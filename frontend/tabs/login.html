@@ -1,0 +1,70 @@
+<section class="login-shell">
+    <div class="login-stage">
+        <div class="login-hero">
+            <div class="login-hero-badge">
+                <i class="fas fa-shield-heart"></i>
+                DPI access
+            </div>
+            <h2>Sign in for protected DPI workflows</h2>
+            <p>
+                Use your organization Google account to access clinical extraction,
+                insurance processing, privacy filtering, and forgery detection.
+                The Dashboard remains open for viewing.
+            </p>
+
+            <div class="login-hero-grid">
+                <div class="login-hero-card">
+                    <span class="login-hero-label">Clinical + Insurance</span>
+                    <span class="login-hero-value">ABDM and NHCX outputs</span>
+                </div>
+                <div class="login-hero-card">
+                    <span class="login-hero-label">Privacy + Security</span>
+                    <span class="login-hero-value">PII redaction and audit logs</span>
+                </div>
+                <div class="login-hero-card">
+                    <span class="login-hero-label">Public Dashboard</span>
+                    <span class="login-hero-value">View usage status without sign-in</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="login-card">
+            <div class="login-card-header">
+                <span class="login-card-eyebrow">Portal sign-in</span>
+                <h3>Continue with Google</h3>
+                <p>Single sign-on unlocks protected tools. Dashboard access stays public.</p>
+            </div>
+
+            <div class="login-card-actions">
+                <a class="login-google-btn" href="/auth/google" aria-label="Sign in with Google">
+                    <span class="login-google-icon">
+                        <i class="fab fa-google"></i>
+                    </span>
+                    <span>Sign in with Google</span>
+                </a>
+                <button class="login-ghost-btn" type="button" onclick="document.getElementById('navDashboard').click()">
+                    View Dashboard
+                </button>
+            </div>
+
+            <div class="login-divider">
+                <span>About access</span>
+            </div>
+
+            <div class="login-card-meta">
+                <div class="login-card-note">
+                    <i class="fas fa-lock"></i>
+                    Sign-in redirects to your configured auth service.
+                </div>
+                <div class="login-card-note">
+                    <i class="fas fa-circle-check"></i>
+                    Access is limited to approved organization domains.
+                </div>
+            </div>
+
+            <div class="login-card-footer">
+                Need access? Contact your DPI admin to enable your account.
+            </div>
+        </div>
+    </div>
+</section>

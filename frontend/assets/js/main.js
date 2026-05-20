@@ -152,8 +152,8 @@
     document.addEventListener('DOMContentLoaded', () => {
         checkAiStatus();
         setInterval(checkAiStatus, 30000);
-        openTab(null, 'PDF2FHIR');
-        document.getElementById('navClinical')?.classList.add('active');
+        openTab(null, 'Login');
+        document.getElementById('navLogin')?.classList.add('active');
         if (window.initDashboard) window.initDashboard();
     });
 

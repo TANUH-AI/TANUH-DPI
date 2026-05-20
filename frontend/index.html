@@ -37,6 +37,7 @@
                 <button class="tablinks" id="navPrivacyFilter" onclick="openTab(event, 'PrivacyFilter')"><i class="fas fa-user-shield"></i> Privacy Filter</button>
                 <button class="tablinks" id="navForgery" onclick="openTab(event, 'ForgeryDetection')"><i class="fas fa-search-plus"></i> Forgery Detection</button>
                 <button class="tablinks" id="navDashboard" onclick="openTab(event, 'Dashboard')"><i class="fas fa-chart-bar"></i> Dashboard</button>
+                <button class="tablinks tab-login" id="navLogin" onclick="openTab(event, 'Login')"><i class="fas fa-right-to-bracket"></i> Login</button>
             </nav>
         </div>
         <div class="header-ai-bar">
@@ -45,11 +46,12 @@
     </header>
 
     <main class="content-container">
-        <div id="PDF2FHIR" class="tabcontent" style="display: block;"></div>
+        <div id="PDF2FHIR" class="tabcontent" style="display: none;"></div>
         <div id="PDF2NHCX" class="tabcontent" style="display: none;"></div>
         <div id="PrivacyFilter" class="tabcontent" style="display: none;"></div>
         <div id="ForgeryDetection" class="tabcontent" style="display: none;"></div>
         <div id="Dashboard" class="tabcontent" style="display: none;"></div>
+        <div id="Login" class="tabcontent" style="display: block;"></div>
     </main>
 
     <footer class="footer">
