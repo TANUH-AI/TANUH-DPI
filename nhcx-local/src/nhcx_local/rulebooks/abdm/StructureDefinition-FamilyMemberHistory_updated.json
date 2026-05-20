@@ -1,0 +1,915 @@
+{
+  "resourceType": "StructureDefinition",
+  "id": "FamilyMemberHistory",
+  "url": "https://nrces.in/ndhm/fhir/r4/StructureDefinition/FamilyMemberHistory",
+  "name": "FamilyMemberHistory",
+  "description": "Thinned ABDM FamilyMemberHistory Rulebook (Optimized for Hereditary Risk Extraction)",
+  "elements": [
+    {
+      "id": "FamilyMemberHistory",
+      "path": "FamilyMemberHistory",
+      "min": 0,
+      "max": "*",
+      "short": "Information about patient's relatives, relevant for patient"
+    },
+    {
+      "id": "FamilyMemberHistory.id",
+      "path": "FamilyMemberHistory.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Logical id of this artifact"
+    },
+    {
+      "id": "FamilyMemberHistory.meta",
+      "path": "FamilyMemberHistory.meta",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "Meta"
+        }
+      ],
+      "short": "Metadata about the resource"
+    },
+    {
+      "id": "FamilyMemberHistory.implicitRules",
+      "path": "FamilyMemberHistory.implicitRules",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "uri"
+        }
+      ],
+      "short": "A set of rules under which this content was created"
+    },
+    {
+      "id": "FamilyMemberHistory.language",
+      "path": "FamilyMemberHistory.language",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "code"
+        }
+      ],
+      "short": "Language of the resource content",
+      "binding": {
+        "strength": "preferred",
+        "valueSet": "http://hl7.org/fhir/ValueSet/languages"
+      }
+    },
+    {
+      "id": "FamilyMemberHistory.text",
+      "path": "FamilyMemberHistory.text",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "Narrative"
+        }
+      ],
+      "short": "Text summary of the resource, for human interpretation"
+    },
+    {
+      "id": "FamilyMemberHistory.contained",
+      "path": "FamilyMemberHistory.contained",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Resource"
+        }
+      ],
+      "short": "Contained, inline Resources"
+    },
+    {
+      "id": "FamilyMemberHistory.extension",
+      "path": "FamilyMemberHistory.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "FamilyMemberHistory.modifierExtension",
+      "path": "FamilyMemberHistory.modifierExtension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Extensions that cannot be ignored"
+    },
+    {
+      "id": "FamilyMemberHistory.identifier",
+      "path": "FamilyMemberHistory.identifier",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Identifier"
+        }
+      ],
+      "short": "External Id(s) for this record"
+    },
+    {
+      "id": "FamilyMemberHistory.instantiatesCanonical",
+      "path": "FamilyMemberHistory.instantiatesCanonical",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "canonical",
+          "targetProfile": [
+            "http://hl7.org/fhir/StructureDefinition/PlanDefinition",
+            "http://hl7.org/fhir/StructureDefinition/Questionnaire",
+            "http://hl7.org/fhir/StructureDefinition/ActivityDefinition",
+            "http://hl7.org/fhir/StructureDefinition/Measure",
+            "http://hl7.org/fhir/StructureDefinition/OperationDefinition"
+          ]
+        }
+      ],
+      "short": "Instantiates FHIR protocol or definition"
+    },
+    {
+      "id": "FamilyMemberHistory.instantiatesUri",
+      "path": "FamilyMemberHistory.instantiatesUri",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "uri"
+        }
+      ],
+      "short": "Instantiates external protocol or definition"
+    },
+    {
+      "id": "FamilyMemberHistory.status",
+      "path": "FamilyMemberHistory.status",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "code"
+        }
+      ],
+      "mustSupport": true,
+      "short": "partial | completed | entered-in-error | health-unknown",
+      "binding": {
+        "strength": "required",
+        "valueSet": "http://hl7.org/fhir/ValueSet/history-status|4.0.1"
+      }
+    },
+    {
+      "id": "FamilyMemberHistory.dataAbsentReason",
+      "path": "FamilyMemberHistory.dataAbsentReason",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "CodeableConcept"
+        }
+      ],
+      "short": "subject-unknown | withheld | unable-to-obtain | deferred",
+      "binding": {
+        "strength": "example",
+        "valueSet": "http://hl7.org/fhir/ValueSet/history-absent-reason"
+      }
+    },
+    {
+      "id": "FamilyMemberHistory.patient",
+      "path": "FamilyMemberHistory.patient",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "Reference",
+          "targetProfile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient"
+          ]
+        }
+      ],
+      "mustSupport": true,
+      "short": "Patient history is about"
+    },
+    {
+      "id": "FamilyMemberHistory.date",
+      "path": "FamilyMemberHistory.date",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "dateTime"
+        }
+      ],
+      "short": "When history was recorded or last updated"
+    },
+    {
+      "id": "FamilyMemberHistory.name",
+      "path": "FamilyMemberHistory.name",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "The family member described"
+    },
+    {
+      "id": "FamilyMemberHistory.relationship",
+      "path": "FamilyMemberHistory.relationship",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "CodeableConcept"
+        }
+      ],
+      "mustSupport": true,
+      "short": "Relationship to the subject",
+      "binding": {
+        "strength": "example",
+        "valueSet": "http://terminology.hl7.org/ValueSet/v3-FamilyMember"
+      }
+    },
+    {
+      "id": "FamilyMemberHistory.relationship.id",
+      "path": "FamilyMemberHistory.relationship.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "FamilyMemberHistory.relationship.extension",
+      "path": "FamilyMemberHistory.relationship.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "FamilyMemberHistory.relationship.coding",
+      "path": "FamilyMemberHistory.relationship.coding",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Coding"
+        }
+      ],
+      "mustSupport": true,
+      "short": "Code defined by a terminology system"
+    },
+    {
+      "id": "FamilyMemberHistory.relationship.coding.id",
+      "path": "FamilyMemberHistory.relationship.coding.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "FamilyMemberHistory.relationship.coding.extension",
+      "path": "FamilyMemberHistory.relationship.coding.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "FamilyMemberHistory.relationship.coding.system",
+      "path": "FamilyMemberHistory.relationship.coding.system",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "uri"
+        }
+      ],
+      "short": "Identity of the terminology system"
+    },
+    {
+      "id": "FamilyMemberHistory.relationship.coding.version",
+      "path": "FamilyMemberHistory.relationship.coding.version",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Version of the system - if relevant"
+    },
+    {
+      "id": "FamilyMemberHistory.relationship.coding.code",
+      "path": "FamilyMemberHistory.relationship.coding.code",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "code"
+        }
+      ],
+      "short": "Symbol in syntax defined by the system"
+    },
+    {
+      "id": "FamilyMemberHistory.relationship.coding.display",
+      "path": "FamilyMemberHistory.relationship.coding.display",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Representation defined by the system"
+    },
+    {
+      "id": "FamilyMemberHistory.relationship.coding.userSelected",
+      "path": "FamilyMemberHistory.relationship.coding.userSelected",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "boolean"
+        }
+      ],
+      "short": "If this coding was chosen directly by the user"
+    },
+    {
+      "id": "FamilyMemberHistory.relationship.text",
+      "path": "FamilyMemberHistory.relationship.text",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "mustSupport": true,
+      "short": "Plain text representation of the concept"
+    },
+    {
+      "id": "FamilyMemberHistory.sex",
+      "path": "FamilyMemberHistory.sex",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "CodeableConcept"
+        }
+      ],
+      "short": "male | female | other | unknown",
+      "binding": {
+        "strength": "extensible",
+        "valueSet": "http://hl7.org/fhir/ValueSet/administrative-gender"
+      }
+    },
+    {
+      "id": "FamilyMemberHistory.born[x]",
+      "path": "FamilyMemberHistory.born[x]",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "Period"
+        },
+        {
+          "code": "date"
+        },
+        {
+          "code": "string"
+        }
+      ],
+      "short": "(approximate) date of birth"
+    },
+    {
+      "id": "FamilyMemberHistory.age[x]",
+      "path": "FamilyMemberHistory.age[x]",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "Age"
+        },
+        {
+          "code": "Range"
+        },
+        {
+          "code": "string"
+        }
+      ],
+      "short": "(approximate) age"
+    },
+    {
+      "id": "FamilyMemberHistory.estimatedAge",
+      "path": "FamilyMemberHistory.estimatedAge",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "boolean"
+        }
+      ],
+      "short": "Age is estimated?"
+    },
+    {
+      "id": "FamilyMemberHistory.deceased[x]",
+      "path": "FamilyMemberHistory.deceased[x]",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "boolean"
+        },
+        {
+          "code": "Age"
+        },
+        {
+          "code": "Range"
+        },
+        {
+          "code": "date"
+        },
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Dead? How old/when?"
+    },
+    {
+      "id": "FamilyMemberHistory.reasonCode",
+      "path": "FamilyMemberHistory.reasonCode",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "CodeableConcept"
+        }
+      ],
+      "short": "Why was family member history performed?",
+      "binding": {
+        "strength": "example",
+        "valueSet": "http://hl7.org/fhir/ValueSet/clinical-findings"
+      }
+    },
+    {
+      "id": "FamilyMemberHistory.reasonCode.id",
+      "path": "FamilyMemberHistory.reasonCode.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "FamilyMemberHistory.reasonCode.extension",
+      "path": "FamilyMemberHistory.reasonCode.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "FamilyMemberHistory.reasonCode.coding",
+      "path": "FamilyMemberHistory.reasonCode.coding",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Coding"
+        }
+      ],
+      "mustSupport": true,
+      "short": "Code defined by a terminology system"
+    },
+    {
+      "id": "FamilyMemberHistory.reasonCode.coding.id",
+      "path": "FamilyMemberHistory.reasonCode.coding.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "FamilyMemberHistory.reasonCode.coding.extension",
+      "path": "FamilyMemberHistory.reasonCode.coding.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "FamilyMemberHistory.reasonCode.coding.system",
+      "path": "FamilyMemberHistory.reasonCode.coding.system",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "uri"
+        }
+      ],
+      "short": "Identity of the terminology system"
+    },
+    {
+      "id": "FamilyMemberHistory.reasonCode.coding.version",
+      "path": "FamilyMemberHistory.reasonCode.coding.version",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Version of the system - if relevant"
+    },
+    {
+      "id": "FamilyMemberHistory.reasonCode.coding.code",
+      "path": "FamilyMemberHistory.reasonCode.coding.code",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "code"
+        }
+      ],
+      "short": "Symbol in syntax defined by the system"
+    },
+    {
+      "id": "FamilyMemberHistory.reasonCode.coding.display",
+      "path": "FamilyMemberHistory.reasonCode.coding.display",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Representation defined by the system"
+    },
+    {
+      "id": "FamilyMemberHistory.reasonCode.coding.userSelected",
+      "path": "FamilyMemberHistory.reasonCode.coding.userSelected",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "boolean"
+        }
+      ],
+      "short": "If this coding was chosen directly by the user"
+    },
+    {
+      "id": "FamilyMemberHistory.reasonCode.text",
+      "path": "FamilyMemberHistory.reasonCode.text",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "mustSupport": true,
+      "short": "Plain text representation of the concept"
+    },
+    {
+      "id": "FamilyMemberHistory.reasonReference",
+      "path": "FamilyMemberHistory.reasonReference",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Reference",
+          "targetProfile": [
+            "http://hl7.org/fhir/StructureDefinition/QuestionnaireResponse",
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition",
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation",
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/AllergyIntolerance",
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/DiagnosticReportLab",
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/DiagnosticReportImaging",
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/DocumentReference"
+          ]
+        }
+      ],
+      "short": "Why was family member history performed?"
+    },
+    {
+      "id": "FamilyMemberHistory.note",
+      "path": "FamilyMemberHistory.note",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Annotation"
+        }
+      ],
+      "short": "General note about related person"
+    },
+    {
+      "id": "FamilyMemberHistory.condition",
+      "path": "FamilyMemberHistory.condition",
+      "min": 1,
+      "max": "*",
+      "type": [
+        {
+          "code": "BackboneElement"
+        }
+      ],
+      "mustSupport": true,
+      "short": "Condition that the related person had"
+    },
+    {
+      "id": "FamilyMemberHistory.condition.id",
+      "path": "FamilyMemberHistory.condition.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "FamilyMemberHistory.condition.extension",
+      "path": "FamilyMemberHistory.condition.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "FamilyMemberHistory.condition.modifierExtension",
+      "path": "FamilyMemberHistory.condition.modifierExtension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Extensions that cannot be ignored even if unrecognized"
+    },
+    {
+      "id": "FamilyMemberHistory.condition.code",
+      "path": "FamilyMemberHistory.condition.code",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "CodeableConcept"
+        }
+      ],
+      "mustSupport": true,
+      "short": "Condition suffered by relation",
+      "binding": {
+        "strength": "example",
+        "valueSet": "http://hl7.org/fhir/ValueSet/condition-code"
+      }
+    },
+    {
+      "id": "FamilyMemberHistory.condition.code.id",
+      "path": "FamilyMemberHistory.condition.code.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "FamilyMemberHistory.condition.code.extension",
+      "path": "FamilyMemberHistory.condition.code.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "FamilyMemberHistory.condition.code.coding",
+      "path": "FamilyMemberHistory.condition.code.coding",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Coding"
+        }
+      ],
+      "mustSupport": true,
+      "short": "Code defined by a terminology system"
+    },
+    {
+      "id": "FamilyMemberHistory.condition.code.coding.id",
+      "path": "FamilyMemberHistory.condition.code.coding.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "FamilyMemberHistory.condition.code.coding.extension",
+      "path": "FamilyMemberHistory.condition.code.coding.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "FamilyMemberHistory.condition.code.coding.system",
+      "path": "FamilyMemberHistory.condition.code.coding.system",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "uri"
+        }
+      ],
+      "short": "Identity of the terminology system"
+    },
+    {
+      "id": "FamilyMemberHistory.condition.code.coding.version",
+      "path": "FamilyMemberHistory.condition.code.coding.version",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Version of the system - if relevant"
+    },
+    {
+      "id": "FamilyMemberHistory.condition.code.coding.code",
+      "path": "FamilyMemberHistory.condition.code.coding.code",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "code"
+        }
+      ],
+      "short": "Symbol in syntax defined by the system"
+    },
+    {
+      "id": "FamilyMemberHistory.condition.code.coding.display",
+      "path": "FamilyMemberHistory.condition.code.coding.display",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Representation defined by the system"
+    },
+    {
+      "id": "FamilyMemberHistory.condition.code.coding.userSelected",
+      "path": "FamilyMemberHistory.condition.code.coding.userSelected",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "boolean"
+        }
+      ],
+      "short": "If this coding was chosen directly by the user"
+    },
+    {
+      "id": "FamilyMemberHistory.condition.code.text",
+      "path": "FamilyMemberHistory.condition.code.text",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "mustSupport": true,
+      "short": "Plain text representation of the concept"
+    },
+    {
+      "id": "FamilyMemberHistory.condition.outcome",
+      "path": "FamilyMemberHistory.condition.outcome",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "CodeableConcept"
+        }
+      ],
+      "short": "deceased | permanent disability | etc.",
+      "binding": {
+        "strength": "example",
+        "valueSet": "http://hl7.org/fhir/ValueSet/condition-outcome"
+      }
+    },
+    {
+      "id": "FamilyMemberHistory.condition.contributedToDeath",
+      "path": "FamilyMemberHistory.condition.contributedToDeath",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "boolean"
+        }
+      ],
+      "short": "Whether the condition contributed to the cause of death"
+    },
+    {
+      "id": "FamilyMemberHistory.condition.onset[x]",
+      "path": "FamilyMemberHistory.condition.onset[x]",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "Age"
+        },
+        {
+          "code": "Range"
+        },
+        {
+          "code": "Period"
+        },
+        {
+          "code": "string"
+        }
+      ],
+      "short": "When condition first manifested"
+    },
+    {
+      "id": "FamilyMemberHistory.condition.note",
+      "path": "FamilyMemberHistory.condition.note",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Annotation"
+        }
+      ],
+      "short": "Extra information about condition"
+    }
+  ]
+}

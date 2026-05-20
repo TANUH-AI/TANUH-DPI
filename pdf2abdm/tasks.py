@@ -1,0 +1,184 @@
+"""
+pdf2abdm/tasks.py — Dedicated Celery background task for ABDM (Clinical) processing.
+
+Flow:
+  1. OCR the PDF (Docling waterfall)
+  2. Classify document type
+  3. Run ABDM pipeline (generates FHIR bundles, uploads each to GCS)
+  4. Store GCS URIs in Redis under key  result:<task_id>  with 24 h TTL
+  5. Fire-and-forget log to session_logger service
+"""
+
+import os
+import sys
+import asyncio
+import json
+import logging
+import time
+import uuid
+
+# Ensure the app root is on the path so sibling imports work inside the worker
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from common.celery_app import celery_app
+
+logger = logging.getLogger(__name__)
+
+RESULT_TTL = int(os.getenv("TASK_RESULT_TTL", 86400))   # 24 h
+SESSION_LOGGER_URL = os.getenv("SESSION_LOGGER_URL", "http://session-logger:8002")
+
+
+def _get_redis():
+    """Return a redis.Redis client using the same URL as Celery."""
+    import redis as _redis
+    url = os.getenv("REDIS_URL", "redis://localhost:6379/0")
+    return _redis.from_url(url, decode_responses=True)
+
+
+def _fire_log(payload: dict):
+    """POST a session log entry to the logger service. Never raises."""
+    try:
+        import httpx
+        with httpx.Client(timeout=5.0) as client:
+            client.post(f"{SESSION_LOGGER_URL}/log", json=payload)
+    except Exception as exc:
+        logger.warning(f"[session-logger] fire-and-forget failed: {exc}")
+
+
+@celery_app.task(bind=True, name="pdf2abdm.tasks.process_abdm_task",
+                 queue="abdm",
+                 time_limit=1800, soft_time_limit=1740)
+def process_abdm_task(self, pdf_path: str, model: str = "gemma4"):
+    """
+    Async Celery task for ABDM FHIR bundle generation.
+    Returns a result dict that is also cached in Redis for /task-result/{task_id}.
+    """
+    task_id = self.request.id
+    session_id = str(uuid.uuid4())
+    task_filename = os.path.basename(pdf_path)
+    start_time = time.perf_counter()
+
+    def update(step: str, progress: int):
+        self.update_state(state="PROGRESS",
+                          meta={"step": step, "progress": progress,
+                                "task_id": task_id})
+
+    log_payload = {
+        "service": "pdf2abdm",
+        "ip_address": "unknown",
+    }
+
+    try:
+        # ── Step 1: OCR ──────────────────────────────────────────────────────
+        update("OCR", 15)
+        from utils.ocr_engine import extract_text_from_abdm_pdf, classify_document
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        unique_patients_text_list, pdf_base64 = loop.run_until_complete(
+            extract_text_from_abdm_pdf(pdf_path)
+        )
+
+        # ── Step 2: Validate document type (gate) ────────────────────────────
+        from common.classifier import classify_document_sync
+        combined_text = "\n".join(unique_patients_text_list)
+        doc_category = classify_document_sync(combined_text)
+        logger.info(f"[{task_id}] Document category: {doc_category}")
+
+        if doc_category != "CLINICAL":
+            if doc_category == "INSURANCE":
+                error_msg = (
+                    "Wrong service: this document appears to be an insurance/NHCX document. "
+                    "Please resubmit via the NHCX pipeline."
+                )
+            else:
+                error_msg = (
+                    "Invalid document: the uploaded PDF is not a clinical medical record "
+                    "(discharge summary, lab report, diagnostic report). "
+                    "Please upload a valid clinical document."
+                )
+            error_payload = {
+                "status": "rejected",
+                "task_id": task_id,
+                "error": error_msg,
+                "detected_type": doc_category,
+            }
+            r = _get_redis()
+            r.setex(f"result:{task_id}", RESULT_TTL, json.dumps(error_payload))
+            logger.warning(f"[{task_id}] Document rejected: {doc_category}")
+            return error_payload
+
+        # ── Step 3: Classify resource type & Extract ──────────────────────────
+        from utils.llm_requirements import run_abdm_pipeline
+        from utils.gcs_storage import upload_json_to_gcs
+
+        bundle_gcs_uris = []
+        bundles = []
+        doc_types = []
+
+        total = len(unique_patients_text_list)
+        for i, extracted_text in enumerate(unique_patients_text_list):
+            progress_pct = 20 + int((i / max(total, 1)) * 70)
+            update(f"LLM Extraction — patient {i+1}/{total}", progress_pct)
+
+            doc_type, must_resources, selected_other_resources = classify_document(extracted_text)
+            logger.info(f"[{task_id}] Patient {i}: {doc_type}")
+
+            bundle = run_abdm_pipeline(
+                extracted_text, doc_type, selected_other_resources,
+                pdf_base64=pdf_base64, idx=i, model=model
+            )
+            bundles.append(bundle)
+            doc_types.append(doc_type)
+
+            # GCS upload is already done inside run_abdm_pipeline;
+            # build the expected URI so we can expose it.
+            filename_json = f"FHIR_BUNDLE_{doc_type}_Patient_{i}.json"
+            gcs_uri = f"json_output/abdm/{filename_json}"
+            bundle_gcs_uris.append(gcs_uri)
+
+
+        # ── Step 3: Store result in Redis ────────────────────────────────────
+        update("Storing results", 95)
+        processing_time = round(time.perf_counter() - start_time, 2)
+        result_payload = {
+            "status": "completed",
+            "task_id": task_id,
+            "doc_types": doc_types,
+            "bundle_count": len(bundles),
+            "bundles": bundles,
+            "bundle_gcs_uris": bundle_gcs_uris,
+            "model_used": model,
+        }
+        r = _get_redis()
+        r.setex(f"result:{task_id}", RESULT_TTL, json.dumps(result_payload))
+
+        log_payload.update({
+            "pdf_location": f"pdf_uploads/abdm/{task_filename}",
+            "json_location": bundle_gcs_uris[0] if bundle_gcs_uris else None,
+        })
+
+        update("Completed", 100)
+        logger.info(f"[{task_id}] ABDM task completed — {len(bundles)} bundle(s)")
+        return result_payload
+
+    except Exception as exc:
+        logger.exception(f"[{task_id}] ABDM task failed: {exc}")
+        error_payload = {"status": "failed", "task_id": task_id, "error": str(exc)}
+        try:
+            r = _get_redis()
+            r.setex(f"result:{task_id}", RESULT_TTL, json.dumps(error_payload))
+        except Exception:
+            pass
+        log_payload["pdf_location"] = f"pdf_uploads/abdm/{task_filename}"
+        log_payload["processing_time_note"] = str(exc)
+        raise
+
+    finally:
+        # Always attempt to log — success or failure
+        _fire_log(log_payload)
+        # Clean up the shared-volume temp file (written by the API container)
+        try:
+            if os.path.exists(pdf_path):
+                os.unlink(pdf_path)
+        except Exception:
+            pass

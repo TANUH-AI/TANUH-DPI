@@ -1,0 +1,986 @@
+{
+  "resourceType": "StructureDefinition",
+  "id": "Invoice",
+  "url": "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Invoice",
+  "name": "Invoice",
+  "description": "Thinned ABDM Invoice Rulebook (Optimized for Billing and Financial Data Extraction)",
+  "elements": [
+    {
+      "id": "Invoice",
+      "path": "Invoice",
+      "min": 0,
+      "max": "*",
+      "short": "Invoice containing ChargeItems from an Account"
+    },
+    {
+      "id": "Invoice.id",
+      "path": "Invoice.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Logical id of this artifact"
+    },
+    {
+      "id": "Invoice.meta",
+      "path": "Invoice.meta",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "Meta"
+        }
+      ],
+      "short": "Metadata about the resource"
+    },
+    {
+      "id": "Invoice.implicitRules",
+      "path": "Invoice.implicitRules",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "uri"
+        }
+      ],
+      "short": "A set of rules under which this content was created"
+    },
+    {
+      "id": "Invoice.language",
+      "path": "Invoice.language",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "code"
+        }
+      ],
+      "short": "Language of the resource content",
+      "binding": {
+        "strength": "preferred",
+        "valueSet": "http://hl7.org/fhir/ValueSet/languages"
+      }
+    },
+    {
+      "id": "Invoice.text",
+      "path": "Invoice.text",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "Narrative"
+        }
+      ],
+      "short": "Text summary of the resource, for human interpretation"
+    },
+    {
+      "id": "Invoice.contained",
+      "path": "Invoice.contained",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Resource"
+        }
+      ],
+      "short": "Contained, inline Resources"
+    },
+    {
+      "id": "Invoice.extension",
+      "path": "Invoice.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "Invoice.modifierExtension",
+      "path": "Invoice.modifierExtension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Extensions that cannot be ignored"
+    },
+    {
+      "id": "Invoice.identifier",
+      "path": "Invoice.identifier",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "Identifier"
+        }
+      ],
+      "short": "Business Identifier for invoice (e.g invoice number or bill number)"
+    },
+    {
+      "id": "Invoice.identifier.id",
+      "path": "Invoice.identifier.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "Invoice.identifier.extension",
+      "path": "Invoice.identifier.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "Invoice.identifier.use",
+      "path": "Invoice.identifier.use",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "code"
+        }
+      ],
+      "short": "usual | official | temp | secondary | old (If known)",
+      "binding": {
+        "strength": "required",
+        "valueSet": "http://hl7.org/fhir/ValueSet/identifier-use|4.0.1"
+      }
+    },
+    {
+      "id": "Invoice.identifier.type",
+      "path": "Invoice.identifier.type",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "CodeableConcept"
+        }
+      ],
+      "short": "Description of identifier",
+      "binding": {
+        "strength": "extensible",
+        "valueSet": "http://hl7.org/fhir/ValueSet/identifier-type"
+      }
+    },
+    {
+      "id": "Invoice.identifier.type.id",
+      "path": "Invoice.identifier.type.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "Invoice.identifier.type.extension",
+      "path": "Invoice.identifier.type.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "Invoice.identifier.type.coding",
+      "path": "Invoice.identifier.type.coding",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Coding"
+        }
+      ],
+      "short": "Code defined by a terminology system"
+    },
+    {
+      "id": "Invoice.identifier.type.text",
+      "path": "Invoice.identifier.type.text",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "mustSupport": true,
+      "short": "Plain text representation of the concept"
+    },
+    {
+      "id": "Invoice.identifier.system",
+      "path": "Invoice.identifier.system",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "uri"
+        }
+      ],
+      "short": "The namespace for the identifier value"
+    },
+    {
+      "id": "Invoice.identifier.value",
+      "path": "Invoice.identifier.value",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "The value that is unique (example the invoice number or bill number)"
+    },
+    {
+      "id": "Invoice.identifier.period",
+      "path": "Invoice.identifier.period",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "Period"
+        }
+      ],
+      "short": "Time period when id is/was valid for use"
+    },
+    {
+      "id": "Invoice.identifier.assigner",
+      "path": "Invoice.identifier.assigner",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "Reference",
+          "targetProfile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        }
+      ],
+      "short": "Organization that issued id (may be just text)"
+    },
+    {
+      "id": "Invoice.status",
+      "path": "Invoice.status",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "code"
+        }
+      ],
+      "short": "draft | issued | balanced | cancelled | entered-in-error",
+      "binding": {
+        "strength": "required",
+        "valueSet": "http://hl7.org/fhir/ValueSet/invoice-status|4.0.1"
+      }
+    },
+    {
+      "id": "Invoice.cancelledReason",
+      "path": "Invoice.cancelledReason",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Reason for cancellation of this Invoice"
+    },
+    {
+      "id": "Invoice.type",
+      "path": "Invoice.type",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "CodeableConcept"
+        }
+      ],
+      "short": "Type of Invoice",
+      "binding": {
+        "strength": "extensible",
+        "valueSet": "https://nrces.in/ndhm/fhir/r4/ValueSet/ndhm-invoice-types"
+      }
+    },
+    {
+      "id": "Invoice.type.id",
+      "path": "Invoice.type.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "Invoice.type.extension",
+      "path": "Invoice.type.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "Invoice.type.coding",
+      "path": "Invoice.type.coding",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "Coding"
+        }
+      ],
+      "short": "Code defined by a terminology system"
+    },
+    {
+      "id": "Invoice.type.coding.id",
+      "path": "Invoice.type.coding.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "Invoice.type.coding.extension",
+      "path": "Invoice.type.coding.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "Invoice.type.coding.system",
+      "path": "Invoice.type.coding.system",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "uri"
+        }
+      ],
+      "short": "Identity of the terminology system"
+    },
+    {
+      "id": "Invoice.type.coding.version",
+      "path": "Invoice.type.coding.version",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Version of the system - if relevant"
+    },
+    {
+      "id": "Invoice.type.coding.code",
+      "path": "Invoice.type.coding.code",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "code"
+        }
+      ],
+      "short": "Symbol in syntax defined by the system"
+    },
+    {
+      "id": "Invoice.type.coding.display",
+      "path": "Invoice.type.coding.display",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Representation defined by the system"
+    },
+    {
+      "id": "Invoice.type.coding.userSelected",
+      "path": "Invoice.type.coding.userSelected",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "boolean"
+        }
+      ],
+      "short": "If this coding was chosen directly by the user"
+    },
+    {
+      "id": "Invoice.type.text",
+      "path": "Invoice.type.text",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "mustSupport": true,
+      "short": "Plain text representation of the concept"
+    },
+    {
+      "id": "Invoice.subject",
+      "path": "Invoice.subject",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "Reference",
+          "targetProfile": [
+            "http://hl7.org/fhir/StructureDefinition/Group",
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient"
+          ]
+        }
+      ],
+      "short": "Recipient(s) of goods and services"
+    },
+    {
+      "id": "Invoice.recipient",
+      "path": "Invoice.recipient",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "Reference",
+          "targetProfile": [
+            "http://hl7.org/fhir/StructureDefinition/RelatedPerson",
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient",
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        }
+      ],
+      "short": "Recipient of this invoice"
+    },
+    {
+      "id": "Invoice.date",
+      "path": "Invoice.date",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "dateTime"
+        }
+      ],
+      "short": "Invoice date / posting date"
+    },
+    {
+      "id": "Invoice.participant",
+      "path": "Invoice.participant",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "BackboneElement"
+        }
+      ],
+      "short": "Participant in creation of this Invoice"
+    },
+    {
+      "id": "Invoice.participant.id",
+      "path": "Invoice.participant.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "Invoice.participant.extension",
+      "path": "Invoice.participant.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "Invoice.participant.modifierExtension",
+      "path": "Invoice.participant.modifierExtension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Extensions that cannot be ignored even if unrecognized"
+    },
+    {
+      "id": "Invoice.participant.role",
+      "path": "Invoice.participant.role",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "CodeableConcept"
+        }
+      ],
+      "short": "Type of involvement in creation of this Invoice"
+    },
+    {
+      "id": "Invoice.participant.actor",
+      "path": "Invoice.participant.actor",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "Reference",
+          "targetProfile": [
+            "http://hl7.org/fhir/StructureDefinition/Device",
+            "http://hl7.org/fhir/StructureDefinition/RelatedPerson",
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Practitioner",
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization",
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient",
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/PractitionerRole"
+          ]
+        }
+      ],
+      "short": "Individual who was involved"
+    },
+    {
+      "id": "Invoice.issuer",
+      "path": "Invoice.issuer",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "Reference",
+          "targetProfile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        }
+      ],
+      "short": "Issuing Organization of Invoice"
+    },
+    {
+      "id": "Invoice.account",
+      "path": "Invoice.account",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "Reference",
+          "targetProfile": [
+            "http://hl7.org/fhir/StructureDefinition/Account"
+          ]
+        }
+      ],
+      "short": "Account that is being balanced"
+    },
+    {
+      "id": "Invoice.lineItem",
+      "path": "Invoice.lineItem",
+      "min": 1,
+      "max": "*",
+      "type": [
+        {
+          "code": "BackboneElement"
+        }
+      ],
+      "short": "Line items of this Invoice"
+    },
+    {
+      "id": "Invoice.lineItem.id",
+      "path": "Invoice.lineItem.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "Invoice.lineItem.extension",
+      "path": "Invoice.lineItem.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "Invoice.lineItem.modifierExtension",
+      "path": "Invoice.lineItem.modifierExtension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Extensions that cannot be ignored even if unrecognized"
+    },
+    {
+      "id": "Invoice.lineItem.sequence",
+      "path": "Invoice.lineItem.sequence",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "positiveInt"
+        }
+      ],
+      "short": "Sequence number of line item"
+    },
+    {
+      "id": "Invoice.lineItem.chargeItem[x]",
+      "path": "Invoice.lineItem.chargeItem[x]",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "Reference",
+          "targetProfile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/ChargeItem"
+          ]
+        },
+        {
+          "code": "CodeableConcept"
+        }
+      ],
+      "short": "Reference to ChargeItem containing details of this line item or an inline billing code. In the context of ABDM the Chargeitem resource reference must be populated indicating the details for the medicines or other service charged."
+    },
+    {
+      "id": "Invoice.lineItem.priceComponent",
+      "path": "Invoice.lineItem.priceComponent",
+      "min": 1,
+      "max": "*",
+      "type": [
+        {
+          "code": "BackboneElement"
+        }
+      ],
+      "short": "Components of total line item price"
+    },
+    {
+      "id": "Invoice.lineItem.priceComponent.id",
+      "path": "Invoice.lineItem.priceComponent.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "Invoice.lineItem.priceComponent.extension",
+      "path": "Invoice.lineItem.priceComponent.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "Invoice.lineItem.priceComponent.modifierExtension",
+      "path": "Invoice.lineItem.priceComponent.modifierExtension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Extensions that cannot be ignored even if unrecognized"
+    },
+    {
+      "id": "Invoice.lineItem.priceComponent.type",
+      "path": "Invoice.lineItem.priceComponent.type",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "code"
+        }
+      ],
+      "short": "base | surcharge | deduction | discount | tax | informational",
+      "binding": {
+        "strength": "required",
+        "valueSet": "http://hl7.org/fhir/ValueSet/invoice-priceComponentType|4.0.1"
+      }
+    },
+    {
+      "id": "Invoice.lineItem.priceComponent.code",
+      "path": "Invoice.lineItem.priceComponent.code",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "CodeableConcept"
+        }
+      ],
+      "short": "Code identifying the specific component",
+      "binding": {
+        "strength": "extensible",
+        "valueSet": "https://nrces.in/ndhm/fhir/r4/ValueSet/ndhm-price-components"
+      }
+    },
+    {
+      "id": "Invoice.lineItem.priceComponent.code.id",
+      "path": "Invoice.lineItem.priceComponent.code.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "Invoice.lineItem.priceComponent.code.extension",
+      "path": "Invoice.lineItem.priceComponent.code.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "Invoice.lineItem.priceComponent.code.coding",
+      "path": "Invoice.lineItem.priceComponent.code.coding",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "Coding"
+        }
+      ],
+      "short": "Code defined by a terminology system"
+    },
+    {
+      "id": "Invoice.lineItem.priceComponent.code.coding.id",
+      "path": "Invoice.lineItem.priceComponent.code.coding.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "Invoice.lineItem.priceComponent.code.coding.extension",
+      "path": "Invoice.lineItem.priceComponent.code.coding.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "Invoice.lineItem.priceComponent.code.coding.system",
+      "path": "Invoice.lineItem.priceComponent.code.coding.system",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "uri"
+        }
+      ],
+      "short": "Identity of the terminology system"
+    },
+    {
+      "id": "Invoice.lineItem.priceComponent.code.coding.version",
+      "path": "Invoice.lineItem.priceComponent.code.coding.version",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Version of the system - if relevant"
+    },
+    {
+      "id": "Invoice.lineItem.priceComponent.code.coding.code",
+      "path": "Invoice.lineItem.priceComponent.code.coding.code",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "code"
+        }
+      ],
+      "short": "Symbol in syntax defined by the system"
+    },
+    {
+      "id": "Invoice.lineItem.priceComponent.code.coding.display",
+      "path": "Invoice.lineItem.priceComponent.code.coding.display",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Representation defined by the system"
+    },
+    {
+      "id": "Invoice.lineItem.priceComponent.code.coding.userSelected",
+      "path": "Invoice.lineItem.priceComponent.code.coding.userSelected",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "boolean"
+        }
+      ],
+      "short": "If this coding was chosen directly by the user"
+    },
+    {
+      "id": "Invoice.lineItem.priceComponent.code.text",
+      "path": "Invoice.lineItem.priceComponent.code.text",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "mustSupport": true,
+      "short": "Plain text representation of the concept"
+    },
+    {
+      "id": "Invoice.lineItem.priceComponent.factor",
+      "path": "Invoice.lineItem.priceComponent.factor",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "decimal"
+        }
+      ],
+      "short": "Factor used for calculating this component"
+    },
+    {
+      "id": "Invoice.lineItem.priceComponent.amount",
+      "path": "Invoice.lineItem.priceComponent.amount",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "Money"
+        }
+      ],
+      "short": "Monetary amount associated with this component"
+    },
+    {
+      "id": "Invoice.totalPriceComponent",
+      "path": "Invoice.totalPriceComponent",
+      "min": 0,
+      "max": "*",
+      "short": "Components of Invoice total"
+    },
+    {
+      "id": "Invoice.totalNet",
+      "path": "Invoice.totalNet",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "Money"
+        }
+      ],
+      "short": "Net total of this Invoice"
+    },
+    {
+      "id": "Invoice.totalGross",
+      "path": "Invoice.totalGross",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "Money"
+        }
+      ],
+      "short": "Gross total of this Invoice"
+    },
+    {
+      "id": "Invoice.paymentTerms",
+      "path": "Invoice.paymentTerms",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "markdown"
+        }
+      ],
+      "short": "Payment details"
+    },
+    {
+      "id": "Invoice.note",
+      "path": "Invoice.note",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Annotation"
+        }
+      ],
+      "short": "Comments made about the invoice"
+    }
+  ]
+}

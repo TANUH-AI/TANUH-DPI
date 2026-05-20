@@ -1,0 +1,1539 @@
+{
+  "resourceType": "StructureDefinition",
+  "id": "Immunization",
+  "url": "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Immunization",
+  "name": "Immunization",
+  "description": "Thinned ABDM Immunization Rulebook (Optimized for Vaccination Record Extraction)",
+  "elements": [
+    {
+      "id": "Immunization",
+      "path": "Immunization",
+      "min": 0,
+      "max": "*",
+      "short": "Immunization event information"
+    },
+    {
+      "id": "Immunization.id",
+      "path": "Immunization.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Logical id of this artifact"
+    },
+    {
+      "id": "Immunization.meta",
+      "path": "Immunization.meta",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "Meta"
+        }
+      ],
+      "short": "Metadata about the resource"
+    },
+    {
+      "id": "Immunization.implicitRules",
+      "path": "Immunization.implicitRules",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "uri"
+        }
+      ],
+      "short": "A set of rules under which this content was created"
+    },
+    {
+      "id": "Immunization.language",
+      "path": "Immunization.language",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "code"
+        }
+      ],
+      "short": "Language of the resource content",
+      "binding": {
+        "strength": "preferred",
+        "valueSet": "http://hl7.org/fhir/ValueSet/languages"
+      }
+    },
+    {
+      "id": "Immunization.text",
+      "path": "Immunization.text",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "Narrative"
+        }
+      ],
+      "short": "Text summary of the resource, for human interpretation"
+    },
+    {
+      "id": "Immunization.contained",
+      "path": "Immunization.contained",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Resource"
+        }
+      ],
+      "short": "Contained, inline Resources"
+    },
+    {
+      "id": "Immunization.extension",
+      "path": "Immunization.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Extension"
+    },
+    {
+      "id": "Immunization.extension:BrandName",
+      "path": "Immunization.extension",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "mustSupport": true,
+      "short": "Extension"
+    },
+    {
+      "id": "Immunization.modifierExtension",
+      "path": "Immunization.modifierExtension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Extensions that cannot be ignored"
+    },
+    {
+      "id": "Immunization.identifier",
+      "path": "Immunization.identifier",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Identifier"
+        }
+      ],
+      "short": "Business identifier"
+    },
+    {
+      "id": "Immunization.status",
+      "path": "Immunization.status",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "code"
+        }
+      ],
+      "mustSupport": true,
+      "short": "completed | entered-in-error | not-done",
+      "binding": {
+        "strength": "required",
+        "valueSet": "http://hl7.org/fhir/ValueSet/immunization-status|4.0.1"
+      }
+    },
+    {
+      "id": "Immunization.statusReason",
+      "path": "Immunization.statusReason",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "CodeableConcept"
+        }
+      ],
+      "short": "Reason not done",
+      "binding": {
+        "strength": "example",
+        "valueSet": "http://hl7.org/fhir/ValueSet/immunization-status-reason"
+      }
+    },
+    {
+      "id": "Immunization.vaccineCode",
+      "path": "Immunization.vaccineCode",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "CodeableConcept"
+        }
+      ],
+      "mustSupport": true,
+      "short": "Vaccine product administered",
+      "binding": {
+        "strength": "preferred",
+        "valueSet": "https://nrces.in/ndhm/fhir/r4/ValueSet/ndhm-vaccine-codes"
+      }
+    },
+    {
+      "id": "Immunization.vaccineCode.id",
+      "path": "Immunization.vaccineCode.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "Immunization.vaccineCode.extension",
+      "path": "Immunization.vaccineCode.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "Immunization.vaccineCode.coding",
+      "path": "Immunization.vaccineCode.coding",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Coding"
+        }
+      ],
+      "mustSupport": true,
+      "short": "Code defined by a terminology system"
+    },
+    {
+      "id": "Immunization.vaccineCode.coding.id",
+      "path": "Immunization.vaccineCode.coding.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "Immunization.vaccineCode.coding.extension",
+      "path": "Immunization.vaccineCode.coding.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "Immunization.vaccineCode.coding.system",
+      "path": "Immunization.vaccineCode.coding.system",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "uri"
+        }
+      ],
+      "short": "Identity of the terminology system"
+    },
+    {
+      "id": "Immunization.vaccineCode.coding.version",
+      "path": "Immunization.vaccineCode.coding.version",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Version of the system - if relevant"
+    },
+    {
+      "id": "Immunization.vaccineCode.coding.code",
+      "path": "Immunization.vaccineCode.coding.code",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "code"
+        }
+      ],
+      "short": "Symbol in syntax defined by the system"
+    },
+    {
+      "id": "Immunization.vaccineCode.coding.display",
+      "path": "Immunization.vaccineCode.coding.display",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Representation defined by the system"
+    },
+    {
+      "id": "Immunization.vaccineCode.coding.userSelected",
+      "path": "Immunization.vaccineCode.coding.userSelected",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "boolean"
+        }
+      ],
+      "short": "If this coding was chosen directly by the user"
+    },
+    {
+      "id": "Immunization.vaccineCode.text",
+      "path": "Immunization.vaccineCode.text",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "mustSupport": true,
+      "short": "Plain text representation of the concept"
+    },
+    {
+      "id": "Immunization.patient",
+      "path": "Immunization.patient",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "Reference",
+          "targetProfile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient"
+          ]
+        }
+      ],
+      "mustSupport": true,
+      "short": "Who was immunized"
+    },
+    {
+      "id": "Immunization.encounter",
+      "path": "Immunization.encounter",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "Reference",
+          "targetProfile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        }
+      ],
+      "short": "Encounter immunization was part of"
+    },
+    {
+      "id": "Immunization.occurrence[x]",
+      "path": "Immunization.occurrence[x]",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "dateTime"
+        }
+      ],
+      "mustSupport": true,
+      "short": "Vaccine administration date"
+    },
+    {
+      "id": "Immunization.recorded",
+      "path": "Immunization.recorded",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "dateTime"
+        }
+      ],
+      "short": "When the immunization was first captured in the subject's record"
+    },
+    {
+      "id": "Immunization.primarySource",
+      "path": "Immunization.primarySource",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "boolean"
+        }
+      ],
+      "short": "Indicates context the data was recorded in"
+    },
+    {
+      "id": "Immunization.reportOrigin",
+      "path": "Immunization.reportOrigin",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "CodeableConcept"
+        }
+      ],
+      "short": "Indicates the source of a secondarily reported record",
+      "binding": {
+        "strength": "example",
+        "valueSet": "http://hl7.org/fhir/ValueSet/immunization-origin"
+      }
+    },
+    {
+      "id": "Immunization.location",
+      "path": "Immunization.location",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "Reference",
+          "targetProfile": [
+            "http://hl7.org/fhir/StructureDefinition/Location"
+          ]
+        }
+      ],
+      "mustSupport": true,
+      "short": "Where immunization occurred"
+    },
+    {
+      "id": "Immunization.manufacturer",
+      "path": "Immunization.manufacturer",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "Reference",
+          "targetProfile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        }
+      ],
+      "mustSupport": true,
+      "short": "Vaccine manufacturer"
+    },
+    {
+      "id": "Immunization.lotNumber",
+      "path": "Immunization.lotNumber",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "mustSupport": true,
+      "short": "Vaccine lot number"
+    },
+    {
+      "id": "Immunization.expirationDate",
+      "path": "Immunization.expirationDate",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "date"
+        }
+      ],
+      "mustSupport": true,
+      "short": "Vaccine expiration date"
+    },
+    {
+      "id": "Immunization.site",
+      "path": "Immunization.site",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "CodeableConcept"
+        }
+      ],
+      "short": "Body site vaccine  was administered",
+      "binding": {
+        "strength": "example",
+        "valueSet": "http://hl7.org/fhir/ValueSet/immunization-site"
+      }
+    },
+    {
+      "id": "Immunization.site.id",
+      "path": "Immunization.site.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "Immunization.site.extension",
+      "path": "Immunization.site.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "Immunization.site.coding",
+      "path": "Immunization.site.coding",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Coding"
+        }
+      ],
+      "mustSupport": true,
+      "short": "Code defined by a terminology system"
+    },
+    {
+      "id": "Immunization.site.coding.id",
+      "path": "Immunization.site.coding.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "Immunization.site.coding.extension",
+      "path": "Immunization.site.coding.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "Immunization.site.coding.system",
+      "path": "Immunization.site.coding.system",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "uri"
+        }
+      ],
+      "short": "Identity of the terminology system"
+    },
+    {
+      "id": "Immunization.site.coding.version",
+      "path": "Immunization.site.coding.version",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Version of the system - if relevant"
+    },
+    {
+      "id": "Immunization.site.coding.code",
+      "path": "Immunization.site.coding.code",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "code"
+        }
+      ],
+      "short": "Symbol in syntax defined by the system"
+    },
+    {
+      "id": "Immunization.site.coding.display",
+      "path": "Immunization.site.coding.display",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Representation defined by the system"
+    },
+    {
+      "id": "Immunization.site.coding.userSelected",
+      "path": "Immunization.site.coding.userSelected",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "boolean"
+        }
+      ],
+      "short": "If this coding was chosen directly by the user"
+    },
+    {
+      "id": "Immunization.site.text",
+      "path": "Immunization.site.text",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "mustSupport": true,
+      "short": "Plain text representation of the concept"
+    },
+    {
+      "id": "Immunization.route",
+      "path": "Immunization.route",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "CodeableConcept"
+        }
+      ],
+      "short": "How vaccine entered body",
+      "binding": {
+        "strength": "example",
+        "valueSet": "http://hl7.org/fhir/ValueSet/immunization-route"
+      }
+    },
+    {
+      "id": "Immunization.route.id",
+      "path": "Immunization.route.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "Immunization.route.extension",
+      "path": "Immunization.route.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "Immunization.route.coding",
+      "path": "Immunization.route.coding",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Coding"
+        }
+      ],
+      "mustSupport": true,
+      "short": "Code defined by a terminology system"
+    },
+    {
+      "id": "Immunization.route.coding.id",
+      "path": "Immunization.route.coding.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "Immunization.route.coding.extension",
+      "path": "Immunization.route.coding.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "Immunization.route.coding.system",
+      "path": "Immunization.route.coding.system",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "uri"
+        }
+      ],
+      "short": "Identity of the terminology system"
+    },
+    {
+      "id": "Immunization.route.coding.version",
+      "path": "Immunization.route.coding.version",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Version of the system - if relevant"
+    },
+    {
+      "id": "Immunization.route.coding.code",
+      "path": "Immunization.route.coding.code",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "code"
+        }
+      ],
+      "short": "Symbol in syntax defined by the system"
+    },
+    {
+      "id": "Immunization.route.coding.display",
+      "path": "Immunization.route.coding.display",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Representation defined by the system"
+    },
+    {
+      "id": "Immunization.route.coding.userSelected",
+      "path": "Immunization.route.coding.userSelected",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "boolean"
+        }
+      ],
+      "short": "If this coding was chosen directly by the user"
+    },
+    {
+      "id": "Immunization.route.text",
+      "path": "Immunization.route.text",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "mustSupport": true,
+      "short": "Plain text representation of the concept"
+    },
+    {
+      "id": "Immunization.doseQuantity",
+      "path": "Immunization.doseQuantity",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "Quantity"
+        }
+      ],
+      "short": "Amount of vaccine administered"
+    },
+    {
+      "id": "Immunization.performer",
+      "path": "Immunization.performer",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "BackboneElement"
+        }
+      ],
+      "short": "Who performed event"
+    },
+    {
+      "id": "Immunization.performer.id",
+      "path": "Immunization.performer.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "Immunization.performer.extension",
+      "path": "Immunization.performer.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "Immunization.performer.modifierExtension",
+      "path": "Immunization.performer.modifierExtension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Extensions that cannot be ignored even if unrecognized"
+    },
+    {
+      "id": "Immunization.performer.function",
+      "path": "Immunization.performer.function",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "CodeableConcept"
+        }
+      ],
+      "short": "What type of performance was done",
+      "binding": {
+        "strength": "extensible",
+        "valueSet": "http://hl7.org/fhir/ValueSet/immunization-function"
+      }
+    },
+    {
+      "id": "Immunization.performer.function.id",
+      "path": "Immunization.performer.function.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "Immunization.performer.function.extension",
+      "path": "Immunization.performer.function.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "Immunization.performer.function.coding",
+      "path": "Immunization.performer.function.coding",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Coding"
+        }
+      ],
+      "mustSupport": true,
+      "short": "Code defined by a terminology system"
+    },
+    {
+      "id": "Immunization.performer.function.coding.id",
+      "path": "Immunization.performer.function.coding.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "Immunization.performer.function.coding.extension",
+      "path": "Immunization.performer.function.coding.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "Immunization.performer.function.coding.system",
+      "path": "Immunization.performer.function.coding.system",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "uri"
+        }
+      ],
+      "short": "Identity of the terminology system"
+    },
+    {
+      "id": "Immunization.performer.function.coding.version",
+      "path": "Immunization.performer.function.coding.version",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Version of the system - if relevant"
+    },
+    {
+      "id": "Immunization.performer.function.coding.code",
+      "path": "Immunization.performer.function.coding.code",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "code"
+        }
+      ],
+      "short": "Symbol in syntax defined by the system"
+    },
+    {
+      "id": "Immunization.performer.function.coding.display",
+      "path": "Immunization.performer.function.coding.display",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Representation defined by the system"
+    },
+    {
+      "id": "Immunization.performer.function.coding.userSelected",
+      "path": "Immunization.performer.function.coding.userSelected",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "boolean"
+        }
+      ],
+      "short": "If this coding was chosen directly by the user"
+    },
+    {
+      "id": "Immunization.performer.function.text",
+      "path": "Immunization.performer.function.text",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "mustSupport": true,
+      "short": "Plain text representation of the concept"
+    },
+    {
+      "id": "Immunization.performer.actor",
+      "path": "Immunization.performer.actor",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "Reference",
+          "targetProfile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Practitioner",
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/PractitionerRole",
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        }
+      ],
+      "short": "Individual or organization who was performing"
+    },
+    {
+      "id": "Immunization.note",
+      "path": "Immunization.note",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Annotation"
+        }
+      ],
+      "short": "Additional immunization notes"
+    },
+    {
+      "id": "Immunization.reasonCode",
+      "path": "Immunization.reasonCode",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "CodeableConcept"
+        }
+      ],
+      "short": "Why immunization occurred",
+      "binding": {
+        "strength": "example",
+        "valueSet": "http://hl7.org/fhir/ValueSet/immunization-reason"
+      }
+    },
+    {
+      "id": "Immunization.reasonCode.id",
+      "path": "Immunization.reasonCode.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "Immunization.reasonCode.extension",
+      "path": "Immunization.reasonCode.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "Immunization.reasonCode.coding",
+      "path": "Immunization.reasonCode.coding",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Coding"
+        }
+      ],
+      "mustSupport": true,
+      "short": "Code defined by a terminology system"
+    },
+    {
+      "id": "Immunization.reasonCode.coding.id",
+      "path": "Immunization.reasonCode.coding.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "Immunization.reasonCode.coding.extension",
+      "path": "Immunization.reasonCode.coding.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "Immunization.reasonCode.coding.system",
+      "path": "Immunization.reasonCode.coding.system",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "uri"
+        }
+      ],
+      "short": "Identity of the terminology system"
+    },
+    {
+      "id": "Immunization.reasonCode.coding.version",
+      "path": "Immunization.reasonCode.coding.version",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Version of the system - if relevant"
+    },
+    {
+      "id": "Immunization.reasonCode.coding.code",
+      "path": "Immunization.reasonCode.coding.code",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "code"
+        }
+      ],
+      "short": "Symbol in syntax defined by the system"
+    },
+    {
+      "id": "Immunization.reasonCode.coding.display",
+      "path": "Immunization.reasonCode.coding.display",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Representation defined by the system"
+    },
+    {
+      "id": "Immunization.reasonCode.coding.userSelected",
+      "path": "Immunization.reasonCode.coding.userSelected",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "boolean"
+        }
+      ],
+      "short": "If this coding was chosen directly by the user"
+    },
+    {
+      "id": "Immunization.reasonCode.text",
+      "path": "Immunization.reasonCode.text",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "mustSupport": true,
+      "short": "Plain text representation of the concept"
+    },
+    {
+      "id": "Immunization.reasonReference",
+      "path": "Immunization.reasonReference",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Reference",
+          "targetProfile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition",
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation",
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/DiagnosticReportLab",
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/DiagnosticReportImaging"
+          ]
+        }
+      ],
+      "short": "Why immunization occurred"
+    },
+    {
+      "id": "Immunization.isSubpotent",
+      "path": "Immunization.isSubpotent",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "boolean"
+        }
+      ],
+      "short": "Dose potency"
+    },
+    {
+      "id": "Immunization.subpotentReason",
+      "path": "Immunization.subpotentReason",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "CodeableConcept"
+        }
+      ],
+      "short": "Reason for being subpotent",
+      "binding": {
+        "strength": "example",
+        "valueSet": "http://hl7.org/fhir/ValueSet/immunization-subpotent-reason"
+      }
+    },
+    {
+      "id": "Immunization.education",
+      "path": "Immunization.education",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "BackboneElement"
+        }
+      ],
+      "short": "Educational material presented to patient"
+    },
+    {
+      "id": "Immunization.education.id",
+      "path": "Immunization.education.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "Immunization.education.extension",
+      "path": "Immunization.education.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "Immunization.education.modifierExtension",
+      "path": "Immunization.education.modifierExtension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Extensions that cannot be ignored even if unrecognized"
+    },
+    {
+      "id": "Immunization.education.documentType",
+      "path": "Immunization.education.documentType",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Educational material document identifier"
+    },
+    {
+      "id": "Immunization.education.reference",
+      "path": "Immunization.education.reference",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "uri"
+        }
+      ],
+      "short": "Educational material reference pointer"
+    },
+    {
+      "id": "Immunization.education.publicationDate",
+      "path": "Immunization.education.publicationDate",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "dateTime"
+        }
+      ],
+      "short": "Educational material publication date"
+    },
+    {
+      "id": "Immunization.education.presentationDate",
+      "path": "Immunization.education.presentationDate",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "dateTime"
+        }
+      ],
+      "short": "Educational material presentation date"
+    },
+    {
+      "id": "Immunization.programEligibility",
+      "path": "Immunization.programEligibility",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "CodeableConcept"
+        }
+      ],
+      "short": "Patient eligibility for a vaccination program",
+      "binding": {
+        "strength": "example",
+        "valueSet": "http://hl7.org/fhir/ValueSet/immunization-program-eligibility"
+      }
+    },
+    {
+      "id": "Immunization.fundingSource",
+      "path": "Immunization.fundingSource",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "CodeableConcept"
+        }
+      ],
+      "short": "Funding source for the vaccine",
+      "binding": {
+        "strength": "example",
+        "valueSet": "http://hl7.org/fhir/ValueSet/immunization-funding-source"
+      }
+    },
+    {
+      "id": "Immunization.reaction",
+      "path": "Immunization.reaction",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "BackboneElement"
+        }
+      ],
+      "short": "Details of a reaction that follows immunization"
+    },
+    {
+      "id": "Immunization.reaction.id",
+      "path": "Immunization.reaction.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "Immunization.reaction.extension",
+      "path": "Immunization.reaction.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "Immunization.reaction.modifierExtension",
+      "path": "Immunization.reaction.modifierExtension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Extensions that cannot be ignored even if unrecognized"
+    },
+    {
+      "id": "Immunization.reaction.date",
+      "path": "Immunization.reaction.date",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "dateTime"
+        }
+      ],
+      "short": "When reaction started"
+    },
+    {
+      "id": "Immunization.reaction.detail",
+      "path": "Immunization.reaction.detail",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "Reference",
+          "targetProfile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        }
+      ],
+      "short": "Additional information on reaction"
+    },
+    {
+      "id": "Immunization.reaction.reported",
+      "path": "Immunization.reaction.reported",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "boolean"
+        }
+      ],
+      "short": "Indicates self-reported reaction"
+    },
+    {
+      "id": "Immunization.protocolApplied",
+      "path": "Immunization.protocolApplied",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "BackboneElement"
+        }
+      ],
+      "short": "Protocol followed by the provider"
+    },
+    {
+      "id": "Immunization.protocolApplied.id",
+      "path": "Immunization.protocolApplied.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "Immunization.protocolApplied.extension",
+      "path": "Immunization.protocolApplied.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "Immunization.protocolApplied.modifierExtension",
+      "path": "Immunization.protocolApplied.modifierExtension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Extensions that cannot be ignored even if unrecognized"
+    },
+    {
+      "id": "Immunization.protocolApplied.series",
+      "path": "Immunization.protocolApplied.series",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Name of vaccine series"
+    },
+    {
+      "id": "Immunization.protocolApplied.authority",
+      "path": "Immunization.protocolApplied.authority",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "Reference",
+          "targetProfile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        }
+      ],
+      "short": "Who is responsible for publishing the recommendations"
+    },
+    {
+      "id": "Immunization.protocolApplied.targetDisease",
+      "path": "Immunization.protocolApplied.targetDisease",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "CodeableConcept"
+        }
+      ],
+      "short": "Vaccine preventatable disease being targetted",
+      "binding": {
+        "strength": "example",
+        "valueSet": "http://hl7.org/fhir/ValueSet/immunization-target-disease"
+      }
+    },
+    {
+      "id": "Immunization.protocolApplied.doseNumber[x]",
+      "path": "Immunization.protocolApplied.doseNumber[x]",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "positiveInt"
+        },
+        {
+          "code": "string"
+        }
+      ],
+      "mustSupport": true,
+      "short": "Dose number within series"
+    },
+    {
+      "id": "Immunization.protocolApplied.seriesDoses[x]",
+      "path": "Immunization.protocolApplied.seriesDoses[x]",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "positiveInt"
+        },
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Recommended number of doses for immunity"
+    }
+  ]
+}
