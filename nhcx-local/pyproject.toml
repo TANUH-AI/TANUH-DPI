@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nhcx-local"
+version = "1.0.0"
+description = "Local CLI tool for extracting FHIR bundles from clinical and insurance PDFs using a local LLM (Ollama)"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.10"
+authors = [
+    {name = "NHCX Team"},
+]
+keywords = ["fhir", "abdm", "nhcx", "healthcare", "pdf", "ollama"]
+
+dependencies = [
+    "click>=8.0",
+    "langchain-core>=0.3",
+    "langchain-ollama>=0.3",
+    "langgraph>=0.2",
+    "docling>=2.0,<3",
+    "pypdf>=4.0",
+    "pymupdf4llm>=0.0.10",
+    "pymupdf>=1.24",
+    "rich>=13.0",
+]
+
+[project.optional-dependencies]
+gpu = [
+    "torch>=2.0",
+    "transformers>=4.40",
+    "accelerate>=0.30",
+]
+
+[project.scripts]
+nhcx-extract = "nhcx_local.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["nhcx_local*"]
+
+[tool.setuptools.package-data]
+nhcx_local = ["rulebooks/**/*.json"]

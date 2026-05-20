@@ -1,0 +1,148 @@
+name: Deploy to VM
+
+# ─── Trigger ────────────────────────────────────────────────────────────────
+on:
+  push:
+    branches:
+      - main
+
+# ─── Concurrency guard ──────────────────────────────────────────────────────
+# Prevents two deployments from running in parallel on the same VM.
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false   # queue, don't cancel — let the first finish
+
+jobs:
+  deploy:
+    name: SSH Deploy → 35.200.133.45
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      # ── 1. Write SSH private key from GitHub Secret ───────────────────────
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.VM_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H ${{ secrets.VM_HOST }} >> ~/.ssh/known_hosts
+
+      # ── 2. Pull latest code on the VM ────────────────────────────────────
+      - name: Pull latest code
+        run: |
+          ssh -i ~/.ssh/deploy_key \
+            -o StrictHostKeyChecking=no \
+            -o ConnectTimeout=30 \
+            ${{ secrets.VM_USER }}@${{ secrets.VM_HOST }} << 'ENDSSH'
+              set -e
+              echo "📥 Pulling latest code..."
+              cd /app/NHCX_HACKATHON
+              git fetch origin main
+              git reset --hard origin/main
+              echo "✅ Code updated to commit: $(git rev-parse --short HEAD)"
+          ENDSSH
+
+      # ── 3. Write credential files from GitHub Secrets ─────────────────────
+      # Secrets are never in git (.gitignore). We write them directly to the
+      # compose working directory so Docker bind-mounts get a FILE, not a dir.
+      # SSL PEM files are stored as base64-encoded secrets to preserve newlines.
+      - name: Write credential files to VM
+        env:
+          GCP_SA_JSON: ${{ secrets.GCP_SERVICE_ACCOUNT_JSON }}
+          GCS_SA_JSON: ${{ secrets.GCS_SERVICE_ACCOUNT_JSON }}
+          SERVER_CA_B64: ${{ secrets.MYSQL_SERVER_CA_B64 }}
+          CLIENT_CERT_B64: ${{ secrets.MYSQL_CLIENT_CERT_B64 }}
+          CLIENT_KEY_B64: ${{ secrets.MYSQL_CLIENT_KEY_B64 }}
+        run: |
+          ssh -i ~/.ssh/deploy_key \
+            -o StrictHostKeyChecking=no \
+            -o ConnectTimeout=30 \
+            -o ServerAliveInterval=30 \
+            ${{ secrets.VM_USER }}@${{ secrets.VM_HOST }} \
+            "TARGET=/app/NHCX_HACKATHON
+
+            # ── Remove all stale directory placeholders ──────────────────────
+            for f in gcp-service-account.json gcs-service-account.json \
+                     server-ca.pem client-cert.pem client-key.pem; do
+              [ -d \"\$TARGET/\$f\" ] && sudo rm -rf \"\$TARGET/\$f\" && echo \"Removed stale dir: \$f\" || true
+            done
+
+            # ── Write GCP/GCS JSON credentials ──────────────────────────────
+            echo '$GCP_SA_JSON' | sudo tee \$TARGET/gcp-service-account.json > /dev/null
+            echo '$GCS_SA_JSON' | sudo tee \$TARGET/gcs-service-account.json > /dev/null
+            sudo chmod 600 \$TARGET/gcp-service-account.json \$TARGET/gcs-service-account.json
+
+            # ── Write Cloud SQL SSL PEM files (stored as base64 secrets) ────
+            echo '$SERVER_CA_B64'   | base64 -d | sudo tee \$TARGET/server-ca.pem  > /dev/null
+            echo '$CLIENT_CERT_B64' | base64 -d | sudo tee \$TARGET/client-cert.pem > /dev/null
+            echo '$CLIENT_KEY_B64'  | base64 -d | sudo tee \$TARGET/client-key.pem  > /dev/null
+            sudo chmod 600 \$TARGET/client-key.pem \$TARGET/client-cert.pem
+
+            echo '✅ All credential files written:'
+            sudo file \$TARGET/gcp-service-account.json \$TARGET/gcs-service-account.json \
+                      \$TARGET/server-ca.pem \$TARGET/client-cert.pem \$TARGET/client-key.pem" \
+            GCP_SA_JSON="$GCP_SA_JSON" GCS_SA_JSON="$GCS_SA_JSON" \
+            SERVER_CA_B64="$SERVER_CA_B64" CLIENT_CERT_B64="$CLIENT_CERT_B64" CLIENT_KEY_B64="$CLIENT_KEY_B64"
+
+      # ── 4. Rebuild & restart Docker services ─────────────────────────────
+      - name: Rebuild & restart containers
+        run: |
+          ssh -i ~/.ssh/deploy_key \
+            -o StrictHostKeyChecking=no \
+            -o ConnectTimeout=30 \
+            -o ServerAliveInterval=60 \
+            -o ServerAliveCountMax=20 \
+            ${{ secrets.VM_USER }}@${{ secrets.VM_HOST }} << 'ENDSSH'
+              set -e
+              cd /app/NHCX_HACKATHON
+
+              echo "🐳 Rebuilding changed services..."
+              docker compose build --parallel
+
+              echo "🚀 Restarting containers..."
+              docker compose up -d --remove-orphans
+
+              echo "🧹 Pruning unused Docker images..."
+              docker image prune -f
+
+              echo "✅ Deployment complete!"
+              docker compose ps
+          ENDSSH
+
+      # ── 5. Smoke-test health endpoints ───────────────────────────────────
+      - name: Smoke test health endpoints
+        run: |
+          ssh -i ~/.ssh/deploy_key \
+            -o StrictHostKeyChecking=no \
+            ${{ secrets.VM_USER }}@${{ secrets.VM_HOST }} << 'ENDSSH'
+              echo "🩺 Waiting for containers to be ready..."
+              sleep 10
+
+              check() {
+                local name="$1" url="$2"
+                if curl -sf --max-time 10 "$url" > /dev/null; then
+                  echo "  ✅ $name is healthy"
+                else
+                  echo "  ❌ $name health check FAILED at $url"
+                  exit 1
+                fi
+              }
+
+              check "ABDM API"       "http://localhost:8000/health"
+              check "NHCX API"       "http://localhost:8001/health"
+              check "Frontend"       "http://localhost:8080"
+              check "Session Logger" "http://localhost:8002/health"
+          ENDSSH
+
+      # ── 6. Always remove the private key from the runner ─────────────────
+      - name: Clean up SSH key
+        if: always()
+        run: rm -f ~/.ssh/deploy_key
+
+      # ── 7. Report failure ─────────────────────────────────────────────────
+      - name: Report failure
+        if: failure()
+        run: |
+          echo "::error::Deployment to ${{ secrets.VM_HOST }} FAILED — see logs above."
+          echo "Commit : ${{ github.sha }}"
+          echo "Author : ${{ github.actor }}"

@@ -1,0 +1,353 @@
+<!-- Sub Navigation -->
+<div class="sub-nav-bar">
+    <button class="sub-tab-btn active" onclick="openSubTab('PDF2FHIR','clinical-main',this)">
+        <i class="fas fa-file-medical"></i> Clinical Document
+    </button>
+    <button class="sub-tab-btn" onclick="openSubTab('PDF2FHIR','clinical-runlocally',this)">
+        <i class="fas fa-download"></i> Run Locally
+    </button>
+    <button class="sub-tab-btn" onclick="openSubTab('PDF2FHIR','clinical-about',this)">
+        <i class="fas fa-info-circle"></i> About Us
+    </button>
+    <button class="sub-tab-btn" onclick="openSubTab('PDF2FHIR','clinical-api',this)">
+        <i class="fas fa-code"></i> API Access
+    </button>
+    <button class="sub-tab-btn" onclick="openSubTab('PDF2FHIR','clinical-docs',this)">
+        <i class="fas fa-book"></i> Docs
+    </button>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SUB: Clinical Document (main upload) -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div id="clinical-main" class="sub-content">
+
+<div class="tab-header">
+    <div class="tab-header-text">
+        <h2>PDF to ABDM Conversion</h2>
+        <p>Transform clinical documents into ABDM compliant FHIR JSON resources.</p>
+        <div style="margin-top: 10px;">
+            <a href="assets/abdm_diagnostic_report.pdf" download style="text-decoration: none; color: #14868C; font-weight: bold; font-size: 14px; margin-right: 15px;">
+                <i class="fas fa-file-download"></i> Download Demo Diagnostic Report
+            </a>
+            <a href="assets/abdm_discharge_summary.pdf" download style="text-decoration: none; color: #14868C; font-weight: bold; font-size: 14px;">
+                <i class="fas fa-file-download"></i> Download Demo Discharge Summary
+            </a>
+        </div>
+    </div>
+    <div class="tab-header-logos">
+        <img src="assets/tanuh.png" alt="Tanuh Logo" class="logo">
+        <img src="assets/MoE_Logo.svg" alt="Ministry of Education Logo" class="logo">
+        <img src="assets/IISc_Logo.png" alt="IISc Logo" class="logo">
+        <img src="assets/NHA_logo.png" alt="NHA Logo" class="logo">
+    </div>
+</div>
+
+<div class="info-notes" style="margin-bottom: 20px; padding: 15px; border-left: 4px solid #14868C; background-color: #f0fdfa; border-radius: 6px;">
+    <p style="margin: 0 0 8px 0; color: #0f766e; font-size: 14px;">
+        <strong><i class="fas fa-clock"></i> Note:</strong> Processing time is typically <strong>3 to 5 minutes</strong>, depending on the PDF size.
+    </p>
+    <p style="margin: 0 0 8px 0; color: #0f766e; font-size: 14px;">
+        <strong><i class="fas fa-user-shield"></i> Privacy Protocol:</strong> This is a non-persistent service. Your data is processed in real-time and purged automatically after use. No data is stored. Kindly download your JSON bundles to preserve your results.
+    </p>
+    <p style="margin: 0; color: #0f766e; font-size: 14px;">
+        <strong><i class="fas fa-file-pdf"></i> Limit:</strong> Maximum allowed file size is <strong>25 MB</strong>.
+    </p>
+</div>
+
+<div class="upload-section">
+    <div class="controls">
+        <div class="file-input-wrapper">
+            <input type="file" id="fileFHIR" accept=".pdf" onchange="updateFileName('fileFHIR')">
+            <label for="fileFHIR" id="labelFHIR">
+                <i class="fas fa-file-pdf"></i>
+                <span class="file-text">Choose PDF file...</span>
+            </label>
+        </div>
+        <button onclick="processFile('PDF2FHIR')" id="btnFHIR" class="process-btn">
+            <span>Process clinical document</span>
+            <div class="loader" id="loaderFHIR"></div>
+        </button>
+    </div>
+</div>
+
+<div class="output-wrapper">
+    <div id="infoFHIR" style="display: none; padding: 10px; background: #eef2f5; border-radius: 6px; margin-bottom: 10px; font-family: sans-serif; font-size: 14px; border: 1px solid #d1d9e0;">
+        <strong style="color: #2c3e50;">Document Type:</strong> <span id="docTypeFHIR" style="color: #34495e; margin-right: 15px;">-</span>
+        <strong style="color: #2c3e50;">Processing Time:</strong> <span id="procTimeFHIR" style="color: #34495e;">-</span>
+    </div>
+    <div id="bundleSelectorContainerFHIR" style="display: none; padding: 10px; background: #eef2f5; border-radius: 6px; margin-bottom: 10px; border: 1px solid #d1d9e0;">
+        <label for="bundleSelectFHIR" style="font-weight: bold; color: #2c3e50; margin-right: 10px;">Select Bundle:</label>
+        <select id="bundleSelectFHIR" style="padding: 5px; border-radius: 4px; border: 1px solid #ccc; width: 60%; font-family: sans-serif;"></select>
+    </div>
+    <div id="processingLogoFHIR" style="display: none; text-align: center; padding: 40px; border: 1px dashed #d1d9e0; border-radius: 6px; background: #fafafa; margin-bottom: 10px;">
+        <img src="assets/tanuh.png" alt="Processing Logo" style="width: 60px; height: auto; animation: pulse 1.5s infinite;">
+        <p style="margin-top: 15px; color: #34495e; font-family: sans-serif; font-weight: bold;">Processing file... Please wait.</p>
+    </div>
+    <div class="output-section">
+        <div class="output-toolbar">
+            <span class="label">ABDM JSON Output</span>
+            <div>
+                <button onclick="copyToClipboard('outputFHIR')" class="copy-btn"><i class="fas fa-copy"></i> Copy JSON</button>
+                <button onclick="downloadJSON('outputFHIR')" class="copy-btn" style="margin-left: 10px;"><i class="fas fa-file-download"></i> Download JSON</button>
+            </div>
+        </div>
+        <pre class="json-output"><code id="outputFHIR" class="language-json">Output will appear here...</code></pre>
+    </div>
+</div>
+
+<div class="validation-container">
+    <div class="validation-trigger">
+        <button onclick="runFhirValidation('PDF2FHIR')" id="valBtnFHIR" class="validate-btn">
+            <i class="fas fa-shield-alt"></i> Validate FHIR R4
+        </button>
+        <div class="loader-v" id="loaderValFHIR"></div>
+    </div>
+    <div id="validationReportFHIR" class="validation-report-area"></div>
+</div>
+
+</div><!-- /clinical-main -->
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SUB: Run Locally -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div id="clinical-runlocally" class="sub-content" style="display:none">
+
+<div class="tab-header">
+    <div class="tab-header-text">
+        <h2><i class="fas fa-download" style="color:var(--primary)"></i> Run Locally (Offline Mode)</h2>
+        <p>Download a single executable for your OS. No Python, no pip, no cloud APIs. All data stays on your machine.</p>
+    </div>
+</div>
+<p style="margin:0 0 20px; padding:10px 14px; background:#fef3c7; border-left:4px solid #f59e0b; border-radius:0 6px 6px 0; font-size:14px; color:#92400e;">
+    <strong><i class="fas fa-microchip"></i> Requires:</strong> NVIDIA GPU with 16 GB+ VRAM (or Apple Silicon Mac with 16 GB+ memory) and ~20 GB free disk space.
+</p>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 25px 0;">
+    <a href="https://drive.google.com/file/d/1Jb-KK6i1bTNtJ9731zMX8MBcMXfcWalI/view?usp=sharing" target="_blank" style="text-decoration:none; background:#fff; border:2px solid #e2e8f0; border-radius:12px; padding:25px; text-align:center; transition: border-color 0.2s, box-shadow 0.2s;" onmouseover="this.style.borderColor='#14868C'; this.style.boxShadow='0 4px 12px rgba(20,134,140,0.15)';" onmouseout="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none';">
+        <i class="fab fa-linux" style="font-size:3rem; color:#14868C; margin-bottom:12px;"></i>
+        <h3 style="margin:0 0 6px 0; color:#0f172a;">Linux x86_64</h3>
+        <p style="margin:0; color:#64748b; font-size:14px;">AppImage (~400 MB)</p>
+        <p style="margin:4px 0 0; color:#94a3b8; font-size:12px;">Ubuntu 20.04+, Fedora 33+</p>
+    </a>
+    <a href="https://drive.google.com/file/d/16t_R4U3emX9DswYferLZwRtKHjgHP2YB/view?usp=sharing" target="_blank" style="text-decoration:none; background:#fff; border:2px solid #e2e8f0; border-radius:12px; padding:25px; text-align:center; transition: border-color 0.2s, box-shadow 0.2s;" onmouseover="this.style.borderColor='#14868C'; this.style.boxShadow='0 4px 12px rgba(20,134,140,0.15)';" onmouseout="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none';">
+        <i class="fab fa-linux" style="font-size:3rem; color:#14868C; margin-bottom:12px;"></i>
+        <h3 style="margin:0 0 6px 0; color:#0f172a;">Linux ARM64</h3>
+        <p style="margin:0; color:#64748b; font-size:14px;">Binary (~400 MB)</p>
+        <p style="margin:4px 0 0; color:#94a3b8; font-size:12px;">aarch64 / AWS Graviton</p>
+    </a>
+    <a href="https://drive.google.com/file/d/16rnbuXTHooIWeh4R_2OmxLBNOnbjHt7D/view?usp=sharing" target="_blank" style="text-decoration:none; background:#fff; border:2px solid #e2e8f0; border-radius:12px; padding:25px; text-align:center; transition: border-color 0.2s, box-shadow 0.2s;" onmouseover="this.style.borderColor='#14868C'; this.style.boxShadow='0 4px 12px rgba(20,134,140,0.15)';" onmouseout="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none';">
+        <i class="fab fa-windows" style="font-size:3rem; color:#14868C; margin-bottom:12px;"></i>
+        <h3 style="margin:0 0 6px 0; color:#0f172a;">Windows</h3>
+        <p style="margin:0; color:#64748b; font-size:14px;">Portable EXE (~400 MB)</p>
+        <p style="margin:4px 0 0; color:#94a3b8; font-size:12px;">Windows 10 / 11</p>
+    </a>
+    <a href="https://drive.google.com/file/d/1Lf6Mbydg_KCnPS-xKkDRwqVuvkFaQgYW/view?usp=sharing" target="_blank" style="text-decoration:none; background:#fff; border:2px solid #e2e8f0; border-radius:12px; padding:25px; text-align:center; transition: border-color 0.2s, box-shadow 0.2s;" onmouseover="this.style.borderColor='#14868C'; this.style.boxShadow='0 4px 12px rgba(20,134,140,0.15)';" onmouseout="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none';">
+        <i class="fab fa-apple" style="font-size:3rem; color:#14868C; margin-bottom:12px;"></i>
+        <h3 style="margin:0 0 6px 0; color:#0f172a;">macOS</h3>
+        <p style="margin:0; color:#64748b; font-size:14px;">Binary (~400 MB)</p>
+        <p style="margin:4px 0 0; color:#94a3b8; font-size:12px;">macOS 13+ (Apple Silicon / Intel)</p>
+    </a>
+</div>
+
+<div style="background:#fff; border-radius:8px; box-shadow:0 2px 4px rgba(0,0,0,0.1); padding:25px; margin:20px 0;">
+    <h3 style="margin-bottom:20px;">Setup Steps (All Platforms)</h3>
+
+    <div style="margin-bottom:20px; padding:15px; border-left:4px solid #14868C; background:#f0fdfa; border-radius:0 6px 6px 0;">
+        <h4 style="margin:0 0 8px 0; color:#0f766e;">1. Install Ollama</h4>
+        <p style="margin:0; color:#0f766e; font-size:14px;">
+            Download from <a href="https://ollama.com/download" target="_blank" style="color:#14868C; font-weight:bold;">ollama.com/download</a><br>
+            Linux: <code style="background:#e2e8f0; padding:2px 6px; border-radius:4px;">curl -fsSL https://ollama.com/install.sh | sh</code>
+        </p>
+    </div>
+
+    <div style="margin-bottom:20px; padding:15px; border-left:4px solid #14868C; background:#f0fdfa; border-radius:0 6px 6px 0;">
+        <h4 style="margin:0 0 8px 0; color:#0f766e;">2. Pull the LLM Model (~16 GB download)</h4>
+        <p style="margin:0; color:#0f766e; font-size:14px;">
+            <code style="background:#e2e8f0; padding:2px 6px; border-radius:4px;">ollama pull gemma4:26b</code><br>
+            Requires NVIDIA GPU with 16 GB+ VRAM, or Apple Silicon with 16 GB+ unified memory.
+        </p>
+    </div>
+
+    <div style="margin-bottom:20px; padding:15px; border-left:4px solid #14868C; background:#f0fdfa; border-radius:0 6px 6px 0;">
+        <h4 style="margin:0 0 8px 0; color:#0f766e;">3. Unzip &amp; Make Executable</h4>
+        <p style="margin:0; color:#0f766e; font-size:14px;">
+            Unzip the downloaded file. On Linux/Mac run: <code style="background:#e2e8f0; padding:2px 6px; border-radius:4px;">chmod +x nhcx-extract*</code><br>
+            Linux requires <code style="background:#e2e8f0; padding:2px 6px; border-radius:4px;">sudo apt install libfuse2</code> if not already installed.
+        </p>
+    </div>
+
+    <div style="margin-bottom:20px; padding:15px; border-left:4px solid #14868C; background:#f0fdfa; border-radius:0 6px 6px 0;">
+        <h4 style="margin:0 0 8px 0; color:#0f766e;">4. Run ABDM Clinical Extraction</h4>
+        <p style="margin:0 0 8px 0; color:#0f766e; font-size:14px;">
+            <code style="background:#e2e8f0; padding:2px 6px; border-radius:4px;">./nhcx-extract abdm report.pdf -o result.json -m gemma4:26b</code>
+        </p>
+        <p style="margin:0; color:#64748b; font-size:13px;">
+            Use <code>check</code> first to verify setup: <code style="background:#e2e8f0; padding:2px 6px; border-radius:4px;">./nhcx-extract check -m gemma4:26b</code>
+        </p>
+    </div>
+
+    <div style="padding:12px 15px; background:#fef3c7; border-left:4px solid #f59e0b; border-radius:0 6px 6px 0;">
+        <p style="margin:0; color:#92400e; font-size:14px;">
+            <strong><i class="fas fa-shield-alt"></i> Privacy:</strong> All data stays on your machine. Zero cloud API calls. The output JSON contains a complete FHIR R4 Bundle.
+        </p>
+    </div>
+</div>
+
+</div><!-- /clinical-runlocally -->
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SUB: About Us -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div id="clinical-about" class="sub-content" style="display:none">
+
+<div class="tab-header">
+    <div class="tab-header-text">
+        <h2>About Us</h2>
+        <p style="line-height: 1.6; max-width: 800px; padding-bottom: 10px;">
+            <a href="https://tanuh.ai" target="_blank" style="color: #14868C; text-decoration: none; font-weight: bold;">TANUH</a> (Translational Artificial Intelligence for Networked Universal Healthcare) is a Section 8 not-for-profit organization promoted by <a href="https://iisc.ac.in/" target="_blank" style="color: #14868C; text-decoration: none; font-weight: bold;">Indian Institute of Science (IISc)</a>. Funded by the Ministry of Education as an AI Centre of Excellence in Healthcare, TANUH is dedicated to advancing the Government of India's vision to <a href="https://www.pib.gov.in/PressReleasePage.aspx?PRID=2178092&reg=3&lang=2" target="_blank" style="color: #14868C; text-decoration: none; font-weight: bold;">"Make AI in India and Make AI Work for India."</a>
+        </p>
+    </div>
+    <div class="tab-header-logos">
+        <img src="assets/tanuh.png" alt="Tanuh Logo" class="logo">
+        <img src="assets/MoE_Logo.svg" alt="Ministry of Education Logo" class="logo">
+        <img src="assets/IISc_Logo.png" alt="IISc Logo" class="logo">
+    </div>
+</div>
+<div style="padding: 20px; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin: 20px 0;">
+    <h3>Team Members</h3>
+    <ul style="list-style-type: none; padding: 0; display: flex; flex-direction: row; justify-content: space-around; flex-wrap: wrap;">
+        <li style="margin-bottom: 20px; display: flex; flex-direction: column; align-items: center; text-align: center; width: 150px;">
+            <img src="assets/manideep.png" alt="Venkata Sai Manideep Nanepalli" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin-bottom: 10px;">
+            <a href="https://www.linkedin.com/in/venkata-sai-manideep-nanepalli-42bab3261/" target="_blank" style="text-decoration: none; color: #2c3e50; font-size: 16px; font-weight: bold;">Venkata Sai Manideep Nanepalli</a>
+            <span style="font-size: 14px; color: #64748b; margin-top: 5px;">Technical Staff, TANUH</span>
+        </li>
+        <li style="margin-bottom: 20px; display: flex; flex-direction: column; align-items: center; text-align: center; width: 150px;">
+            <img src="assets/bharath.png" alt="Bharath Kumar Tangella" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin-bottom: 10px;">
+            <a href="https://www.linkedin.com/in/bharath-kumar-tangella-628738213/" target="_blank" style="text-decoration: none; color: #2c3e50; font-size: 16px; font-weight: bold;">Bharath Kumar Tangella</a>
+            <span style="font-size: 14px; color: #64748b; margin-top: 5px;">Technical Staff, TANUH</span>
+        </li>
+        <li style="margin-bottom: 20px; display: flex; flex-direction: column; align-items: center; text-align: center; width: 150px;">
+            <img src="assets/hema.png" alt="Dr. Hema Priyadharshini" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin-bottom: 10px;">
+            <a href="https://www.linkedin.com/in/dr-s-hema-priyadarshini-64246314/" target="_blank" style="text-decoration: none; color: #2c3e50; font-size: 16px; font-weight: bold;">Dr. Hema Priyadharshini</a>
+            <span style="font-size: 14px; color: #64748b; margin-top: 5px;">Program Manager (Chronic Kidney Disease, TANUH)</span>
+        </li>
+        <li style="margin-bottom: 20px; display: flex; flex-direction: column; align-items: center; text-align: center; width: 150px;">
+            <img src="assets/ark_portrait.png" alt="Dr. Ashwin RaajKumar" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin-bottom: 10px;">
+            <a href="https://www.linkedin.com/in/ashwin-rajkumar/" target="_blank" style="text-decoration: none; color: #2c3e50; font-size: 16px; font-weight: bold;">Dr. Ashwin RaajKumar</a>
+            <span style="font-size: 14px; color: #64748b; margin-top: 5px;">Program Manager (Breast Cancer Detection, TANUH)</span>
+        </li>
+        <li style="margin-bottom: 20px; display: flex; flex-direction: column; align-items: center; text-align: center; width: 150px;">
+            <img src="assets/Phani_porttrait.png" alt="Dr. Phaneendra Yalavarthy" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin-bottom: 10px;">
+            <a href="https://cds.iisc.ac.in/faculty/yalavarthy/" target="_blank" style="text-decoration: none; color: #2c3e50; font-size: 16px; font-weight: bold;">Dr. Phaneendra Yalavarthy</a>
+            <span style="font-size: 14px; color: #64748b; margin-top: 5px;">Chief Project Manager (TANUH FOUNDATION)</span>
+        </li>
+    </ul>
+
+    <hr style="margin: 30px 0; border: 0; border-top: 1px solid #eee;">
+
+    <h3>Contact us:</h3>
+    <div style="margin-top: 20px; line-height: 1.6; font-size: 15px; color: #34495e;">
+        <p style="margin: 0 0 5px 0;"><strong>TANUH: AI Centre of Excellence in Healthcare</strong></p>
+        <p style="margin: 0 0 5px 0;">Indian Institute of Science</p>
+        <p style="margin: 0 0 5px 0;">Seventh Floor, TCS Smart-X Hub</p>
+        <p style="margin: 0 0 15px 0;">Bengaluru, India - 560 012</p>
+        <p style="margin: 0 0 8px 0;"><strong>Email:</strong> <a href="mailto:nhcx@tanuh.ai" style="color: #14868C; text-decoration: none;">nhcx@tanuh.ai</a></p>
+        <p style="margin: 0 0 0 0;"><strong>Telephone:</strong> (080) 2293 4106  |  (080) 2293 4107</p>
+    </div>
+</div>
+
+</div><!-- /clinical-about -->
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SUB: API Access (Clinical Document) -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div id="clinical-api" class="sub-content" style="display:none">
+
+<div class="tab-header">
+    <div class="tab-header-text">
+        <h2><i class="fas fa-code" style="color:var(--primary)"></i> Clinical Document API</h2>
+        <p>Developer API for converting clinical PDFs into ABDM-compliant FHIR Document Bundles.</p>
+    </div>
+</div>
+
+<div style="background:#f0fafb; border-left:4px solid var(--primary); padding:16px 20px; border-radius:8px; margin-bottom:20px;">
+    <p style="margin:0; font-size:0.92rem; color:#0e6a6f; line-height:1.5;">
+        <strong><i class="fas fa-info-circle"></i> Authentication:</strong> Uses JWT bearer tokens. Request a 1-day demo token via the form below, then pass it as <code>Authorization: Bearer &lt;token&gt;</code>.
+        <br><strong><i class="fas fa-magic"></i> UI Uploads:</strong> When using the Clinical Document tab, tokens are fetched automatically.
+    </p>
+</div>
+
+<!-- Token Request -->
+<div class="pf-demo-token-card" style="margin-bottom:24px;">
+    <div class="pf-demo-token-header">
+        <i class="fas fa-file-medical-alt" style="color:#14868C;"></i>
+        <span>Clinical Document API Token&nbsp;<small style="font-weight:400;color:#64748b;">(pdf2abdm)</small></span>
+        <span class="pf-demo-token-badge">1-DAY TOKEN</span>
+    </div>
+    <p style="font-size:0.88rem;color:#64748b;margin:0 0 14px;">ABDM FHIR bundle generation from clinical PDF reports.</p>
+    <form id="apiAbdmTokenForm" class="pf-demo-token-form" autocomplete="off" novalidate>
+        <div class="pf-demo-token-fields">
+            <div class="pf-demo-token-field">
+                <label for="apiAbdmTokenName">Full Name</label>
+                <input type="text" id="apiAbdmTokenName" placeholder="Your name" required />
+            </div>
+            <div class="pf-demo-token-field">
+                <label for="apiAbdmTokenEmail">Email Address</label>
+                <input type="email" id="apiAbdmTokenEmail" placeholder="you@example.com" required />
+            </div>
+        </div>
+        <button type="submit" class="pf-btn pf-btn-primary" id="apiAbdmTokenSubmit">
+            <i class="fas fa-bolt"></i> Request Clinical Token
+        </button>
+    </form>
+    <div id="apiAbdmTokenResult" class="pf-demo-token-result hidden">
+        <div class="pf-demo-token-result-header">
+            <span id="apiAbdmTokenGreeting"></span>
+            <span id="apiAbdmTokenExpiry" class="pf-demo-token-expiry"></span>
+        </div>
+        <div class="pf-demo-token-output-wrap">
+            <pre class="pf-demo-token-output" id="apiAbdmTokenOutput"></pre>
+            <button class="pf-demo-token-copy pf-btn" id="apiAbdmTokenCopy"><i class="fas fa-copy"></i> Copy</button>
+        </div>
+    </div>
+    <div id="apiAbdmTokenError" class="pf-demo-token-error hidden"></div>
+</div>
+
+<!-- Endpoint Reference -->
+<h3 style="margin:0 0 14px;font-size:1.05rem;color:#0e6a6f;"><i class="fas fa-list-ul"></i> Endpoint Reference</h3>
+<div class="api-section-box">
+    <table class="api-endpoint-table">
+        <thead>
+            <tr>
+                <th style="width:70px;">Method</th>
+                <th>Path</th>
+                <th style="width:100px;">Auth</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td><span class="api-method post">POST</span></td><td><code>/pdf2abdm/api/token</code></td><td>Open</td><td>Issue a 1-day demo JWT for the Clinical API</td></tr>
+            <tr><td><span class="api-method post">POST</span></td><td><code>/pdf2abdm</code></td><td>Bearer</td><td>Sync: PDF to ABDM FHIR DocumentBundle</td></tr>
+            <tr><td><span class="api-method post">POST</span></td><td><code>/pdf2abdm/submit</code></td><td>Bearer</td><td>Async: submit PDF, returns <code>task_id</code> (202)</td></tr>
+            <tr><td><span class="api-method get">GET</span></td><td><code>/pdf2abdm/task-status/{id}</code></td><td>Open</td><td>Poll async task status</td></tr>
+            <tr><td><span class="api-method get">GET</span></td><td><code>/pdf2abdm/health</code></td><td>Open</td><td>Service liveness + model status</td></tr>
+            <tr><td><span class="api-method get">GET</span></td><td><code>/pdf2abdm/model-health</code></td><td>Open</td><td>AI model readiness check</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div style="margin-top:20px;display:flex;gap:12px;justify-content:center;">
+    <button onclick="API_downloadPostman()" class="pf-btn-postman" style="flex:1;font-size:0.9rem;padding:0;height:48px;display:inline-flex;align-items:center;justify-content:center;gap:8px;margin:0;">
+        <svg width="18" height="18" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+            <circle cx="16" cy="16" r="16" fill="#FF6C37"/>
+            <path d="M22.3 9.7a8.5 8.5 0 1 0-1.1 12.1l-4.6-4.6 1.3-1.3 4.6 4.6A8.5 8.5 0 0 0 22.3 9.7z" fill="#fff"/>
+        </svg>
+        Download Postman Collection
+    </button>
+    <a href="docs/index.html" class="pf-btn pf-btn-ghost" style="flex:1;font-size:0.9rem;padding:0;height:48px;display:inline-flex;align-items:center;justify-content:center;margin:0;text-decoration:none;">
+        <i class="fas fa-book-open"></i>&nbsp; Full API Documentation
+    </a>
+</div>
+
+</div><!-- /clinical-api -->

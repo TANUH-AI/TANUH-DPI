@@ -1,0 +1,783 @@
+{
+  "resourceType": "StructureDefinition",
+  "id": "Specimen",
+  "url": "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Specimen",
+  "name": "Specimen",
+  "description": "Thinned ABDM Specimen Rulebook (Optimized for Laboratory Sample Management)",
+  "elements": [
+    {
+      "id": "Specimen",
+      "path": "Specimen",
+      "min": 0,
+      "max": "*",
+      "short": "Sample for analysis"
+    },
+    {
+      "id": "Specimen.id",
+      "path": "Specimen.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Logical id of this artifact"
+    },
+    {
+      "id": "Specimen.meta",
+      "path": "Specimen.meta",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "Meta"
+        }
+      ],
+      "short": "Metadata about the resource"
+    },
+    {
+      "id": "Specimen.implicitRules",
+      "path": "Specimen.implicitRules",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "uri"
+        }
+      ],
+      "short": "A set of rules under which this content was created"
+    },
+    {
+      "id": "Specimen.language",
+      "path": "Specimen.language",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "code"
+        }
+      ],
+      "short": "Language of the resource content",
+      "binding": {
+        "strength": "preferred",
+        "valueSet": "http://hl7.org/fhir/ValueSet/languages"
+      }
+    },
+    {
+      "id": "Specimen.text",
+      "path": "Specimen.text",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "Narrative"
+        }
+      ],
+      "short": "Text summary of the resource, for human interpretation"
+    },
+    {
+      "id": "Specimen.contained",
+      "path": "Specimen.contained",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Resource"
+        }
+      ],
+      "short": "Contained, inline Resources"
+    },
+    {
+      "id": "Specimen.extension",
+      "path": "Specimen.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "Specimen.modifierExtension",
+      "path": "Specimen.modifierExtension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Extensions that cannot be ignored"
+    },
+    {
+      "id": "Specimen.identifier",
+      "path": "Specimen.identifier",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Identifier"
+        }
+      ],
+      "short": "External Identifier"
+    },
+    {
+      "id": "Specimen.accessionIdentifier",
+      "path": "Specimen.accessionIdentifier",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "Identifier"
+        }
+      ],
+      "short": "Identifier assigned by the lab"
+    },
+    {
+      "id": "Specimen.status",
+      "path": "Specimen.status",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "code"
+        }
+      ],
+      "short": "available | unavailable | unsatisfactory | entered-in-error",
+      "binding": {
+        "strength": "required",
+        "valueSet": "http://hl7.org/fhir/ValueSet/specimen-status|4.0.1"
+      }
+    },
+    {
+      "id": "Specimen.type",
+      "path": "Specimen.type",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "CodeableConcept"
+        }
+      ],
+      "short": "Kind of material that forms the specimen",
+      "binding": {
+        "strength": "example",
+        "valueSet": "https://nrces.in/ndhm/fhir/r4/ValueSet/ndhm-specimen-types"
+      }
+    },
+    {
+      "id": "Specimen.type.id",
+      "path": "Specimen.type.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "Specimen.type.extension",
+      "path": "Specimen.type.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "Specimen.type.coding",
+      "path": "Specimen.type.coding",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Coding"
+        }
+      ],
+      "mustSupport": true,
+      "short": "Code defined by a terminology system"
+    },
+    {
+      "id": "Specimen.type.coding.id",
+      "path": "Specimen.type.coding.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "Specimen.type.coding.extension",
+      "path": "Specimen.type.coding.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "Specimen.type.coding.system",
+      "path": "Specimen.type.coding.system",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "uri"
+        }
+      ],
+      "short": "Identity of the terminology system"
+    },
+    {
+      "id": "Specimen.type.coding.version",
+      "path": "Specimen.type.coding.version",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Version of the system - if relevant"
+    },
+    {
+      "id": "Specimen.type.coding.code",
+      "path": "Specimen.type.coding.code",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "code"
+        }
+      ],
+      "short": "Symbol in syntax defined by the system"
+    },
+    {
+      "id": "Specimen.type.coding.display",
+      "path": "Specimen.type.coding.display",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Representation defined by the system"
+    },
+    {
+      "id": "Specimen.type.coding.userSelected",
+      "path": "Specimen.type.coding.userSelected",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "boolean"
+        }
+      ],
+      "short": "If this coding was chosen directly by the user"
+    },
+    {
+      "id": "Specimen.type.text",
+      "path": "Specimen.type.text",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "mustSupport": true,
+      "short": "Plain text representation of the concept"
+    },
+    {
+      "id": "Specimen.subject",
+      "path": "Specimen.subject",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "Reference",
+          "targetProfile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient"
+          ]
+        }
+      ],
+      "short": "Where the specimen came from. This may be from patient(s), from a location (e.g., the source of an environmental sample), or a sampling of a substance or a device"
+    },
+    {
+      "id": "Specimen.receivedTime",
+      "path": "Specimen.receivedTime",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "dateTime"
+        }
+      ],
+      "mustSupport": true,
+      "short": "The time when specimen was received for processing"
+    },
+    {
+      "id": "Specimen.parent",
+      "path": "Specimen.parent",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Reference",
+          "targetProfile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Specimen"
+          ]
+        }
+      ],
+      "short": "Specimen from which this specimen originated"
+    },
+    {
+      "id": "Specimen.request",
+      "path": "Specimen.request",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Reference",
+          "targetProfile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/ServiceRequest"
+          ]
+        }
+      ],
+      "short": "Why the specimen was collected"
+    },
+    {
+      "id": "Specimen.collection",
+      "path": "Specimen.collection",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "BackboneElement"
+        }
+      ],
+      "short": "Collection details"
+    },
+    {
+      "id": "Specimen.collection.id",
+      "path": "Specimen.collection.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "Specimen.collection.extension",
+      "path": "Specimen.collection.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "Specimen.collection.modifierExtension",
+      "path": "Specimen.collection.modifierExtension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Extensions that cannot be ignored even if unrecognized"
+    },
+    {
+      "id": "Specimen.collection.collector",
+      "path": "Specimen.collection.collector",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "Reference",
+          "targetProfile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Practitioner",
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/PractitionerRole"
+          ]
+        }
+      ],
+      "short": "Who collected the specimen"
+    },
+    {
+      "id": "Specimen.collection.collected[x]",
+      "path": "Specimen.collection.collected[x]",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "dateTime"
+        }
+      ],
+      "short": "Collection time"
+    },
+    {
+      "id": "Specimen.collection.duration",
+      "path": "Specimen.collection.duration",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "Duration"
+        }
+      ],
+      "short": "How long it took to collect specimen"
+    },
+    {
+      "id": "Specimen.collection.quantity",
+      "path": "Specimen.collection.quantity",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "Quantity"
+        }
+      ],
+      "short": "The quantity of specimen collected"
+    },
+    {
+      "id": "Specimen.collection.method",
+      "path": "Specimen.collection.method",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "CodeableConcept"
+        }
+      ],
+      "short": "Technique used to perform collection",
+      "binding": {
+        "strength": "example",
+        "valueSet": "http://hl7.org/fhir/ValueSet/specimen-collection-method"
+      }
+    },
+    {
+      "id": "Specimen.collection.bodySite",
+      "path": "Specimen.collection.bodySite",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "CodeableConcept"
+        }
+      ],
+      "short": "Anatomical collection site",
+      "binding": {
+        "strength": "example",
+        "valueSet": "http://hl7.org/fhir/ValueSet/body-site"
+      }
+    },
+    {
+      "id": "Specimen.collection.fastingStatus[x]",
+      "path": "Specimen.collection.fastingStatus[x]",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "CodeableConcept"
+        },
+        {
+          "code": "Duration"
+        }
+      ],
+      "short": "Whether or how long patient abstained from food and/or drink",
+      "binding": {
+        "strength": "extensible",
+        "valueSet": "http://terminology.hl7.org/ValueSet/v2-0916"
+      }
+    },
+    {
+      "id": "Specimen.processing",
+      "path": "Specimen.processing",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "BackboneElement"
+        }
+      ],
+      "short": "Processing and processing step details"
+    },
+    {
+      "id": "Specimen.processing.id",
+      "path": "Specimen.processing.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "Specimen.processing.extension",
+      "path": "Specimen.processing.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "Specimen.processing.modifierExtension",
+      "path": "Specimen.processing.modifierExtension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Extensions that cannot be ignored even if unrecognized"
+    },
+    {
+      "id": "Specimen.processing.description",
+      "path": "Specimen.processing.description",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Textual description of procedure"
+    },
+    {
+      "id": "Specimen.processing.procedure",
+      "path": "Specimen.processing.procedure",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "CodeableConcept"
+        }
+      ],
+      "short": "Indicates the treatment step  applied to the specimen",
+      "binding": {
+        "strength": "example",
+        "valueSet": "http://hl7.org/fhir/ValueSet/specimen-processing-procedure"
+      }
+    },
+    {
+      "id": "Specimen.processing.additive",
+      "path": "Specimen.processing.additive",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Reference",
+          "targetProfile": [
+            "http://hl7.org/fhir/StructureDefinition/Substance"
+          ]
+        }
+      ],
+      "short": "Material used in the processing step"
+    },
+    {
+      "id": "Specimen.processing.time[x]",
+      "path": "Specimen.processing.time[x]",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "dateTime"
+        },
+        {
+          "code": "Period"
+        }
+      ],
+      "short": "Date and time of specimen processing"
+    },
+    {
+      "id": "Specimen.container",
+      "path": "Specimen.container",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "BackboneElement"
+        }
+      ],
+      "short": "Direct container of specimen (tube/slide, etc.)"
+    },
+    {
+      "id": "Specimen.container.id",
+      "path": "Specimen.container.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "Specimen.container.extension",
+      "path": "Specimen.container.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "Specimen.container.modifierExtension",
+      "path": "Specimen.container.modifierExtension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Extensions that cannot be ignored even if unrecognized"
+    },
+    {
+      "id": "Specimen.container.identifier",
+      "path": "Specimen.container.identifier",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Identifier"
+        }
+      ],
+      "short": "Id for the container"
+    },
+    {
+      "id": "Specimen.container.description",
+      "path": "Specimen.container.description",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Textual description of the container"
+    },
+    {
+      "id": "Specimen.container.type",
+      "path": "Specimen.container.type",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "CodeableConcept"
+        }
+      ],
+      "short": "Kind of container directly associated with specimen",
+      "binding": {
+        "strength": "example",
+        "valueSet": "http://hl7.org/fhir/ValueSet/specimen-container-type"
+      }
+    },
+    {
+      "id": "Specimen.container.capacity",
+      "path": "Specimen.container.capacity",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "Quantity"
+        }
+      ],
+      "short": "Container volume or size"
+    },
+    {
+      "id": "Specimen.container.specimenQuantity",
+      "path": "Specimen.container.specimenQuantity",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "Quantity"
+        }
+      ],
+      "short": "Quantity of specimen within container"
+    },
+    {
+      "id": "Specimen.container.additive[x]",
+      "path": "Specimen.container.additive[x]",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "CodeableConcept"
+        },
+        {
+          "code": "Reference",
+          "targetProfile": [
+            "http://hl7.org/fhir/StructureDefinition/Substance"
+          ]
+        }
+      ],
+      "short": "Additive associated with container",
+      "binding": {
+        "strength": "example",
+        "valueSet": "http://terminology.hl7.org/ValueSet/v2-0371"
+      }
+    },
+    {
+      "id": "Specimen.condition",
+      "path": "Specimen.condition",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "CodeableConcept"
+        }
+      ],
+      "short": "State of the specimen",
+      "binding": {
+        "strength": "extensible",
+        "valueSet": "http://terminology.hl7.org/ValueSet/v2-0493"
+      }
+    },
+    {
+      "id": "Specimen.note",
+      "path": "Specimen.note",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Annotation"
+        }
+      ],
+      "short": "Comments"
+    }
+  ]
+}

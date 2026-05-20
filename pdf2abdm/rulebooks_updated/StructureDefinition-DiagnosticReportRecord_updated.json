@@ -1,0 +1,1446 @@
+{
+  "resourceType": "StructureDefinition",
+  "id": "DiagnosticReportRecord",
+  "url": "https://nrces.in/ndhm/fhir/r4/StructureDefinition/DiagnosticReportRecord",
+  "name": "DiagnosticReportRecord",
+  "description": "Thinned ABDM DiagnosticReportRecord (Composition) Rulebook",
+  "elements": [
+    {
+      "id": "Composition",
+      "path": "Composition",
+      "min": 0,
+      "max": "*",
+      "short": "A set of resources composed into a single coherent clinical statement with clinical attestation / a set of resources composed to define the diagnostic report record."
+    },
+    {
+      "id": "Composition.id",
+      "path": "Composition.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Logical id of this artifact"
+    },
+    {
+      "id": "Composition.meta",
+      "path": "Composition.meta",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "Meta"
+        }
+      ],
+      "short": "Metadata about the resource"
+    },
+    {
+      "id": "Composition.implicitRules",
+      "path": "Composition.implicitRules",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "uri"
+        }
+      ],
+      "short": "A set of rules under which this content was created"
+    },
+    {
+      "id": "Composition.language",
+      "path": "Composition.language",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "code"
+        }
+      ],
+      "short": "Language of the resource content",
+      "binding": {
+        "strength": "preferred",
+        "valueSet": "http://hl7.org/fhir/ValueSet/languages"
+      }
+    },
+    {
+      "id": "Composition.text",
+      "path": "Composition.text",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "Narrative"
+        }
+      ],
+      "short": "Text summary of the resource, for human interpretation"
+    },
+    {
+      "id": "Composition.contained",
+      "path": "Composition.contained",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Resource"
+        }
+      ],
+      "short": "Contained, inline Resources"
+    },
+    {
+      "id": "Composition.extension",
+      "path": "Composition.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "Composition.modifierExtension",
+      "path": "Composition.modifierExtension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Extensions that cannot be ignored"
+    },
+    {
+      "id": "Composition.identifier",
+      "path": "Composition.identifier",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "Identifier"
+        }
+      ],
+      "short": "Version-independent identifier for the Composition"
+    },
+    {
+      "id": "Composition.status",
+      "path": "Composition.status",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "code"
+        }
+      ],
+      "mustSupport": true,
+      "short": "preliminary | final | amended | entered-in-error",
+      "binding": {
+        "strength": "required",
+        "valueSet": "http://hl7.org/fhir/ValueSet/composition-status|4.0.1"
+      }
+    },
+    {
+      "id": "Composition.type",
+      "path": "Composition.type",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "CodeableConcept"
+        }
+      ],
+      "mustSupport": true,
+      "short": "Kind of composition (SNOMED CT if possible)",
+      "binding": {
+        "strength": "preferred",
+        "valueSet": "https://nrces.in/ndhm/fhir/r4/ValueSet/ndhm-diagnostic-report-type"
+      }
+    },
+    {
+      "id": "Composition.type.id",
+      "path": "Composition.type.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "Composition.type.extension",
+      "path": "Composition.type.extension",
+      "min": 0,
+      "max": "*",
+      "slicing": {
+        "discriminator": [
+          {
+            "type": "value",
+            "path": "url"
+          }
+        ],
+        "description": "Extensions are always sliced by (at least) url",
+        "rules": "open"
+      },
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "Composition.type.coding",
+      "path": "Composition.type.coding",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "Coding"
+        }
+      ],
+      "short": "Code defined by a terminology system"
+    },
+    {
+      "id": "Composition.type.coding.id",
+      "path": "Composition.type.coding.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "Composition.type.coding.extension",
+      "path": "Composition.type.coding.extension",
+      "min": 0,
+      "max": "*",
+      "slicing": {
+        "discriminator": [
+          {
+            "type": "value",
+            "path": "url"
+          }
+        ],
+        "description": "Extensions are always sliced by (at least) url",
+        "rules": "open"
+      },
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "Composition.type.coding.system",
+      "path": "Composition.type.coding.system",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "uri"
+        }
+      ],
+      "fixedUri": "http://snomed.info/sct",
+      "short": "Identity of the terminology system"
+    },
+    {
+      "id": "Composition.type.coding.version",
+      "path": "Composition.type.coding.version",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Version of the system - if relevant"
+    },
+    {
+      "id": "Composition.type.coding.code",
+      "path": "Composition.type.coding.code",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "code"
+        }
+      ],
+      "short": "Symbol in syntax defined by the system"
+    },
+    {
+      "id": "Composition.type.coding.display",
+      "path": "Composition.type.coding.display",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Representation defined by the system"
+    },
+    {
+      "id": "Composition.type.coding.userSelected",
+      "path": "Composition.type.coding.userSelected",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "boolean"
+        }
+      ],
+      "short": "If this coding was chosen directly by the user"
+    },
+    {
+      "id": "Composition.type.text",
+      "path": "Composition.type.text",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "mustSupport": true,
+      "short": "Plain text representation of the concept"
+    },
+    {
+      "id": "Composition.category",
+      "path": "Composition.category",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "CodeableConcept"
+        }
+      ],
+      "short": "Categorization of Composition",
+      "binding": {
+        "strength": "example",
+        "valueSet": "http://hl7.org/fhir/ValueSet/document-classcodes"
+      }
+    },
+    {
+      "id": "Composition.subject",
+      "path": "Composition.subject",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "Reference",
+          "targetProfile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient"
+          ]
+        }
+      ],
+      "mustSupport": true,
+      "short": "Who and/or what the composition is about"
+    },
+    {
+      "id": "Composition.subject.id",
+      "path": "Composition.subject.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "Composition.subject.extension",
+      "path": "Composition.subject.extension",
+      "min": 0,
+      "max": "*",
+      "slicing": {
+        "discriminator": [
+          {
+            "type": "value",
+            "path": "url"
+          }
+        ],
+        "description": "Extensions are always sliced by (at least) url",
+        "rules": "open"
+      },
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "Composition.subject.reference",
+      "path": "Composition.subject.reference",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Literal reference, Relative, internal or absolute URL"
+    },
+    {
+      "id": "Composition.subject.type",
+      "path": "Composition.subject.type",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "uri"
+        }
+      ],
+      "short": "Type the reference refers to (e.g. \"Patient\")",
+      "binding": {
+        "strength": "extensible",
+        "valueSet": "http://hl7.org/fhir/ValueSet/resource-types"
+      }
+    },
+    {
+      "id": "Composition.subject.identifier",
+      "path": "Composition.subject.identifier",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "Identifier"
+        }
+      ],
+      "short": "Logical reference, when literal reference is not known"
+    },
+    {
+      "id": "Composition.subject.display",
+      "path": "Composition.subject.display",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Text alternative for the resource"
+    },
+    {
+      "id": "Composition.encounter",
+      "path": "Composition.encounter",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "Reference",
+          "targetProfile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        }
+      ],
+      "short": "Context of the Composition"
+    },
+    {
+      "id": "Composition.date",
+      "path": "Composition.date",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "dateTime"
+        }
+      ],
+      "short": "Composition editing time"
+    },
+    {
+      "id": "Composition.author",
+      "path": "Composition.author",
+      "min": 1,
+      "max": "*",
+      "type": [
+        {
+          "code": "Reference",
+          "targetProfile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Practitioner",
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/PractitionerRole",
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization",
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient",
+            "http://hl7.org/fhir/StructureDefinition/Device",
+            "http://hl7.org/fhir/StructureDefinition/RelatedPerson"
+          ]
+        }
+      ],
+      "mustSupport": true,
+      "short": "Who and/or what authored the composition"
+    },
+    {
+      "id": "Composition.author.id",
+      "path": "Composition.author.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "Composition.author.extension",
+      "path": "Composition.author.extension",
+      "min": 0,
+      "max": "*",
+      "slicing": {
+        "discriminator": [
+          {
+            "type": "value",
+            "path": "url"
+          }
+        ],
+        "description": "Extensions are always sliced by (at least) url",
+        "rules": "open"
+      },
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "Composition.author.reference",
+      "path": "Composition.author.reference",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Literal reference, Relative, internal or absolute URL"
+    },
+    {
+      "id": "Composition.author.type",
+      "path": "Composition.author.type",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "uri"
+        }
+      ],
+      "short": "Type the reference refers to (e.g. \"Patient\")",
+      "binding": {
+        "strength": "extensible",
+        "valueSet": "http://hl7.org/fhir/ValueSet/resource-types"
+      }
+    },
+    {
+      "id": "Composition.author.identifier",
+      "path": "Composition.author.identifier",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "Identifier"
+        }
+      ],
+      "short": "Logical reference, when literal reference is not known"
+    },
+    {
+      "id": "Composition.author.display",
+      "path": "Composition.author.display",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Text alternative for the resource"
+    },
+    {
+      "id": "Composition.title",
+      "path": "Composition.title",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Human Readable name/title"
+    },
+    {
+      "id": "Composition.confidentiality",
+      "path": "Composition.confidentiality",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "code"
+        }
+      ],
+      "short": "As defined by affinity domain",
+      "binding": {
+        "strength": "required",
+        "valueSet": "http://terminology.hl7.org/ValueSet/v3-ConfidentialityClassification|2014-03-26"
+      }
+    },
+    {
+      "id": "Composition.attester",
+      "path": "Composition.attester",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "BackboneElement"
+        }
+      ],
+      "mustSupport": true,
+      "short": "Attests to accuracy of composition"
+    },
+    {
+      "id": "Composition.attester.id",
+      "path": "Composition.attester.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "Composition.attester.extension",
+      "path": "Composition.attester.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "Composition.attester.modifierExtension",
+      "path": "Composition.attester.modifierExtension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Extensions that cannot be ignored even if unrecognized"
+    },
+    {
+      "id": "Composition.attester.mode",
+      "path": "Composition.attester.mode",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "code"
+        }
+      ],
+      "short": "personal | professional | legal | official",
+      "binding": {
+        "strength": "required",
+        "valueSet": "http://hl7.org/fhir/ValueSet/composition-attestation-mode|4.0.1"
+      }
+    },
+    {
+      "id": "Composition.attester.time",
+      "path": "Composition.attester.time",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "dateTime"
+        }
+      ],
+      "short": "When the composition was attested"
+    },
+    {
+      "id": "Composition.attester.party",
+      "path": "Composition.attester.party",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "Reference",
+          "targetProfile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization",
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient",
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Practitioner",
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/PractitionerRole",
+            "http://hl7.org/fhir/StructureDefinition/RelatedPerson"
+          ]
+        }
+      ],
+      "short": "Who attested the composition"
+    },
+    {
+      "id": "Composition.custodian",
+      "path": "Composition.custodian",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "Reference",
+          "targetProfile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        }
+      ],
+      "short": "Organization which maintains the composition"
+    },
+    {
+      "id": "Composition.relatesTo",
+      "path": "Composition.relatesTo",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "BackboneElement"
+        }
+      ],
+      "short": "Relationships to other compositions/documents"
+    },
+    {
+      "id": "Composition.relatesTo.id",
+      "path": "Composition.relatesTo.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "Composition.relatesTo.extension",
+      "path": "Composition.relatesTo.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "Composition.relatesTo.modifierExtension",
+      "path": "Composition.relatesTo.modifierExtension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Extensions that cannot be ignored even if unrecognized"
+    },
+    {
+      "id": "Composition.relatesTo.code",
+      "path": "Composition.relatesTo.code",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "code"
+        }
+      ],
+      "short": "replaces | transforms | signs | appends",
+      "binding": {
+        "strength": "required",
+        "valueSet": "http://hl7.org/fhir/ValueSet/document-relationship-type|4.0.1"
+      }
+    },
+    {
+      "id": "Composition.relatesTo.target[x]",
+      "path": "Composition.relatesTo.target[x]",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "Identifier"
+        },
+        {
+          "code": "Reference",
+          "targetProfile": [
+            "http://hl7.org/fhir/StructureDefinition/Composition"
+          ]
+        }
+      ],
+      "short": "Target of the relationship"
+    },
+    {
+      "id": "Composition.event",
+      "path": "Composition.event",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "BackboneElement"
+        }
+      ],
+      "short": "The clinical service(s) being documented"
+    },
+    {
+      "id": "Composition.event.id",
+      "path": "Composition.event.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "Composition.event.extension",
+      "path": "Composition.event.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "Composition.event.modifierExtension",
+      "path": "Composition.event.modifierExtension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Extensions that cannot be ignored even if unrecognized"
+    },
+    {
+      "id": "Composition.event.code",
+      "path": "Composition.event.code",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "CodeableConcept"
+        }
+      ],
+      "short": "Code(s) that apply to the event being documented",
+      "binding": {
+        "strength": "example",
+        "valueSet": "http://terminology.hl7.org/ValueSet/v3-ActCode"
+      }
+    },
+    {
+      "id": "Composition.event.period",
+      "path": "Composition.event.period",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "Period"
+        }
+      ],
+      "short": "The period covered by the documentation"
+    },
+    {
+      "id": "Composition.event.detail",
+      "path": "Composition.event.detail",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Reference",
+          "targetProfile": [
+            "http://hl7.org/fhir/StructureDefinition/Resource"
+          ]
+        }
+      ],
+      "short": "The event(s) being documented"
+    },
+    {
+      "id": "Composition.section",
+      "path": "Composition.section",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "BackboneElement"
+        }
+      ],
+      "mustSupport": true,
+      "short": "Composition is broken into sections"
+    },
+    {
+      "id": "Composition.section.id",
+      "path": "Composition.section.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "Composition.section.extension",
+      "path": "Composition.section.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "Composition.section.modifierExtension",
+      "path": "Composition.section.modifierExtension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Extensions that cannot be ignored even if unrecognized"
+    },
+    {
+      "id": "Composition.section.title",
+      "path": "Composition.section.title",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Label for section (e.g. for ToC)"
+    },
+    {
+      "id": "Composition.section.code",
+      "path": "Composition.section.code",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "CodeableConcept"
+        }
+      ],
+      "short": "Classification of section (recommended)",
+      "binding": {
+        "strength": "example",
+        "valueSet": "http://hl7.org/fhir/ValueSet/doc-section-codes"
+      }
+    },
+    {
+      "id": "Composition.section.code.id",
+      "path": "Composition.section.code.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "Composition.section.code.extension",
+      "path": "Composition.section.code.extension",
+      "min": 0,
+      "max": "*",
+      "slicing": {
+        "discriminator": [
+          {
+            "type": "value",
+            "path": "url"
+          }
+        ],
+        "description": "Extensions are always sliced by (at least) url",
+        "rules": "open"
+      },
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "Composition.section.code.coding",
+      "path": "Composition.section.code.coding",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Coding"
+        }
+      ],
+      "mustSupport": true,
+      "short": "Code defined by a terminology system"
+    },
+    {
+      "id": "Composition.section.code.coding.id",
+      "path": "Composition.section.code.coding.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "Composition.section.code.coding.extension",
+      "path": "Composition.section.code.coding.extension",
+      "min": 0,
+      "max": "*",
+      "slicing": {
+        "discriminator": [
+          {
+            "type": "value",
+            "path": "url"
+          }
+        ],
+        "description": "Extensions are always sliced by (at least) url",
+        "rules": "open"
+      },
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "Composition.section.code.coding.system",
+      "path": "Composition.section.code.coding.system",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "uri"
+        }
+      ],
+      "fixedUri": "http://snomed.info/sct",
+      "short": "Identity of the terminology system"
+    },
+    {
+      "id": "Composition.section.code.coding.version",
+      "path": "Composition.section.code.coding.version",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Version of the system - if relevant"
+    },
+    {
+      "id": "Composition.section.code.coding.code",
+      "path": "Composition.section.code.coding.code",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "code"
+        }
+      ],
+      "short": "Symbol in syntax defined by the system"
+    },
+    {
+      "id": "Composition.section.code.coding.display",
+      "path": "Composition.section.code.coding.display",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Representation defined by the system"
+    },
+    {
+      "id": "Composition.section.code.coding.userSelected",
+      "path": "Composition.section.code.coding.userSelected",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "boolean"
+        }
+      ],
+      "short": "If this coding was chosen directly by the user"
+    },
+    {
+      "id": "Composition.section.code.text",
+      "path": "Composition.section.code.text",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "mustSupport": true,
+      "short": "Plain text representation of the concept"
+    },
+    {
+      "id": "Composition.section.author",
+      "path": "Composition.section.author",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Reference",
+          "targetProfile": [
+            "http://hl7.org/fhir/StructureDefinition/Device",
+            "http://hl7.org/fhir/StructureDefinition/RelatedPerson",
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient",
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Practitioner",
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/PractitionerRole",
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        }
+      ],
+      "short": "Who and/or what authored the section"
+    },
+    {
+      "id": "Composition.section.focus",
+      "path": "Composition.section.focus",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "Reference",
+          "targetProfile": [
+            "http://hl7.org/fhir/StructureDefinition/Resource"
+          ]
+        }
+      ],
+      "short": "Who/what the section is about, when it is not about the subject of composition"
+    },
+    {
+      "id": "Composition.section.text",
+      "path": "Composition.section.text",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "Narrative"
+        }
+      ],
+      "short": "Text summary of the section, for human interpretation"
+    },
+    {
+      "id": "Composition.section.mode",
+      "path": "Composition.section.mode",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "code"
+        }
+      ],
+      "short": "working | snapshot | changes",
+      "binding": {
+        "strength": "required",
+        "valueSet": "http://hl7.org/fhir/ValueSet/list-mode|4.0.1"
+      }
+    },
+    {
+      "id": "Composition.section.orderedBy",
+      "path": "Composition.section.orderedBy",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "CodeableConcept"
+        }
+      ],
+      "short": "Order of section entries",
+      "binding": {
+        "strength": "preferred",
+        "valueSet": "http://hl7.org/fhir/ValueSet/list-order"
+      }
+    },
+    {
+      "id": "Composition.section.entry",
+      "path": "Composition.section.entry",
+      "min": 1,
+      "max": "2",
+      "slicing": {
+        "discriminator": [
+          {
+            "type": "value",
+            "path": "type"
+          }
+        ],
+        "rules": "closed"
+      },
+      "type": [
+        {
+          "code": "Reference",
+          "targetProfile": [
+            "http://hl7.org/fhir/StructureDefinition/Resource"
+          ]
+        }
+      ],
+      "mustSupport": true,
+      "short": "A reference to data that supports this section"
+    },
+    {
+      "id": "Composition.section.entry:DiagnosticReport",
+      "path": "Composition.section.entry",
+      "min": 0,
+      "max": "1",
+      "sliceName": "DiagnosticReport",
+      "type": [
+        {
+          "code": "Reference",
+          "targetProfile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/DiagnosticReportLab",
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/DiagnosticReportImaging"
+          ]
+        }
+      ],
+      "short": "The section records diagnostic reports which include both laboratory and imaging reports. These reports contain the results and interpretations of diagnostic tests performed on the patient."
+    },
+    {
+      "id": "Composition.section.entry:DiagnosticReport.id",
+      "path": "Composition.section.entry.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "Composition.section.entry:DiagnosticReport.extension",
+      "path": "Composition.section.entry.extension",
+      "min": 0,
+      "max": "*",
+      "slicing": {
+        "discriminator": [
+          {
+            "type": "value",
+            "path": "url"
+          }
+        ],
+        "description": "Extensions are always sliced by (at least) url",
+        "rules": "open"
+      },
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "Composition.section.entry:DiagnosticReport.reference",
+      "path": "Composition.section.entry.reference",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Literal reference, Relative, internal or absolute URL"
+    },
+    {
+      "id": "Composition.section.entry:DiagnosticReport.type",
+      "path": "Composition.section.entry.type",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "uri"
+        }
+      ],
+      "fixedUri": "DiagnosticReport",
+      "short": "Type the reference refers to (e.g. \"Patient\")",
+      "binding": {
+        "strength": "extensible",
+        "valueSet": "http://hl7.org/fhir/ValueSet/resource-types"
+      }
+    },
+    {
+      "id": "Composition.section.entry:DiagnosticReport.identifier",
+      "path": "Composition.section.entry.identifier",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "Identifier"
+        }
+      ],
+      "short": "Logical reference, when literal reference is not known"
+    },
+    {
+      "id": "Composition.section.entry:DiagnosticReport.display",
+      "path": "Composition.section.entry.display",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Text alternative for the resource"
+    },
+    {
+      "id": "Composition.section.entry:DocumentReference",
+      "path": "Composition.section.entry",
+      "min": 0,
+      "max": "1",
+      "sliceName": "DocumentReference",
+      "type": [
+        {
+          "code": "Reference",
+          "targetProfile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/DocumentReference"
+          ]
+        }
+      ],
+      "short": "The section records documents, such as PDFs or images, relevant to the DiagnosticReport"
+    },
+    {
+      "id": "Composition.section.entry:DocumentReference.id",
+      "path": "Composition.section.entry.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "Composition.section.entry:DocumentReference.extension",
+      "path": "Composition.section.entry.extension",
+      "min": 0,
+      "max": "*",
+      "slicing": {
+        "discriminator": [
+          {
+            "type": "value",
+            "path": "url"
+          }
+        ],
+        "description": "Extensions are always sliced by (at least) url",
+        "rules": "open"
+      },
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "Composition.section.entry:DocumentReference.reference",
+      "path": "Composition.section.entry.reference",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Literal reference, Relative, internal or absolute URL"
+    },
+    {
+      "id": "Composition.section.entry:DocumentReference.type",
+      "path": "Composition.section.entry.type",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "uri"
+        }
+      ],
+      "fixedUri": "DocumentReference",
+      "short": "Type the reference refers to (e.g. \"Patient\")",
+      "binding": {
+        "strength": "extensible",
+        "valueSet": "http://hl7.org/fhir/ValueSet/resource-types"
+      }
+    },
+    {
+      "id": "Composition.section.entry:DocumentReference.identifier",
+      "path": "Composition.section.entry.identifier",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "Identifier"
+        }
+      ],
+      "short": "Logical reference, when literal reference is not known"
+    },
+    {
+      "id": "Composition.section.entry:DocumentReference.display",
+      "path": "Composition.section.entry.display",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Text alternative for the resource"
+    },
+    {
+      "id": "Composition.section.emptyReason",
+      "path": "Composition.section.emptyReason",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "CodeableConcept"
+        }
+      ],
+      "short": "Why the section is empty",
+      "binding": {
+        "strength": "preferred",
+        "valueSet": "http://hl7.org/fhir/ValueSet/list-empty-reason"
+      }
+    },
+    {
+      "id": "Composition.section.section",
+      "path": "Composition.section.section",
+      "min": 0,
+      "max": "*",
+      "short": "Nested Section"
+    }
+  ]
+}

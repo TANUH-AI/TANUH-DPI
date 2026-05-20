@@ -1,0 +1,994 @@
+{
+  "resourceType": "StructureDefinition",
+  "id": "DiagnosticReportLab",
+  "url": "https://nrces.in/ndhm/fhir/r4/StructureDefinition/DiagnosticReportLab",
+  "name": "DiagnosticReportLab",
+  "description": "Thinned ABDM DiagnosticReportLab Rulebook (Optimized for Result Linking)",
+  "elements": [
+    {
+      "id": "DiagnosticReport",
+      "path": "DiagnosticReport",
+      "min": 0,
+      "max": "*",
+      "short": "A Diagnostic report - a combination of request information, atomic results, images, interpretation, as well as formatted reports"
+    },
+    {
+      "id": "DiagnosticReport.id",
+      "path": "DiagnosticReport.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Logical id of this artifact"
+    },
+    {
+      "id": "DiagnosticReport.meta",
+      "path": "DiagnosticReport.meta",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "Meta"
+        }
+      ],
+      "short": "Metadata about the resource"
+    },
+    {
+      "id": "DiagnosticReport.implicitRules",
+      "path": "DiagnosticReport.implicitRules",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "uri"
+        }
+      ],
+      "short": "A set of rules under which this content was created"
+    },
+    {
+      "id": "DiagnosticReport.language",
+      "path": "DiagnosticReport.language",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "code"
+        }
+      ],
+      "short": "Language of the resource content",
+      "binding": {
+        "strength": "preferred",
+        "valueSet": "http://hl7.org/fhir/ValueSet/languages"
+      }
+    },
+    {
+      "id": "DiagnosticReport.text",
+      "path": "DiagnosticReport.text",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "Narrative"
+        }
+      ],
+      "short": "Text summary of the resource, for human interpretation"
+    },
+    {
+      "id": "DiagnosticReport.contained",
+      "path": "DiagnosticReport.contained",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Resource"
+        }
+      ],
+      "short": "Contained, inline Resources"
+    },
+    {
+      "id": "DiagnosticReport.extension",
+      "path": "DiagnosticReport.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "DiagnosticReport.modifierExtension",
+      "path": "DiagnosticReport.modifierExtension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Extensions that cannot be ignored"
+    },
+    {
+      "id": "DiagnosticReport.identifier",
+      "path": "DiagnosticReport.identifier",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Identifier"
+        }
+      ],
+      "short": "Business identifier for report"
+    },
+    {
+      "id": "DiagnosticReport.basedOn",
+      "path": "DiagnosticReport.basedOn",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Reference",
+          "targetProfile": [
+            "http://hl7.org/fhir/StructureDefinition/NutritionOrder",
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest",
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/ServiceRequest",
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/CarePlan",
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/ImmunizationRecommendation"
+          ]
+        }
+      ],
+      "mustSupport": true,
+      "short": "What was requested"
+    },
+    {
+      "id": "DiagnosticReport.status",
+      "path": "DiagnosticReport.status",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "code"
+        }
+      ],
+      "mustSupport": true,
+      "short": "registered | partial | preliminary | final +",
+      "binding": {
+        "strength": "required",
+        "valueSet": "http://hl7.org/fhir/ValueSet/diagnostic-report-status|4.0.1"
+      }
+    },
+    {
+      "id": "DiagnosticReport.category",
+      "path": "DiagnosticReport.category",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "CodeableConcept"
+        }
+      ],
+      "mustSupport": true,
+      "short": "Service category",
+      "binding": {
+        "strength": "example",
+        "valueSet": "http://hl7.org/fhir/ValueSet/diagnostic-service-sections"
+      }
+    },
+    {
+      "id": "DiagnosticReport.category.id",
+      "path": "DiagnosticReport.category.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "DiagnosticReport.category.extension",
+      "path": "DiagnosticReport.category.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "DiagnosticReport.category.coding",
+      "path": "DiagnosticReport.category.coding",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Coding"
+        }
+      ],
+      "mustSupport": true,
+      "short": "Code defined by a terminology system"
+    },
+    {
+      "id": "DiagnosticReport.category.coding.id",
+      "path": "DiagnosticReport.category.coding.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "DiagnosticReport.category.coding.extension",
+      "path": "DiagnosticReport.category.coding.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "DiagnosticReport.category.coding.system",
+      "path": "DiagnosticReport.category.coding.system",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "uri"
+        }
+      ],
+      "fixedUri": "http://snomed.info/sct",
+      "short": "Identity of the terminology system"
+    },
+    {
+      "id": "DiagnosticReport.category.coding.version",
+      "path": "DiagnosticReport.category.coding.version",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Version of the system - if relevant"
+    },
+    {
+      "id": "DiagnosticReport.category.coding.code",
+      "path": "DiagnosticReport.category.coding.code",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "code"
+        }
+      ],
+      "short": "Symbol in syntax defined by the system"
+    },
+    {
+      "id": "DiagnosticReport.category.coding.display",
+      "path": "DiagnosticReport.category.coding.display",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Representation defined by the system"
+    },
+    {
+      "id": "DiagnosticReport.category.coding.userSelected",
+      "path": "DiagnosticReport.category.coding.userSelected",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "boolean"
+        }
+      ],
+      "short": "If this coding was chosen directly by the user"
+    },
+    {
+      "id": "DiagnosticReport.category.text",
+      "path": "DiagnosticReport.category.text",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "mustSupport": true,
+      "short": "Plain text representation of the concept"
+    },
+    {
+      "id": "DiagnosticReport.code",
+      "path": "DiagnosticReport.code",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "CodeableConcept"
+        }
+      ],
+      "mustSupport": true,
+      "short": "Name/Code for this diagnostic report",
+      "binding": {
+        "strength": "preferred",
+        "valueSet": "http://hl7.org/fhir/ValueSet/report-codes"
+      }
+    },
+    {
+      "id": "DiagnosticReport.code.id",
+      "path": "DiagnosticReport.code.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "DiagnosticReport.code.extension",
+      "path": "DiagnosticReport.code.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "DiagnosticReport.code.coding",
+      "path": "DiagnosticReport.code.coding",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Coding"
+        }
+      ],
+      "mustSupport": true,
+      "short": "Code defined by a terminology system"
+    },
+    {
+      "id": "DiagnosticReport.code.coding.id",
+      "path": "DiagnosticReport.code.coding.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "DiagnosticReport.code.coding.extension",
+      "path": "DiagnosticReport.code.coding.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "DiagnosticReport.code.coding.system",
+      "path": "DiagnosticReport.code.coding.system",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "uri"
+        }
+      ],
+      "fixedUri": "http://loinc.org",
+      "short": "Identity of the terminology system"
+    },
+    {
+      "id": "DiagnosticReport.code.coding.version",
+      "path": "DiagnosticReport.code.coding.version",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Version of the system - if relevant"
+    },
+    {
+      "id": "DiagnosticReport.code.coding.code",
+      "path": "DiagnosticReport.code.coding.code",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "code"
+        }
+      ],
+      "short": "Symbol in syntax defined by the system"
+    },
+    {
+      "id": "DiagnosticReport.code.coding.display",
+      "path": "DiagnosticReport.code.coding.display",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Representation defined by the system"
+    },
+    {
+      "id": "DiagnosticReport.code.coding.userSelected",
+      "path": "DiagnosticReport.code.coding.userSelected",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "boolean"
+        }
+      ],
+      "short": "If this coding was chosen directly by the user"
+    },
+    {
+      "id": "DiagnosticReport.code.text",
+      "path": "DiagnosticReport.code.text",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "mustSupport": true,
+      "short": "Plain text representation of the concept"
+    },
+    {
+      "id": "DiagnosticReport.subject",
+      "path": "DiagnosticReport.subject",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "Reference",
+          "targetProfile": [
+            "http://hl7.org/fhir/StructureDefinition/Group",
+            "http://hl7.org/fhir/StructureDefinition/Device",
+            "http://hl7.org/fhir/StructureDefinition/Location",
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient"
+          ]
+        }
+      ],
+      "short": "The subject of the report - usually, but not always, the patient"
+    },
+    {
+      "id": "DiagnosticReport.encounter",
+      "path": "DiagnosticReport.encounter",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "Reference",
+          "targetProfile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        }
+      ],
+      "short": "Health care event when test ordered"
+    },
+    {
+      "id": "DiagnosticReport.effective[x]",
+      "path": "DiagnosticReport.effective[x]",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "dateTime"
+        },
+        {
+          "code": "Period"
+        }
+      ],
+      "short": "Clinically relevant time/time-period for report"
+    },
+    {
+      "id": "DiagnosticReport.issued",
+      "path": "DiagnosticReport.issued",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "instant"
+        }
+      ],
+      "short": "DateTime this version was made"
+    },
+    {
+      "id": "DiagnosticReport.performer",
+      "path": "DiagnosticReport.performer",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Reference",
+          "targetProfile": [
+            "http://hl7.org/fhir/StructureDefinition/CareTeam",
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization",
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Practitioner",
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/PractitionerRole"
+          ]
+        }
+      ],
+      "mustSupport": true,
+      "short": "Responsible Diagnostic Service"
+    },
+    {
+      "id": "DiagnosticReport.resultsInterpreter",
+      "path": "DiagnosticReport.resultsInterpreter",
+      "min": 1,
+      "max": "*",
+      "type": [
+        {
+          "code": "Reference",
+          "targetProfile": [
+            "http://hl7.org/fhir/StructureDefinition/CareTeam",
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Practitioner",
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization",
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/PractitionerRole"
+          ]
+        }
+      ],
+      "mustSupport": true,
+      "short": "Primary result interpreter"
+    },
+    {
+      "id": "DiagnosticReport.specimen",
+      "path": "DiagnosticReport.specimen",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Reference",
+          "targetProfile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Specimen"
+          ]
+        }
+      ],
+      "mustSupport": true,
+      "short": "Specimens this report is based on"
+    },
+    {
+      "id": "DiagnosticReport.result",
+      "path": "DiagnosticReport.result",
+      "min": 1,
+      "max": "*",
+      "type": [
+        {
+          "code": "Reference",
+          "targetProfile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        }
+      ],
+      "mustSupport": true,
+      "short": "Observations"
+    },
+    {
+      "id": "DiagnosticReport.imagingStudy",
+      "path": "DiagnosticReport.imagingStudy",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Reference",
+          "targetProfile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/ImagingStudy"
+          ]
+        }
+      ],
+      "short": "Reference to full details of imaging associated with the diagnostic report"
+    },
+    {
+      "id": "DiagnosticReport.media",
+      "path": "DiagnosticReport.media",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "BackboneElement"
+        }
+      ],
+      "short": "Key images associated with this report"
+    },
+    {
+      "id": "DiagnosticReport.media.id",
+      "path": "DiagnosticReport.media.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "DiagnosticReport.media.extension",
+      "path": "DiagnosticReport.media.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "DiagnosticReport.media.modifierExtension",
+      "path": "DiagnosticReport.media.modifierExtension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Extensions that cannot be ignored even if unrecognized"
+    },
+    {
+      "id": "DiagnosticReport.media.comment",
+      "path": "DiagnosticReport.media.comment",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Comment about the image (e.g. explanation)"
+    },
+    {
+      "id": "DiagnosticReport.media.link",
+      "path": "DiagnosticReport.media.link",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "Reference",
+          "targetProfile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Media"
+          ]
+        }
+      ],
+      "short": "Reference to the image source"
+    },
+    {
+      "id": "DiagnosticReport.conclusion",
+      "path": "DiagnosticReport.conclusion",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "mustSupport": true,
+      "short": "Clinical conclusion (interpretation) of test results"
+    },
+    {
+      "id": "DiagnosticReport.conclusionCode",
+      "path": "DiagnosticReport.conclusionCode",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "CodeableConcept"
+        }
+      ],
+      "mustSupport": true,
+      "short": "Codes for the clinical conclusion of test results",
+      "binding": {
+        "strength": "example",
+        "valueSet": "http://hl7.org/fhir/ValueSet/clinical-findings"
+      }
+    },
+    {
+      "id": "DiagnosticReport.conclusionCode.id",
+      "path": "DiagnosticReport.conclusionCode.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "DiagnosticReport.conclusionCode.extension",
+      "path": "DiagnosticReport.conclusionCode.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "DiagnosticReport.conclusionCode.coding",
+      "path": "DiagnosticReport.conclusionCode.coding",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Coding"
+        }
+      ],
+      "mustSupport": true,
+      "short": "Code defined by a terminology system"
+    },
+    {
+      "id": "DiagnosticReport.conclusionCode.coding.id",
+      "path": "DiagnosticReport.conclusionCode.coding.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "DiagnosticReport.conclusionCode.coding.extension",
+      "path": "DiagnosticReport.conclusionCode.coding.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "DiagnosticReport.conclusionCode.coding.system",
+      "path": "DiagnosticReport.conclusionCode.coding.system",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "uri"
+        }
+      ],
+      "fixedUri": "http://snomed.info/sct",
+      "short": "Identity of the terminology system"
+    },
+    {
+      "id": "DiagnosticReport.conclusionCode.coding.version",
+      "path": "DiagnosticReport.conclusionCode.coding.version",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Version of the system - if relevant"
+    },
+    {
+      "id": "DiagnosticReport.conclusionCode.coding.code",
+      "path": "DiagnosticReport.conclusionCode.coding.code",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "code"
+        }
+      ],
+      "short": "Symbol in syntax defined by the system"
+    },
+    {
+      "id": "DiagnosticReport.conclusionCode.coding.display",
+      "path": "DiagnosticReport.conclusionCode.coding.display",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Representation defined by the system"
+    },
+    {
+      "id": "DiagnosticReport.conclusionCode.coding.userSelected",
+      "path": "DiagnosticReport.conclusionCode.coding.userSelected",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "boolean"
+        }
+      ],
+      "short": "If this coding was chosen directly by the user"
+    },
+    {
+      "id": "DiagnosticReport.conclusionCode.text",
+      "path": "DiagnosticReport.conclusionCode.text",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "mustSupport": true,
+      "short": "Plain text representation of the concept"
+    },
+    {
+      "id": "DiagnosticReport.presentedForm",
+      "path": "DiagnosticReport.presentedForm",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Attachment"
+        }
+      ],
+      "short": "Entire report as issued"
+    },
+    {
+      "id": "DiagnosticReport.presentedForm.id",
+      "path": "DiagnosticReport.presentedForm.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "DiagnosticReport.presentedForm.extension",
+      "path": "DiagnosticReport.presentedForm.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "DiagnosticReport.presentedForm.contentType",
+      "path": "DiagnosticReport.presentedForm.contentType",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "code"
+        }
+      ],
+      "short": "Mime type of the content, with charset etc.",
+      "binding": {
+        "strength": "required",
+        "valueSet": "http://hl7.org/fhir/ValueSet/mimetypes|4.0.1"
+      }
+    },
+    {
+      "id": "DiagnosticReport.presentedForm.language",
+      "path": "DiagnosticReport.presentedForm.language",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "code"
+        }
+      ],
+      "short": "Human language of the content (BCP-47)",
+      "binding": {
+        "strength": "preferred",
+        "valueSet": "http://hl7.org/fhir/ValueSet/languages"
+      }
+    },
+    {
+      "id": "DiagnosticReport.presentedForm.data",
+      "path": "DiagnosticReport.presentedForm.data",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "base64Binary"
+        }
+      ],
+      "short": "Data inline, base64ed"
+    },
+    {
+      "id": "DiagnosticReport.presentedForm.url",
+      "path": "DiagnosticReport.presentedForm.url",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "url"
+        }
+      ],
+      "short": "Uri where the data can be found"
+    },
+    {
+      "id": "DiagnosticReport.presentedForm.size",
+      "path": "DiagnosticReport.presentedForm.size",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "unsignedInt"
+        }
+      ],
+      "short": "Number of bytes of content (if url provided)"
+    },
+    {
+      "id": "DiagnosticReport.presentedForm.hash",
+      "path": "DiagnosticReport.presentedForm.hash",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "base64Binary"
+        }
+      ],
+      "short": "Hash of the data (sha-1, base64ed)"
+    },
+    {
+      "id": "DiagnosticReport.presentedForm.title",
+      "path": "DiagnosticReport.presentedForm.title",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Label to display in place of the data"
+    },
+    {
+      "id": "DiagnosticReport.presentedForm.creation",
+      "path": "DiagnosticReport.presentedForm.creation",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "dateTime"
+        }
+      ],
+      "short": "Date attachment was first created"
+    }
+  ]
+}

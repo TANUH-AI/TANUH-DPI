@@ -1,0 +1,1264 @@
+{
+  "resourceType": "StructureDefinition",
+  "id": "ImmunizationRecommendation",
+  "url": "https://nrces.in/ndhm/fhir/r4/StructureDefinition/ImmunizationRecommendation",
+  "name": "ImmunizationRecommendation",
+  "description": "Thinned ABDM ImmunizationRecommendation Rulebook (Optimized for Vaccination Scheduling)",
+  "elements": [
+    {
+      "id": "ImmunizationRecommendation",
+      "path": "ImmunizationRecommendation",
+      "min": 0,
+      "max": "*",
+      "short": "Guidance or advice relating to an immunization"
+    },
+    {
+      "id": "ImmunizationRecommendation.id",
+      "path": "ImmunizationRecommendation.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Logical id of this artifact"
+    },
+    {
+      "id": "ImmunizationRecommendation.meta",
+      "path": "ImmunizationRecommendation.meta",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "Meta"
+        }
+      ],
+      "short": "Metadata about the resource"
+    },
+    {
+      "id": "ImmunizationRecommendation.implicitRules",
+      "path": "ImmunizationRecommendation.implicitRules",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "uri"
+        }
+      ],
+      "short": "A set of rules under which this content was created"
+    },
+    {
+      "id": "ImmunizationRecommendation.language",
+      "path": "ImmunizationRecommendation.language",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "code"
+        }
+      ],
+      "short": "Language of the resource content",
+      "binding": {
+        "strength": "preferred",
+        "valueSet": "http://hl7.org/fhir/ValueSet/languages"
+      }
+    },
+    {
+      "id": "ImmunizationRecommendation.text",
+      "path": "ImmunizationRecommendation.text",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "Narrative"
+        }
+      ],
+      "short": "Text summary of the resource, for human interpretation"
+    },
+    {
+      "id": "ImmunizationRecommendation.contained",
+      "path": "ImmunizationRecommendation.contained",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Resource"
+        }
+      ],
+      "short": "Contained, inline Resources"
+    },
+    {
+      "id": "ImmunizationRecommendation.extension",
+      "path": "ImmunizationRecommendation.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "ImmunizationRecommendation.modifierExtension",
+      "path": "ImmunizationRecommendation.modifierExtension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Extensions that cannot be ignored"
+    },
+    {
+      "id": "ImmunizationRecommendation.identifier",
+      "path": "ImmunizationRecommendation.identifier",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Identifier"
+        }
+      ],
+      "short": "Business identifier"
+    },
+    {
+      "id": "ImmunizationRecommendation.patient",
+      "path": "ImmunizationRecommendation.patient",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "Reference",
+          "targetProfile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient"
+          ]
+        }
+      ],
+      "short": "Who this profile is for"
+    },
+    {
+      "id": "ImmunizationRecommendation.date",
+      "path": "ImmunizationRecommendation.date",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "dateTime"
+        }
+      ],
+      "short": "Date recommendation(s) created"
+    },
+    {
+      "id": "ImmunizationRecommendation.authority",
+      "path": "ImmunizationRecommendation.authority",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "Reference",
+          "targetProfile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        }
+      ],
+      "short": "Who is responsible for protocol"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation",
+      "path": "ImmunizationRecommendation.recommendation",
+      "min": 1,
+      "max": "*",
+      "type": [
+        {
+          "code": "BackboneElement"
+        }
+      ],
+      "mustSupport": true,
+      "short": "Vaccine administration recommendations"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.id",
+      "path": "ImmunizationRecommendation.recommendation.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.extension",
+      "path": "ImmunizationRecommendation.recommendation.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.modifierExtension",
+      "path": "ImmunizationRecommendation.recommendation.modifierExtension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Extensions that cannot be ignored even if unrecognized"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.vaccineCode",
+      "path": "ImmunizationRecommendation.recommendation.vaccineCode",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "CodeableConcept"
+        }
+      ],
+      "short": "Vaccine  or vaccine group recommendation applies to",
+      "binding": {
+        "strength": "example",
+        "valueSet": "http://hl7.org/fhir/ValueSet/vaccine-code"
+      }
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.vaccineCode.id",
+      "path": "ImmunizationRecommendation.recommendation.vaccineCode.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.vaccineCode.extension",
+      "path": "ImmunizationRecommendation.recommendation.vaccineCode.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.vaccineCode.coding",
+      "path": "ImmunizationRecommendation.recommendation.vaccineCode.coding",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Coding"
+        }
+      ],
+      "mustSupport": true,
+      "short": "Code defined by a terminology system"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.vaccineCode.coding.id",
+      "path": "ImmunizationRecommendation.recommendation.vaccineCode.coding.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.vaccineCode.coding.extension",
+      "path": "ImmunizationRecommendation.recommendation.vaccineCode.coding.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.vaccineCode.coding.system",
+      "path": "ImmunizationRecommendation.recommendation.vaccineCode.coding.system",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "uri"
+        }
+      ],
+      "short": "Identity of the terminology system"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.vaccineCode.coding.version",
+      "path": "ImmunizationRecommendation.recommendation.vaccineCode.coding.version",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Version of the system - if relevant"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.vaccineCode.coding.code",
+      "path": "ImmunizationRecommendation.recommendation.vaccineCode.coding.code",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "code"
+        }
+      ],
+      "short": "Symbol in syntax defined by the system"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.vaccineCode.coding.display",
+      "path": "ImmunizationRecommendation.recommendation.vaccineCode.coding.display",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Representation defined by the system"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.vaccineCode.coding.userSelected",
+      "path": "ImmunizationRecommendation.recommendation.vaccineCode.coding.userSelected",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "boolean"
+        }
+      ],
+      "short": "If this coding was chosen directly by the user"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.vaccineCode.text",
+      "path": "ImmunizationRecommendation.recommendation.vaccineCode.text",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "mustSupport": true,
+      "short": "Plain text representation of the concept"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.targetDisease",
+      "path": "ImmunizationRecommendation.recommendation.targetDisease",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "CodeableConcept"
+        }
+      ],
+      "short": "Disease to be immunized against",
+      "binding": {
+        "strength": "example",
+        "valueSet": "http://hl7.org/fhir/ValueSet/immunization-recommendation-target-disease"
+      }
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.targetDisease.id",
+      "path": "ImmunizationRecommendation.recommendation.targetDisease.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.targetDisease.extension",
+      "path": "ImmunizationRecommendation.recommendation.targetDisease.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.targetDisease.coding",
+      "path": "ImmunizationRecommendation.recommendation.targetDisease.coding",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Coding"
+        }
+      ],
+      "mustSupport": true,
+      "short": "Code defined by a terminology system"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.targetDisease.coding.id",
+      "path": "ImmunizationRecommendation.recommendation.targetDisease.coding.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.targetDisease.coding.extension",
+      "path": "ImmunizationRecommendation.recommendation.targetDisease.coding.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.targetDisease.coding.system",
+      "path": "ImmunizationRecommendation.recommendation.targetDisease.coding.system",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "uri"
+        }
+      ],
+      "short": "Identity of the terminology system"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.targetDisease.coding.version",
+      "path": "ImmunizationRecommendation.recommendation.targetDisease.coding.version",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Version of the system - if relevant"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.targetDisease.coding.code",
+      "path": "ImmunizationRecommendation.recommendation.targetDisease.coding.code",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "code"
+        }
+      ],
+      "short": "Symbol in syntax defined by the system"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.targetDisease.coding.display",
+      "path": "ImmunizationRecommendation.recommendation.targetDisease.coding.display",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Representation defined by the system"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.targetDisease.coding.userSelected",
+      "path": "ImmunizationRecommendation.recommendation.targetDisease.coding.userSelected",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "boolean"
+        }
+      ],
+      "short": "If this coding was chosen directly by the user"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.targetDisease.text",
+      "path": "ImmunizationRecommendation.recommendation.targetDisease.text",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "mustSupport": true,
+      "short": "Plain text representation of the concept"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.contraindicatedVaccineCode",
+      "path": "ImmunizationRecommendation.recommendation.contraindicatedVaccineCode",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "CodeableConcept"
+        }
+      ],
+      "short": "Vaccine which is contraindicated to fulfill the recommendation",
+      "binding": {
+        "strength": "example",
+        "valueSet": "http://hl7.org/fhir/ValueSet/vaccine-code"
+      }
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.contraindicatedVaccineCode.id",
+      "path": "ImmunizationRecommendation.recommendation.contraindicatedVaccineCode.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.contraindicatedVaccineCode.extension",
+      "path": "ImmunizationRecommendation.recommendation.contraindicatedVaccineCode.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.contraindicatedVaccineCode.coding",
+      "path": "ImmunizationRecommendation.recommendation.contraindicatedVaccineCode.coding",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Coding"
+        }
+      ],
+      "mustSupport": true,
+      "short": "Code defined by a terminology system"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.contraindicatedVaccineCode.coding.id",
+      "path": "ImmunizationRecommendation.recommendation.contraindicatedVaccineCode.coding.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.contraindicatedVaccineCode.coding.extension",
+      "path": "ImmunizationRecommendation.recommendation.contraindicatedVaccineCode.coding.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.contraindicatedVaccineCode.coding.system",
+      "path": "ImmunizationRecommendation.recommendation.contraindicatedVaccineCode.coding.system",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "uri"
+        }
+      ],
+      "short": "Identity of the terminology system"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.contraindicatedVaccineCode.coding.version",
+      "path": "ImmunizationRecommendation.recommendation.contraindicatedVaccineCode.coding.version",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Version of the system - if relevant"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.contraindicatedVaccineCode.coding.code",
+      "path": "ImmunizationRecommendation.recommendation.contraindicatedVaccineCode.coding.code",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "code"
+        }
+      ],
+      "short": "Symbol in syntax defined by the system"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.contraindicatedVaccineCode.coding.display",
+      "path": "ImmunizationRecommendation.recommendation.contraindicatedVaccineCode.coding.display",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Representation defined by the system"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.contraindicatedVaccineCode.coding.userSelected",
+      "path": "ImmunizationRecommendation.recommendation.contraindicatedVaccineCode.coding.userSelected",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "boolean"
+        }
+      ],
+      "short": "If this coding was chosen directly by the user"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.contraindicatedVaccineCode.text",
+      "path": "ImmunizationRecommendation.recommendation.contraindicatedVaccineCode.text",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "mustSupport": true,
+      "short": "Plain text representation of the concept"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.forecastStatus",
+      "path": "ImmunizationRecommendation.recommendation.forecastStatus",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "CodeableConcept"
+        }
+      ],
+      "short": "Vaccine recommendation status",
+      "binding": {
+        "strength": "example",
+        "valueSet": "http://hl7.org/fhir/ValueSet/immunization-recommendation-status"
+      }
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.forecastStatus.id",
+      "path": "ImmunizationRecommendation.recommendation.forecastStatus.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.forecastStatus.extension",
+      "path": "ImmunizationRecommendation.recommendation.forecastStatus.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.forecastStatus.coding",
+      "path": "ImmunizationRecommendation.recommendation.forecastStatus.coding",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Coding"
+        }
+      ],
+      "mustSupport": true,
+      "short": "Code defined by a terminology system"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.forecastStatus.coding.id",
+      "path": "ImmunizationRecommendation.recommendation.forecastStatus.coding.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.forecastStatus.coding.extension",
+      "path": "ImmunizationRecommendation.recommendation.forecastStatus.coding.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.forecastStatus.coding.system",
+      "path": "ImmunizationRecommendation.recommendation.forecastStatus.coding.system",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "uri"
+        }
+      ],
+      "short": "Identity of the terminology system"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.forecastStatus.coding.version",
+      "path": "ImmunizationRecommendation.recommendation.forecastStatus.coding.version",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Version of the system - if relevant"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.forecastStatus.coding.code",
+      "path": "ImmunizationRecommendation.recommendation.forecastStatus.coding.code",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "code"
+        }
+      ],
+      "short": "Symbol in syntax defined by the system"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.forecastStatus.coding.display",
+      "path": "ImmunizationRecommendation.recommendation.forecastStatus.coding.display",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Representation defined by the system"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.forecastStatus.coding.userSelected",
+      "path": "ImmunizationRecommendation.recommendation.forecastStatus.coding.userSelected",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "boolean"
+        }
+      ],
+      "short": "If this coding was chosen directly by the user"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.forecastStatus.text",
+      "path": "ImmunizationRecommendation.recommendation.forecastStatus.text",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "mustSupport": true,
+      "short": "Plain text representation of the concept"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.forecastReason",
+      "path": "ImmunizationRecommendation.recommendation.forecastReason",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "CodeableConcept"
+        }
+      ],
+      "short": "Vaccine administration status reason",
+      "binding": {
+        "strength": "example",
+        "valueSet": "http://hl7.org/fhir/ValueSet/immunization-recommendation-reason"
+      }
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.forecastReason.id",
+      "path": "ImmunizationRecommendation.recommendation.forecastReason.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.forecastReason.extension",
+      "path": "ImmunizationRecommendation.recommendation.forecastReason.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.forecastReason.coding",
+      "path": "ImmunizationRecommendation.recommendation.forecastReason.coding",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Coding"
+        }
+      ],
+      "mustSupport": true,
+      "short": "Code defined by a terminology system"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.forecastReason.coding.id",
+      "path": "ImmunizationRecommendation.recommendation.forecastReason.coding.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.forecastReason.coding.extension",
+      "path": "ImmunizationRecommendation.recommendation.forecastReason.coding.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.forecastReason.coding.system",
+      "path": "ImmunizationRecommendation.recommendation.forecastReason.coding.system",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "uri"
+        }
+      ],
+      "short": "Identity of the terminology system"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.forecastReason.coding.version",
+      "path": "ImmunizationRecommendation.recommendation.forecastReason.coding.version",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Version of the system - if relevant"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.forecastReason.coding.code",
+      "path": "ImmunizationRecommendation.recommendation.forecastReason.coding.code",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "code"
+        }
+      ],
+      "short": "Symbol in syntax defined by the system"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.forecastReason.coding.display",
+      "path": "ImmunizationRecommendation.recommendation.forecastReason.coding.display",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Representation defined by the system"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.forecastReason.coding.userSelected",
+      "path": "ImmunizationRecommendation.recommendation.forecastReason.coding.userSelected",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "boolean"
+        }
+      ],
+      "short": "If this coding was chosen directly by the user"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.forecastReason.text",
+      "path": "ImmunizationRecommendation.recommendation.forecastReason.text",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "mustSupport": true,
+      "short": "Plain text representation of the concept"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.dateCriterion",
+      "path": "ImmunizationRecommendation.recommendation.dateCriterion",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "BackboneElement"
+        }
+      ],
+      "short": "Dates governing proposed immunization"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.dateCriterion.id",
+      "path": "ImmunizationRecommendation.recommendation.dateCriterion.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.dateCriterion.extension",
+      "path": "ImmunizationRecommendation.recommendation.dateCriterion.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.dateCriterion.modifierExtension",
+      "path": "ImmunizationRecommendation.recommendation.dateCriterion.modifierExtension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Extensions that cannot be ignored even if unrecognized"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.dateCriterion.code",
+      "path": "ImmunizationRecommendation.recommendation.dateCriterion.code",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "CodeableConcept"
+        }
+      ],
+      "short": "Type of date",
+      "binding": {
+        "strength": "example",
+        "valueSet": "http://hl7.org/fhir/ValueSet/immunization-recommendation-date-criterion"
+      }
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.dateCriterion.code.id",
+      "path": "ImmunizationRecommendation.recommendation.dateCriterion.code.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.dateCriterion.code.extension",
+      "path": "ImmunizationRecommendation.recommendation.dateCriterion.code.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.dateCriterion.code.coding",
+      "path": "ImmunizationRecommendation.recommendation.dateCriterion.code.coding",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Coding"
+        }
+      ],
+      "mustSupport": true,
+      "short": "Code defined by a terminology system"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.dateCriterion.code.coding.id",
+      "path": "ImmunizationRecommendation.recommendation.dateCriterion.code.coding.id",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "http://hl7.org/fhirpath/System.String"
+        }
+      ],
+      "short": "Unique id for inter-element referencing"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.dateCriterion.code.coding.extension",
+      "path": "ImmunizationRecommendation.recommendation.dateCriterion.code.coding.extension",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Extension"
+        }
+      ],
+      "short": "Additional content defined by implementations"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.dateCriterion.code.coding.system",
+      "path": "ImmunizationRecommendation.recommendation.dateCriterion.code.coding.system",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "uri"
+        }
+      ],
+      "short": "Identity of the terminology system"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.dateCriterion.code.coding.version",
+      "path": "ImmunizationRecommendation.recommendation.dateCriterion.code.coding.version",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Version of the system - if relevant"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.dateCriterion.code.coding.code",
+      "path": "ImmunizationRecommendation.recommendation.dateCriterion.code.coding.code",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "code"
+        }
+      ],
+      "short": "Symbol in syntax defined by the system"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.dateCriterion.code.coding.display",
+      "path": "ImmunizationRecommendation.recommendation.dateCriterion.code.coding.display",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Representation defined by the system"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.dateCriterion.code.coding.userSelected",
+      "path": "ImmunizationRecommendation.recommendation.dateCriterion.code.coding.userSelected",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "boolean"
+        }
+      ],
+      "short": "If this coding was chosen directly by the user"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.dateCriterion.code.text",
+      "path": "ImmunizationRecommendation.recommendation.dateCriterion.code.text",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "mustSupport": true,
+      "short": "Plain text representation of the concept"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.dateCriterion.value",
+      "path": "ImmunizationRecommendation.recommendation.dateCriterion.value",
+      "min": 1,
+      "max": "1",
+      "type": [
+        {
+          "code": "dateTime"
+        }
+      ],
+      "short": "Recommended date"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.description",
+      "path": "ImmunizationRecommendation.recommendation.description",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Protocol details"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.series",
+      "path": "ImmunizationRecommendation.recommendation.series",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Name of vaccination series"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.doseNumber[x]",
+      "path": "ImmunizationRecommendation.recommendation.doseNumber[x]",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "positiveInt"
+        },
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Recommended dose number within series"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.seriesDoses[x]",
+      "path": "ImmunizationRecommendation.recommendation.seriesDoses[x]",
+      "min": 0,
+      "max": "1",
+      "type": [
+        {
+          "code": "positiveInt"
+        },
+        {
+          "code": "string"
+        }
+      ],
+      "short": "Recommended number of doses for immunity"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.supportingImmunization",
+      "path": "ImmunizationRecommendation.recommendation.supportingImmunization",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Reference",
+          "targetProfile": [
+            "http://hl7.org/fhir/StructureDefinition/ImmunizationEvaluation",
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Immunization"
+          ]
+        }
+      ],
+      "short": "Past immunizations supporting recommendation"
+    },
+    {
+      "id": "ImmunizationRecommendation.recommendation.supportingPatientInformation",
+      "path": "ImmunizationRecommendation.recommendation.supportingPatientInformation",
+      "min": 0,
+      "max": "*",
+      "type": [
+        {
+          "code": "Reference",
+          "targetProfile": [
+            "http://hl7.org/fhir/StructureDefinition/Resource"
+          ]
+        }
+      ],
+      "short": "Patient observations supporting recommendation"
+    }
+  ]
+}

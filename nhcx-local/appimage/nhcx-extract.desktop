@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=NHCX Extract
+Comment=Extract FHIR bundles from clinical and insurance PDFs using local LLM
+Exec=nhcx-extract
+Icon=nhcx-extract
+Type=Application
+Terminal=true
+Categories=Science;MedicalSoftware;

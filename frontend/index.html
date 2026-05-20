@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Public Infrastructure | Tanuh AI</title>
+    <link rel="icon" type="image/png" href="assets/tanuh.png">
+    <link rel="stylesheet" href="assets/style.css">
+    <link rel="stylesheet" href="assets/privacy-filter.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <script type="text/javascript">
+        (function (f, b) { if (!b.__SV) { var e, g, i, h; window.mixpanel = b; b._i = []; b.init = function (e, f, c) { function g(a, d) { var b = d.split("."); 2 == b.length && ((a = a[b[0]]), (d = b[1])); a[d] = function () { a.push([d].concat(Array.prototype.slice.call(arguments, 0))); }; } var a = b; "undefined" !== typeof c ? (a = b[c] = []) : (c = "mixpanel"); a.people = a.people || []; a.toString = function (a) { var d = "mixpanel"; "mixpanel" !== c && (d += "." + c); a || (d += " (stub)"); return d; }; a.people.toString = function () { return a.toString(1) + ".people (stub)"; }; i = "disable time_event track track_pageview track_links track_forms track_with_groups add_group set_group remove_group register register_once alias unregister identify name_tag set_config reset opt_in_tracking opt_out_tracking has_opted_in_tracking has_opted_out_tracking clear_opt_in_out_tracking start_batch_senders people.set people.set_once people.unset people.increment people.append people.union people.track_charge people.clear_charges people.delete_user people.remove".split( " "); for (h = 0; h < i.length; h++) g(a, i[h]); var j = "set set_once union unset remove delete".split(" "); a.get_group = function () { function b(c) { d[c] = function () { call2_args = arguments; call2 = [c].concat(Array.prototype.slice.call(call2_args, 0)); a.push([e, call2]); }; } for ( var d = {}, e = ["get_group"].concat( Array.prototype.slice.call(arguments, 0)), c = 0; c < j.length; c++) b(j[c]); return d; }; b._i.push([e, f, c]); }; b.__SV = 1.2; e = f.createElement("script"); e.type = "text/javascript"; e.async = !0; e.src = "undefined" !== typeof MIXPANEL_CUSTOM_LIB_URL ? MIXPANEL_CUSTOM_LIB_URL : "file:" === f.location.protocol && "//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js".match(/^\/\//) ? "https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js" : "//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js"; g = f.getElementsByTagName("script")[0]; g.parentNode.insertBefore(e, g); } })(document, window.mixpanel || []);
+    </script>
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-brand-bar">
+            <div class="header-nav-brand">
+                <i class="fas fa-network-wired fhir-icon"></i>
+                <div class="header-nav-brand-text">
+                    <span class="header-nav-title">Digital Public Infrastructure</span>
+                    <span class="header-nav-subtitle">TANUH: AI Center of Excellence in Healthcare</span>
+                </div>
+            </div>
+            <div class="header-logos">
+                <img src="assets/tanuh.png" alt="Tanuh Logo" class="logo">
+                <img src="assets/MoE_Logo.svg" alt="Ministry of Education Logo" class="logo">
+                <img src="assets/IISc_Logo.png" alt="IISc Logo" class="logo">
+            </div>
+        </div>
+        <div class="header-tabs-bar">
+            <nav class="header-nav">
+                <button class="tablinks" id="navClinical" onclick="openTab(event, 'PDF2FHIR')"><i class="fas fa-file-medical"></i> Clinical Document</button>
+                <button class="tablinks" id="navInsurance" onclick="openTab(event, 'PDF2NHCX')"><i class="fas fa-shield-alt"></i> Insurance Policy</button>
+                <button class="tablinks" id="navPrivacyFilter" onclick="openTab(event, 'PrivacyFilter')"><i class="fas fa-user-shield"></i> Privacy Filter</button>
+                <button class="tablinks" id="navForgery" onclick="openTab(event, 'ForgeryDetection')"><i class="fas fa-search-plus"></i> Forgery Detection</button>
+                <button class="tablinks" id="navDashboard" onclick="openTab(event, 'Dashboard')"><i class="fas fa-chart-bar"></i> Dashboard</button>
+            </nav>
+        </div>
+        <div class="header-ai-bar">
+            <div class="ai-badge ai-badge-off" id="aiBadge"><span class="ai-badge-dot"></span> <span id="aiBadgeText">Checking Status...</span></div>
+        </div>
+    </header>
+
+    <main class="content-container">
+        <div id="PDF2FHIR" class="tabcontent" style="display: block;"></div>
+        <div id="PDF2NHCX" class="tabcontent" style="display: none;"></div>
+        <div id="PrivacyFilter" class="tabcontent" style="display: none;"></div>
+        <div id="ForgeryDetection" class="tabcontent" style="display: none;"></div>
+        <div id="Dashboard" class="tabcontent" style="display: none;"></div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-stats">
+            <div class="footer-stat">
+                <i class="fas fa-eye"></i>
+                <span id="footerPageVisitors">0</span>
+                <span class="footer-stat-label">Page Visits</span>
+            </div>
+            <div class="footer-stat-divider"></div>
+            <div class="footer-stat">
+                <i class="fas fa-users"></i>
+                <span id="footerAppUsers">0</span>
+                <span class="footer-stat-label">App Users</span>
+            </div>
+            <div class="footer-stat-divider"></div>
+            <div class="footer-stat">
+                <i class="fas fa-hospital"></i>
+                <span id="footerClinical">0</span>
+                <span class="footer-stat-label">Clinical Docs</span>
+            </div>
+            <div class="footer-stat-divider"></div>
+            <div class="footer-stat">
+                <i class="fas fa-file-invoice"></i>
+                <span id="footerInsurance">0</span>
+                <span class="footer-stat-label">Insurance Docs</span>
+            </div>
+            <div class="footer-stat-divider"></div>
+            <div class="footer-stat">
+                <i class="fas fa-user-shield"></i>
+                <span id="footerDocsRedacted">0</span>
+                <span class="footer-stat-label">Docs Redacted</span>
+            </div>
+        </div>
+        <div class="footer-links">
+            <a href="https://www.tanuh.ai" target="_blank" class="blue-link" title="Website"><i class="fas fa-globe"></i></a>
+            <a href="https://www.linkedin.com/company/tanuh-aicoe/" target="_blank" class="blue-link" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+            <a href="https://x.com/TANUH_AI" target="_blank" class="blue-link" title="Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="https://www.youtube.com/@TANUH-AI" target="_blank" class="blue-link" title="YouTube"><i class="fab fa-youtube"></i></a>
+        </div>
+        <p class="copyright">&copy; 2026 Tanuh AI. All rights reserved.</p>
+    </footer>
+
+    <div id="toast-container"></div>
+
+    <!-- Core Logic -->
+    <script src="assets/js/main.js"></script>
+    <!-- Tab Modules -->
+    <script src="assets/js/dashboard.js"></script>
+    <script src="assets/js/processor.js"></script>
+    <script src="assets/js/apiaccess.js"></script>
+    <script src="assets/js/fhir-validator.js"></script>
+    <script src="assets/privacy-filter.js"></script>
+    <script src="assets/js/forgery.js"></script>
+    
+    <!-- Third Party -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+</body>
+</html>
