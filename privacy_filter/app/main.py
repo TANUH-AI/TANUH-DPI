@@ -31,6 +31,8 @@ from fastapi.staticfiles import StaticFiles
 from jose import jwt
 from pydantic import BaseModel, EmailStr
 
+import httpx
+
 from .auth import require_bearer
 from .model import PrivacyFilter
 from .redactor import get_handler, supported_extensions
@@ -39,6 +41,17 @@ from .stats import get_stats, record_redaction, record_visit
 from .storage import get_storage, _guess_content_type
 
 load_dotenv()
+
+SESSION_LOGGER_URL = os.getenv("SESSION_LOGGER_URL", "http://session-logger:8002")
+
+
+def _fire_log(payload: dict):
+    """POST a session log entry to the logger service. Never raises."""
+    try:
+        with httpx.Client(timeout=5.0) as client:
+            client.post(f"{SESSION_LOGGER_URL}/log", json=payload)
+    except Exception as exc:
+        logger.warning("[session-logger] fire-and-forget failed: %s", exc)
 
 logging.basicConfig(
     level=os.getenv("LOG_LEVEL", "INFO"),
@@ -159,6 +172,7 @@ async def create_demo_token(body: DemoTokenRequest):
 
 @app.post("/api/redact", response_model=RedactionResult)
 async def redact_file(
+    request: Request,
     file: UploadFile = File(...),
     _claims: Dict[str, Any] = Depends(require_bearer),
 ):
@@ -265,6 +279,13 @@ async def redact_file(
             record_redaction()
         except Exception:
             pass
+        client_ip = request.headers.get("x-forwarded-for", "").split(",")[0].strip() \
+                    or (request.client.host if request.client else "unknown")
+        _fire_log({
+            "service": "privacy_filter",
+            "ip_address": client_ip,
+            "pdf_location": safe_name,
+        })
         return result
     finally:
         # Drop large transient buffers so the next request starts clean.
@@ -305,10 +326,16 @@ async def download_file(
 
 @app.get("/api/stats")
 async def stats():
-    """Return live usage counters for the dashboard."""
+    """Return usage counters from the session logger database."""
+    try:
+        with httpx.Client(timeout=5.0) as client:
+            r = client.get(f"{SESSION_LOGGER_URL}/logs/pf-stats")
+            if r.status_code == 200:
+                return r.json()
+    except Exception as e:
+        logger.warning("Session logger stats fetch failed: %s", e)
     try:
         return get_stats()
-    except Exception as e:
-        logger.exception("Stats fetch failed")
+    except Exception:
         return {"page_visits": 0, "unique_visitors": 0, "docs_redacted": 0}
 

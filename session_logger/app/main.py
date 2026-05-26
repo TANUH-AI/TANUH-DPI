@@ -70,20 +70,26 @@ app.add_middleware(
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
-def _ip_to_user_id(ip: str) -> bytes:
-    return uuid.uuid4().bytes
+def _ip_to_user_id(ip: str) -> str:
+    return uuid.uuid4().hex
 
-def _new_session_id() -> bytes:
-    return uuid.uuid4().bytes
+def _new_session_id() -> str:
+    return uuid.uuid4().hex
 
 def _doc_type_enum(service: str) -> str:
-    return "clinical_document" if service == "pdf2abdm" else "insurance_document"
+    mapping = {
+        "pdf2abdm": "clinical_document",
+        "pdf2nhcx": "insurance_document",
+        "privacy_filter": "privacy_document",
+        "forgensic": "forgery_document",
+    }
+    return mapping.get(service, service)
 
 
 # ── Pydantic schemas ──────────────────────────────────────────────────────────
 
 class SessionLogCreate(BaseModel):
-    service:      Literal["pdf2abdm", "pdf2nhcx"]
+    service:      Literal["pdf2abdm", "pdf2nhcx", "privacy_filter", "forgensic"]
     ip_address:   Optional[str]  = "unknown"
     state:        Optional[str]  = None
     city:         Optional[str]  = None
@@ -396,12 +402,32 @@ def log_stats(db: Session = Depends(get_db)):
 
 @app.get("/logs/pf-stats", tags=["Analytics"],
          summary="Privacy Filter usage stats")
-def pf_stats():
-    """Return zeroed stats (cloud persistence removed)."""
+def pf_stats(db: Session = Depends(get_db)):
+    """Return privacy filter document count from the database."""
+    docs_redacted = (
+        db.query(func.count(SessionLog.session_id))
+        .filter(SessionLog.document_type == "privacy_document")
+        .scalar() or 0
+    )
     return {
         "page_visits":    0,
-        "docs_redacted":  0,
+        "docs_redacted":  docs_redacted,
         "unique_visitors": 0,
+    }
+
+
+@app.get("/logs/forgensic-stats", tags=["Analytics"],
+         summary="Forgensic usage stats")
+def forgensic_stats(db: Session = Depends(get_db)):
+    """Return forgery detection document count from the database."""
+    docs_analyzed = (
+        db.query(func.count(SessionLog.session_id))
+        .filter(SessionLog.document_type == "forgery_document")
+        .scalar() or 0
+    )
+    return {
+        "docs_analyzed": docs_analyzed,
+        "active_jobs":   0,
     }
 
 

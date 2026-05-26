@@ -1,13 +1,13 @@
 import uuid
 import hashlib
 from datetime import datetime
-from sqlalchemy import Column, String, Text, DateTime, Boolean, Integer, LargeBinary
+from sqlalchemy import Column, String, Text, DateTime, Boolean, Integer
 from sqlalchemy.sql import text
 from ..db.session import Base, USE_SQLITE
 
 
-def _new_binary_uuid() -> bytes:
-    return uuid.uuid4().bytes
+def _new_hex_uuid() -> str:
+    return uuid.uuid4().hex
 
 
 _CREATED_AT_DEFAULT = text("CURRENT_TIMESTAMP") if USE_SQLITE else text("convert_tz(now(),'UTC','+05:30')")
@@ -16,8 +16,8 @@ _CREATED_AT_DEFAULT = text("CURRENT_TIMESTAMP") if USE_SQLITE else text("convert
 class SessionLog(Base):
     __tablename__ = "session_logs"
 
-    session_id    = Column(LargeBinary(16), primary_key=True, default=_new_binary_uuid)
-    user_id       = Column(LargeBinary(16), nullable=False)
+    session_id    = Column(String(32), primary_key=True, default=_new_hex_uuid)
+    user_id       = Column(String(32), nullable=False)
     ip_address    = Column(String(45),   nullable=False)
     state         = Column(String(100),  nullable=True)
     city          = Column(String(100),  nullable=True)
