@@ -164,20 +164,31 @@ async def health() -> Dict[str, Any]:
 
 @app.get("/stats")
 async def stats() -> Dict[str, Any]:
+    docs_analyzed = 0
+    active = 0
+    try:
+        import httpx
+        session_logger_url = os.getenv("SESSION_LOGGER_URL", "http://session-logger:8002")
+        resp = httpx.get(f"{session_logger_url}/logs/forgensic-stats", timeout=5.0)
+        if resp.status_code == 200:
+            docs_analyzed = resp.json().get("docs_analyzed", 0)
+    except Exception:
+        try:
+            r = _get_redis()
+            docs_analyzed = int(r.get("forgensic:total_analyzed") or 0)
+        except Exception:
+            pass
     try:
         r = _get_redis()
-        total = int(r.get("forgensic:total_analyzed") or 0)
-        # Count active jobs: scan keys (only feasible at moderate scale)
-        active = 0
         for key in r.scan_iter("forgensic:job:*"):
             raw = r.get(key)
             if raw:
                 state = json.loads(raw)
                 if state.get("status") in ("queued", "processing"):
                     active += 1
-        return {"docs_analyzed": total, "active_jobs": active}
     except Exception:
-        return {"docs_analyzed": 0, "active_jobs": 0}
+        pass
+    return {"docs_analyzed": docs_analyzed, "active_jobs": active}
 
 
 @app.post("/api/token")

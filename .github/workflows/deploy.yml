@@ -71,7 +71,7 @@ jobs:
           script: |
             cd ~/TANUH-DPI
             echo "${GCP_SA_B64}" | base64 -d > gcp-service-account.json
-            chmod 600 gcp-service-account.json
+            chmod 644 gcp-service-account.json
             echo "gcp-service-account.json written"
         env:
           GCP_SA_B64: ${{ secrets.GCP_SERVICE_ACCOUNT_JSON_B64 }}

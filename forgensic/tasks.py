@@ -23,9 +23,22 @@ from typing import Any, Dict, Optional
 
 import redis as redis_lib
 
+import httpx
+
 from forgensic.celery_app import celery_app
 
 logger = logging.getLogger(__name__)
+
+SESSION_LOGGER_URL = os.getenv("SESSION_LOGGER_URL", "http://session-logger:8002")
+
+
+def _fire_log(payload: dict):
+    """POST a session log entry to the logger service. Never raises."""
+    try:
+        with httpx.Client(timeout=5.0) as client:
+            client.post(f"{SESSION_LOGGER_URL}/log", json=payload)
+    except Exception as exc:
+        logger.warning("[session-logger] fire-and-forget failed: %s", exc)
 
 # ── Redis helpers ──────────────────────────────────────────────────────────────
 
@@ -206,6 +219,12 @@ def process_forgensic_job(
 
         # Increment global docs-analyzed counter (atomic)
         r.incr("forgensic:total_analyzed")
+
+        _fire_log({
+            "service": "forgensic",
+            "ip_address": "unknown",
+            "pdf_location": file_path.name,
+        })
 
         # ── 7. Clean up the raw input file (output stays for serving) ─────────
         # Note: We no longer eagerly delete the input directory here.
