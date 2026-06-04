@@ -2,6 +2,17 @@ global:
   scrape_interval: 15s
   evaluation_interval: 15s
 
+# ── Alertmanager integration (Phase 4) ───────────────────────────────────────
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+            - alertmanager:9093
+
+# ── Alert rule files (Phase 4) ────────────────────────────────────────────────
+rule_files:
+  - /etc/prometheus/rules/*.yml
+
 scrape_configs:
   # ── Monitoring infrastructure ─────────────────────────────────────────────
   - job_name: prometheus
