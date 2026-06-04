@@ -1,0 +1,61 @@
+groups:
+  - name: error_rates
+    rules:
+
+      # HTTP 5xx error rate > 5% sustained for 5 minutes.
+      #
+      # Threshold rationale:
+      #   - 5% is the industry-standard SLO "error budget" trigger for API services.
+      #   - A single transient 5xx (model load timeout, brief Redis hiccup) will
+      #     produce a spike but not sustain past 5 minutes under normal conditions.
+      #   - The denominator guard `> 0` prevents division-by-zero noise when a service
+      #     receives zero traffic (series disappears entirely — no false alert).
+      #
+      # The `dpi_http_request_failures_total` counter only appears in Prometheus
+      # after the first 5xx occurs. The `dpi_http_requests_total` counter appears
+      # after the first request of any kind. Both are zero-series until first event,
+      # so this rule is naturally quiet on idle services.
+      - alert: HttpErrorRateHigh
+        expr: >
+          (
+            sum by (service) (rate(dpi_http_request_failures_total[5m]))
+            /
+            (sum by (service) (rate(dpi_http_requests_total[5m])) > 0)
+          ) > 0.05
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: >
+            HTTP 5xx error rate high for {{ $labels.service }}
+            ({{ $value | humanizePercentage }})
+          description: >
+            More than 5% of HTTP requests to {{ $labels.service }} are returning
+            5xx errors, sustained for 5 minutes. This indicates a systemic failure
+            in the service, not isolated errors. Check application logs:
+            docker logs <service-container>
+
+      # Task failure spike: more than 5 failed Celery tasks in a 15-minute window,
+      # sustained for 5 minutes.
+      #
+      # Threshold rationale:
+      #   - Under normal operation, task failures are very rare (0–1 per hour).
+      #   - 5 failures in 15 minutes = one failure every 3 minutes — this indicates
+      #     a systemic problem: model crash, Redis unavailable, or a class of documents
+      #     consistently triggering bugs.
+      #   - The `for: 5m` window prevents alerting on transient retry bursts
+      #     (a single bad batch may produce 2–3 failures then recover).
+      #   - `increase()` measures the raw counter increment over 15 minutes,
+      #     accounting for counter resets caused by worker container restarts.
+      - alert: TaskFailureSpike
+        expr: increase(dpi_tasks_failed_total[15m]) > 5
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Task failure spike on {{ $labels.service }}"
+          description: >
+            More than 5 Celery task failures recorded on {{ $labels.service }}
+            in the past 15 minutes (sustained for 5+ minutes). This exceeds
+            normal failure rates. Check worker logs for recurring error patterns:
+            docker logs <celery-worker-container>

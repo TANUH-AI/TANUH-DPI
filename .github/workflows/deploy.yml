@@ -92,6 +92,20 @@ jobs:
             echo "Deployment complete!"
             docker compose ps
 
+      - name: Restart monitoring stack
+        uses: appleboy/ssh-action@v1.2.1
+        with:
+          host: ${{ secrets.VM_HOST }}
+          username: ${{ secrets.VM_USER }}
+          password: ${{ secrets.VM_PASSWORD }}
+          command_timeout: 5m
+          script: |
+            set -e
+            cd ~/TANUH-DPI
+            docker compose -f monitoring/monitoring/docker-compose.monitoring.yml up -d
+            echo "Monitoring stack running:"
+            docker compose -f monitoring/monitoring/docker-compose.monitoring.yml ps
+
       - name: Health check
         uses: appleboy/ssh-action@v1.2.1
         with:
