@@ -109,10 +109,12 @@ jobs:
             --exclude='tests/' --exclude='app/' \
             "privacy_filter/" "${APPDIR}/usr/lib/python3/site-packages/privacy_filter/"
 
-          # Copy shared libraries that Python extensions need
+          # Copy shared libraries that Python interpreter and extensions need
           mkdir -p "${APPDIR}/usr/lib/x86_64-linux-gnu"
-          for so_file in $(find "${APPDIR}" -name "*.so" -type f 2>/dev/null); do
-            ldd "${so_file}" 2>/dev/null | grep "=> /" | awk '{print $3}' | while read dep; do
+          # Scan the Python binary AND all .so files — the python3 binary
+          # links against libpython3.11.so.1.0 which must be bundled
+          for elf_file in "${APPDIR}/usr/bin/python3" $(find "${APPDIR}" -name "*.so" -type f 2>/dev/null); do
+            ldd "${elf_file}" 2>/dev/null | grep "=> /" | awk '{print $3}' | while read dep; do
               dep_name="$(basename "${dep}")"
               case "${dep_name}" in
                 libc.so*|libm.so*|libpthread.so*|libdl.so*|librt.so*|ld-linux*|libgcc_s*) continue ;;
