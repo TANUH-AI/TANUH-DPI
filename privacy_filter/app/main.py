@@ -84,7 +84,9 @@ _CLEANUP_DIRS = [
 
 
 def _cleanup_old_files():
-    """Background thread: delete files older than TTL from all temp/data dirs."""
+    """Background thread: delete files older than TTL from temp/data dirs and,
+    when the GCS backend is active, from the privacy bucket too (30-min window)."""
+    gcs_backend = os.getenv("STORAGE_BACKEND", "local").lower() == "gcs"
     while True:
         time.sleep(_CLEANUP_INTERVAL_SECONDS)
         cutoff = time.time() - _CLEANUP_TTL_SECONDS
@@ -100,6 +102,16 @@ def _cleanup_old_files():
                         shutil.rmtree(item, ignore_errors=True)
                 except Exception:
                     pass
+        # GCS sweep — enforce the 30-min edit window in the privacy bucket. A GCS
+        # lifecycle rule can't express sub-day TTLs, so we delete expired objects
+        # here. Best-effort: never let it crash the cleanup loop.
+        if gcs_backend:
+            try:
+                store = get_storage()
+                if hasattr(store, "cleanup_expired"):
+                    store.cleanup_expired(_CLEANUP_TTL_SECONDS)
+            except Exception:
+                logger.exception("GCS cleanup pass failed")
         logger.debug("File cleanup pass complete (TTL=%ds)", _CLEANUP_TTL_SECONDS)
 
 
