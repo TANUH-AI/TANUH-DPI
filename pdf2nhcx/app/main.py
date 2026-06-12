@@ -111,6 +111,10 @@ from fastapi import HTTPException
 from pydantic import BaseModel, EmailStr
 from typing import Any, Dict
 
+# Resolve secrets (NHCX_SECRET_KEY etc.) from Secret Manager before config reads them.
+from common.secrets import load_secrets
+load_secrets()
+
 from pdf2nhcx.app.auth import require_bearer, issue_demo_token, log_token_to_session_logger
 
 # ── Session Logger integration ────────────────────────────────────────────────

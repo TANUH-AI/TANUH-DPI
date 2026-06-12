@@ -45,6 +45,10 @@ from fastapi.responses import FileResponse, JSONResponse, RedirectResponse, Stre
 from jose import jwt
 from pydantic import BaseModel, EmailStr
 
+# Resolve secrets (SECRET_KEY etc.) from Secret Manager before .auth/config read them.
+from common.secrets import load_secrets
+load_secrets()
+
 from .auth import require_bearer
 from .schemas import Entity, HealthResponse, RedactionResult
 from .stats import get_stats, record_redaction, record_visit

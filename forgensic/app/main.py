@@ -27,6 +27,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, Response
 from pydantic import BaseModel, EmailStr
 
+# Resolve secrets (FORGENSIC_SECRET_KEY etc.) from Secret Manager before config reads them.
+from common.secrets import load_secrets
+load_secrets()
+
 from .config import (
     CORS_ORIGINS,
     DATA_DIR,
