@@ -1,31 +1,18 @@
-# Deploy to proj-dpi-shared VM via IAP tunnel.
+# Pull pre-built images and restart Docker on all MIG VMs.
 #
-# Prerequisites (one-time GCP setup):
-#   1. Create a Workload Identity Pool + GitHub OIDC provider:
-#        gcloud iam workload-identity-pools create github-actions \
-#          --location=global --project=proj-dpi-shared
-#        gcloud iam workload-identity-pools providers create-oidc github \
-#          --location=global --workload-identity-pool=github-actions \
-#          --issuer-uri="https://token.actions.githubusercontent.com" \
-#          --attribute-mapping="google.subject=assertion.sub,attribute.repository=assertion.repository" \
-#          --project=proj-dpi-shared
+# Manually triggered only — go to GitHub Actions → "Deploy to GCP" → "Run workflow".
+# Does NOT destroy/recreate VMs. Just SSHs into each running VM via IAP,
+# pulls the latest images from Artifact Registry, and restarts containers.
 #
-#   2. Grant sa-dpi-app-prod the workload identity user role for this repo:
-#        gcloud iam service-accounts add-iam-policy-binding \
-#          sa-dpi-app-prod@proj-dpi-shared.iam.gserviceaccount.com \
-#          --role=roles/iam.workloadIdentityUser \
-#          --member="principalSet://iam.googleapis.com/projects/<PROJECT_NUMBER>/locations/global/workloadIdentityPools/github-actions/attribute.repository/TRANSLATIONAL-FOUNDATION/TANUH-DPI" \
-#          --project=proj-dpi-shared
-#
-#   3. Set these GitHub repo secrets:
-#        GCP_WORKLOAD_IDENTITY_PROVIDER = projects/<PROJECT_NUMBER>/locations/global/workloadIdentityPools/github-actions/providers/github
-#        GCP_SERVICE_ACCOUNT            = sa-dpi-app-prod@proj-dpi-shared.iam.gserviceaccount.com
+# Prerequisites (one-time GCP setup — same as build.yml):
+#   1. Workload Identity Federation pool + GitHub OIDC provider
+#   2. sa-dpi-app-prod granted workloadIdentityUser for this repo
+#   3. GitHub secrets: GCP_WORKLOAD_IDENTITY_PROVIDER, GCP_SERVICE_ACCOUNT
+#   4. sa-dpi-app-prod needs roles/iap.tunnelResourceAccessor + roles/compute.instanceAdmin.v1
 
 name: Deploy to GCP
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 concurrency:
@@ -49,19 +36,40 @@ jobs:
       - name: Set up gcloud
         uses: google-github-actions/setup-gcloud@v2
 
-      - name: Deploy to VM
+      - name: Pull and restart on all MIG instances
         run: |
-          gcloud compute ssh tanuh-dpi \
-            --zone=asia-south1-c \
+          set -euo pipefail
+
+          INSTANCES=$(gcloud compute instance-groups managed list-instances dpi-mig \
+            --region=asia-south1 \
             --project=proj-dpi-shared \
-            --tunnel-through-iap \
-            --command="
-              cd /home/miglab/TANUH-DPI &&
-              git fetch --depth 1 origin main &&
-              git checkout -f FETCH_HEAD &&
-              cp docker-compose.prod.yml docker-compose.yml &&
-              cp .env.prod .env &&
-              docker compose build --parallel &&
-              docker compose up -d --remove-orphans &&
-              echo 'Deploy complete at $(date -u)'
-            "
+            --format='csv[no-heading](instance,zone)')
+
+          if [ -z "$INSTANCES" ]; then
+            echo "No instances found in MIG dpi-mig"
+            exit 1
+          fi
+
+          DEPLOY_CMD="sudo bash -c 'cd /opt/tanuh-dpi && gcloud auth configure-docker asia-south1-docker.pkg.dev --quiet && docker compose pull && docker compose up -d --remove-orphans && echo Deploy_complete'"
+
+          FAILED=0
+          while IFS=',' read -r NAME ZONE; do
+            ZONE_SHORT=$(basename "$ZONE")
+            echo "--- Deploying to $NAME ($ZONE_SHORT) ---"
+            if gcloud compute ssh "$NAME" \
+              --zone="$ZONE_SHORT" \
+              --project=proj-dpi-shared \
+              --tunnel-through-iap \
+              --command="$DEPLOY_CMD"; then
+              echo "Done: $NAME"
+            else
+              echo "FAILED: $NAME"
+              FAILED=1
+            fi
+          done <<< "$INSTANCES"
+
+          if [ "$FAILED" -eq 1 ]; then
+            echo "Some instances failed to deploy"
+            exit 1
+          fi
+          echo "All instances updated successfully"

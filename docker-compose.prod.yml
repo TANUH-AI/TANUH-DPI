@@ -6,13 +6,20 @@
 #   - Cloud SQL Proxy: keyless, points to proj-dpi-shared instance
 #   - GCS storage for all services (no local volume mounts for uploads)
 #   - Secrets resolved from GCP Secret Manager via common/secrets.py
+#   - image: tags point to Artifact Registry — VMs just pull, never build
 #
 # Required .env vars (all non-secret):
-#   PROJECT_ID, MYSQL_USER, REDIS_HOST,
+#   PROJECT_ID, MYSQL_USER, REDIS_HOST, IMAGE_TAG (default: latest),
 #   *_SECRET pointers (MYSQL_PASSWORD_SECRET, ABDM_SECRET_KEY_SECRET, etc.)
+#
+# One-time Artifact Registry setup:
+#   gcloud artifacts repositories create dpi-containers \
+#     --repository-format=docker --location=asia-south1 \
+#     --project=proj-dpi-shared
 
 services:
   pdf2abdm:
+    image: asia-south1-docker.pkg.dev/proj-dpi-shared/dpi-containers/pdf2abdm:${IMAGE_TAG:-latest}
     build:
       context: .
       dockerfile: pdf2abdm/Dockerfile
@@ -35,6 +42,7 @@ services:
       - session-logger
 
   pdf2nhcx:
+    image: asia-south1-docker.pkg.dev/proj-dpi-shared/dpi-containers/pdf2nhcx:${IMAGE_TAG:-latest}
     build:
       context: .
       dockerfile: pdf2nhcx/Dockerfile
@@ -58,6 +66,7 @@ services:
 
   # ── NHCX Insurance Workers (4 replicas x concurrency 2 = 8 slots) ───────────
   celery-nhcx-worker:
+    image: asia-south1-docker.pkg.dev/proj-dpi-shared/dpi-containers/worker:${IMAGE_TAG:-latest}
     build:
       context: .
       dockerfile: worker/Dockerfile
@@ -78,6 +87,7 @@ services:
 
   # ── ABDM Clinical Workers (4 replicas x concurrency 2 = 8 slots) ─────────────
   celery-abdm-worker:
+    image: asia-south1-docker.pkg.dev/proj-dpi-shared/dpi-containers/worker:${IMAGE_TAG:-latest}
     build:
       context: .
       dockerfile: worker/Dockerfile
@@ -97,6 +107,7 @@ services:
       - PROMETHEUS_MULTIPROC_DIR=/tmp/prometheus_multiproc
 
   frontend:
+    image: asia-south1-docker.pkg.dev/proj-dpi-shared/dpi-containers/frontend:${IMAGE_TAG:-latest}
     build:
       context: .
       dockerfile: frontend/Dockerfile
@@ -118,6 +129,7 @@ services:
     restart: unless-stopped
 
   session-logger:
+    image: asia-south1-docker.pkg.dev/proj-dpi-shared/dpi-containers/session-logger:${IMAGE_TAG:-latest}
     build:
       context: .
       dockerfile: session_logger/Dockerfile
@@ -139,6 +151,7 @@ services:
       - cloud-sql-proxy
 
   privacy-filter:
+    image: asia-south1-docker.pkg.dev/proj-dpi-shared/dpi-containers/privacy-filter:${IMAGE_TAG:-latest}
     build:
       context: .
       dockerfile: privacy_filter/Dockerfile
@@ -163,6 +176,7 @@ services:
 
   # ── Privacy Filter Workers (4 replicas x concurrency 2 = 8 parallel slots) ──
   celery-privacy-worker:
+    image: asia-south1-docker.pkg.dev/proj-dpi-shared/dpi-containers/privacy-filter:${IMAGE_TAG:-latest}
     build:
       context: .
       dockerfile: privacy_filter/Dockerfile
@@ -191,6 +205,7 @@ services:
       - PROMETHEUS_MULTIPROC_DIR=/tmp/prometheus_multiproc
 
   forgensic:
+    image: asia-south1-docker.pkg.dev/proj-dpi-shared/dpi-containers/forgensic:${IMAGE_TAG:-latest}
     build:
       context: .
       dockerfile: forgensic/Dockerfile
@@ -215,6 +230,7 @@ services:
 
   # ── Forgensic CV Workers (4 replicas x concurrency 2 = 8 parallel job slots) ──
   celery-forgensic-worker:
+    image: asia-south1-docker.pkg.dev/proj-dpi-shared/dpi-containers/forgensic:${IMAGE_TAG:-latest}
     build:
       context: .
       dockerfile: forgensic/Dockerfile
