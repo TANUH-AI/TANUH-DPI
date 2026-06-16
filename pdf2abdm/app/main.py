@@ -16,7 +16,6 @@ from fastapi import FastAPI, Request, HTTPException
 from pydantic import BaseModel, EmailStr
 from typing import Any, Dict
 
-# Resolve secrets (ABDM_SECRET_KEY etc.) from Secret Manager before config reads them.
 from common.secrets import load_secrets
 load_secrets()
 
@@ -676,6 +675,36 @@ async def validate_fhir(request: Request):
         # 6. Delete the temporary file
         if os.path.exists(temp_file):
             os.remove(temp_file)
+
+# ── Desktop executable downloads (served from local disk) ────────────────────
+
+@app.get("/downloads/{filename}", tags=["Downloads"],
+         summary="Download a desktop executable")
+async def download_executable(filename: str):
+    """Serve executable from local disk (mounted from /opt/downloads on host)."""
+    from common.downloads import get_local_path, ALLOWED_FILES
+    from fastapi.responses import FileResponse
+
+    if filename not in ALLOWED_FILES:
+        return JSONResponse(status_code=404, content={"detail": "File not found"})
+
+    path = get_local_path(filename)
+    if path is None:
+        return JSONResponse(status_code=404, content={"detail": "File not available — VM may still be downloading executables"})
+
+    return FileResponse(
+        path=str(path),
+        media_type="application/zip",
+        filename=filename,
+    )
+
+
+@app.get("/downloads", tags=["Downloads"],
+         summary="List available desktop executables")
+async def list_downloads():
+    from common.downloads import list_available_downloads
+    return {"downloads": list_available_downloads()}
+
 
 def main():
     parser = argparse.ArgumentParser(description="OCR PDF to ABDM FHIR Converter (Local)")

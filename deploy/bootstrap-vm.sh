@@ -12,7 +12,10 @@
 #   1. install Docker + compose plugin
 #   2. fetch the repo
 #   3. write a secrets-free .env (config + Secret Manager pointers only)
-#   4. docker compose up -d   (keyless ADC + Memorystore + Secret Manager)
+#   4. sanity-check ADC
+#   5. download executables from GCS to /opt/downloads/ (one-time)
+#   6. copy docker-compose.prod.yml → docker-compose.yml
+#   7. pull + start stack (keyless ADC + Memorystore + Secret Manager)
 # =============================================================================
 set -euo pipefail
 
@@ -51,6 +54,8 @@ log "writing secrets-free .env"
 cat > .env <<EOF
 # ── Config (non-secret) ──────────────────────────────────────────────────────
 PROJECT_ID=${PROJECT_ID}
+# Pinned image version pulled from Artifact Registry (override for rollbacks).
+IMAGE_TAG=v1.0.1
 MYSQL_USER=dpi_logger
 MYSQL_HOST=cloud-sql-proxy
 MYSQL_DB=dpi_session_logger
@@ -77,12 +82,30 @@ curl -s -H "Metadata-Flavor: Google" \
   "http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/email" || true
 echo
 
-# ── 5. Start the stack (pull pre-built images from Artifact Registry) ────────
-# The compose declares image: refs in Artifact Registry (dpi-containers) plus a
-# build: fallback for local dev. In production we PULL the pre-built, versioned
+# ── 5. Download executables from GCS (one-time per VM boot) ─────────────────
+# Zip files are served locally from /opt/downloads/ — zero GCS egress on user
+# download. Only fetched from GCS when a VM is created (autoscale / crash).
+# Regular deploys (docker compose pull + up) do NOT touch this directory.
+DOWNLOADS_DIR="/opt/downloads"
+DOWNLOADS_BUCKET="${DOWNLOADS_BUCKET:-dpi-transient-processing}"
+if [ ! -d "$DOWNLOADS_DIR" ] || [ -z "$(ls -A "$DOWNLOADS_DIR" 2>/dev/null)" ]; then
+  log "downloading executables from gs://${DOWNLOADS_BUCKET}/downloads/ ..."
+  mkdir -p "$DOWNLOADS_DIR"
+  gsutil -m cp "gs://${DOWNLOADS_BUCKET}/downloads/*" "$DOWNLOADS_DIR/" || \
+    log "WARNING: failed to download executables (will retry on next boot)"
+else
+  log "executables already present in $DOWNLOADS_DIR — skipping download"
+fi
+
+# ── 6. Use prod compose config ──────────────────────────────────────────────
+log "setting up prod compose..."
+cp docker-compose.prod.yml docker-compose.yml
+
+# ── 7. Start the stack (pull pre-built images from Artifact Registry) ────────
+# docker-compose.prod.yml declares image: refs in Artifact Registry
+# (dpi-containers) plus a build: fallback. In production we PULL the pre-built
 # images (no on-VM build) — boot drops from ~20 min to ~2-3 min. The VM's
 # attached SA needs roles/artifactregistry.reader.
-# Override the image tag with IMAGE_TAG=<tag> for pinned versions / rollbacks.
 log "configuring Artifact Registry auth (ADC)..."
 gcloud auth configure-docker asia-south1-docker.pkg.dev --quiet || true
 
@@ -90,6 +113,6 @@ log "pulling images..."
 docker compose pull
 
 log "starting stack..."
-docker compose up -d
+docker compose up -d --remove-orphans
 
 log "done. services on :8000-8004 (APIs) and :8080 (frontend)."

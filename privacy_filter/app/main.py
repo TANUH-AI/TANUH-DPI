@@ -45,7 +45,6 @@ from fastapi.responses import FileResponse, JSONResponse, RedirectResponse, Stre
 from jose import jwt
 from pydantic import BaseModel, EmailStr
 
-# Resolve secrets (SECRET_KEY etc.) from Secret Manager before .auth/config read them.
 from common.secrets import load_secrets
 load_secrets()
 
@@ -106,9 +105,6 @@ def _cleanup_old_files():
                         shutil.rmtree(item, ignore_errors=True)
                 except Exception:
                     pass
-        # GCS sweep — enforce the 30-min edit window in the privacy bucket. A GCS
-        # lifecycle rule can't express sub-day TTLs, so we delete expired objects
-        # here. Best-effort: never let it crash the cleanup loop.
         if gcs_backend:
             try:
                 store = get_storage()
@@ -117,6 +113,31 @@ def _cleanup_old_files():
             except Exception:
                 logger.exception("GCS cleanup pass failed")
         logger.debug("File cleanup pass complete (TTL=%ds)", _CLEANUP_TTL_SECONDS)
+
+
+def _cleanup_gcs_objects(cutoff: float):
+    """Delete GCS objects in the privacy bucket older than cutoff."""
+    try:
+        from datetime import datetime, timezone
+        from google.cloud import storage as gcs
+        bucket_name = os.getenv("GCS_BUCKET") or os.getenv("PRIVACY_GCS_BUCKET", "dpi-privacy-temp")
+        prefix = os.getenv("GCS_PREFIX", "privacy-app")
+        client = gcs.Client()
+        bucket = client.bucket(bucket_name)
+        cutoff_dt = datetime.fromtimestamp(cutoff, tz=timezone.utc)
+        deleted = 0
+        for blob in bucket.list_blobs(prefix=prefix):
+            if blob.time_created and blob.time_created < cutoff_dt:
+                try:
+                    blob.delete()
+                    deleted += 1
+                except Exception:
+                    pass
+        if deleted:
+            logger.info("GCS cleanup: deleted %d objects older than %ds from gs://%s/%s",
+                        deleted, _CLEANUP_TTL_SECONDS, bucket_name, prefix)
+    except Exception as exc:
+        logger.debug("GCS cleanup skipped: %s", exc)
 
 
 @asynccontextmanager
@@ -263,7 +284,8 @@ async def redact_file(
 
         # Produce the de-identified output (format-preserving).
         out_ext = service.out_extension(safe_name)
-        redacted_key = f"{job_id}__redacted{out_ext}"
+        stem = Path(safe_name).stem
+        redacted_key = f"{job_id}__{stem}_redacted{out_ext}"
         tmp_redact_dir = Path(tempfile.gettempdir()) / "pf_redacted"
         tmp_redact_dir.mkdir(parents=True, exist_ok=True)
         redacted_local = tmp_redact_dir / redacted_key
@@ -500,8 +522,31 @@ def _find_stored_file(kind: str, key: str, storage=None) -> Path | None:
     return None
 
 
-def _render_document_pages(file_path: Path, key: str) -> List[Dict[str, Any]]:
-    """Convert a document to page images. Returns [{page, url, width, height}]."""
+def _persist_pages_to_gcs(storage, key: str, out_dir: Path) -> None:
+    """Mirror locally-rendered page PNGs into GCS so any VM can serve them.
+
+    The MIG runs multiple VMs and the load balancer does not pin a client to a
+    single instance, so a page rendered on VM-A must be retrievable on VM-B.
+    Nothing preview-related is allowed to live only on one VM's local disk.
+    """
+    if os.getenv("STORAGE_BACKEND", "local").lower() != "gcs":
+        return
+    for png in sorted(out_dir.glob("page_*.png")):
+        try:
+            storage.save("pages", f"{key}/{png.name}", png.read_bytes())
+        except Exception:
+            logger.exception("failed to persist page %s to GCS", png.name)
+
+
+def _render_document_pages(file_path: Path, key: str, storage=None) -> List[Dict[str, Any]]:
+    """Convert a document to page images. Returns [{page, url, width, height}].
+
+    Rendered page PNGs are also persisted to GCS (when STORAGE_BACKEND=gcs) so
+    that /api/page-image can be served by any MIG VM — not just the one that ran
+    the render. Requests are not pinned to a single instance.
+    """
+    if storage is None:
+        storage = get_storage()
     out_dir = _PAGE_RENDER_DIR / key
     out_dir.mkdir(parents=True, exist_ok=True)
 
@@ -563,6 +608,7 @@ def _render_document_pages(file_path: Path, key: str) -> List[Dict[str, Any]]:
         except Exception:
             logger.warning("NIfTI preview failed")
 
+    _persist_pages_to_gcs(storage, key, out_dir)
     return pages_info
 
 
@@ -577,16 +623,24 @@ async def render_pages(
     file_path = _find_stored_file(kind, key, storage)
     if file_path is None:
         raise HTTPException(status_code=404, detail="File not found")
-    pages = _render_document_pages(file_path, key)
+    pages = _render_document_pages(file_path, key, storage)
     return {"pages": pages, "text_only": False}
 
 
 @app.get("/api/page-image/{key}/{page_num}")
 async def page_image(key: str, page_num: int):
     img_path = _PAGE_RENDER_DIR / key / f"page_{page_num}.png"
-    if not img_path.exists():
-        raise HTTPException(status_code=404, detail="Page image not found")
-    return FileResponse(img_path, media_type="image/png")
+    if img_path.exists():
+        return FileResponse(img_path, media_type="image/png")
+    # MIG/multi-VM: the page may have been rendered on a different VM. The render
+    # step mirrors pages to GCS, so retrieve it from there rather than 404-ing.
+    if os.getenv("STORAGE_BACKEND", "local").lower() == "gcs":
+        try:
+            data = get_storage().open_read("pages", f"{key}/page_{page_num}.png")
+            return StreamingResponse(data, media_type="image/png")
+        except Exception:
+            logger.warning("page-image %s/%s not found in GCS", key, page_num)
+    raise HTTPException(status_code=404, detail="Page image not found")
 
 
 # ---------------------------------------------------------------------------
@@ -614,8 +668,9 @@ async def apply_redactions(
     suffix = tmp_upload.suffix.lower()
     original_name = body.source_key.split("__", 1)[-1] if "__" in body.source_key else body.source_key
     out_ext = Path(original_name).suffix.lower() or suffix
+    stem = Path(original_name).stem
 
-    redacted_key = f"{body.job_id}__redacted_edited{out_ext}"
+    redacted_key = f"{body.job_id}__{stem}_redacted{out_ext}"
     tmp_redact_dir = Path(tempfile.gettempdir()) / "pf_redacted"
     tmp_redact_dir.mkdir(parents=True, exist_ok=True)
     redacted_path = tmp_redact_dir / redacted_key
