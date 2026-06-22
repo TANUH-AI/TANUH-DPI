@@ -111,7 +111,8 @@
                 renderResult(data, taskType, outputEl, fileInput);
             } else if (!isClinical) {
                 // Async path for NHCX (production — uses GCS + Celery)
-                const r = await fetch(`${base}/pdf2nhcx/submit`, {
+                // base already includes /pdf2nhcx from DPI_API_CONFIG
+                const r = await fetch(`${base}/submit`, {
                     method: 'POST',
                     body:   formData,
                     headers
@@ -126,7 +127,8 @@
                 renderResult(data, taskType, outputEl, fileInput);
             } else {
                 // Async path for ABDM (production — uses GCS + Celery)
-                const r = await fetch(`${base}/pdf2abdm/submit`, {
+                // base already includes /pdf2abdm from DPI_API_CONFIG
+                const r = await fetch(`${base}/submit`, {
                     method: 'POST',
                     body:   formData,
                     headers
@@ -177,7 +179,8 @@
     }
 
     async function _fetchTaskResult(taskId, resultPath, base, headers) {
-        const resultUrl = resultPath.startsWith('http') ? resultPath : `${base}${resultPath}`;
+        const origin = window.location.origin;
+        const resultUrl = resultPath.startsWith('http') ? resultPath : `${origin}${resultPath}`;
         const rr = await fetch(resultUrl, { headers });
         if (!rr.ok) throw new Error(`Failed to fetch result (${rr.status})`);
         const bundle = await rr.json();
@@ -188,7 +191,7 @@
     }
 
     async function pollTask(taskId, base, headers) {
-        const statusUrl = `${base}/pdf2nhcx/task-status/${taskId}`;
+        const statusUrl = `${base}/task-status/${taskId}`;
         while (true) {
             const r = await fetch(statusUrl, { headers });
             const j = await r.json();
@@ -196,7 +199,7 @@
             if (j.status === 'completed' || j.status === 'SUCCESS') {
                 return await _fetchTaskResult(
                     taskId,
-                    j.result_url || `/pdf2nhcx/task-result/${taskId}`,
+                    j.result_url || `/task-result/${taskId}`,
                     base, headers
                 );
             }
@@ -209,7 +212,7 @@
     }
 
     async function pollAbdmTask(taskId, base, headers) {
-        const statusUrl = `${base}/pdf2abdm/task-status/${taskId}`;
+        const statusUrl = `${base}/task-status/${taskId}`;
         while (true) {
             const r = await fetch(statusUrl, { headers });
             const j = await r.json();
@@ -217,7 +220,7 @@
             if (j.status === 'completed' || j.status === 'SUCCESS') {
                 return await _fetchTaskResult(
                     taskId,
-                    j.result_url || `/pdf2abdm/task-result/${taskId}`,
+                    j.result_url || `/task-result/${taskId}`,
                     base, headers
                 );
             }
