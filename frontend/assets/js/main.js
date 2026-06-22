@@ -157,8 +157,8 @@
         const isCloudAbdm = abdm.includes('dpi.tanuh.ai');
         const isCloudNhcx = nhcx.includes('dpi.tanuh.ai');
 
-        checkServiceHealth('clinicalAiBadge', 'clinicalAiText', `${abdm}/health`, isCloudAbdm ? 'AI CLOUD' : 'AI ON', 'AI OFF');
-        checkServiceHealth('insuranceAiBadge', 'insuranceAiText', `${nhcx}/health`, isCloudNhcx ? 'AI CLOUD' : 'AI ON', 'AI OFF');
+        checkServiceHealth('clinicalAiBadge', 'clinicalAiText', `${abdm}/health`, isCloudAbdm ? 'AI ON' : 'AI ON', 'AI OFF');
+        checkServiceHealth('insuranceAiBadge', 'insuranceAiText', `${nhcx}/health`, isCloudNhcx ? 'AI ON' : 'AI ON', 'AI OFF');
     }
 
     // ── Tab Management ──────────────────────────────────────────────────────────
