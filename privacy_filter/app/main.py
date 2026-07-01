@@ -56,7 +56,7 @@ from . import service
 
 load_dotenv()
 
-MAX_FILE_SIZE_MB = 25
+MAX_FILE_SIZE_MB = 75
 SESSION_LOGGER_URL = os.getenv("SESSION_LOGGER_URL", "http://session-logger:8002")
 
 logging.basicConfig(
