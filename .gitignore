@@ -300,7 +300,9 @@ test_files/
 privacy_filter_data/
 privacy_filter_bharath_old/
 privacy_filter_old/
+privacy-filter-local/
 forgensic_data/
+privacy_filter/tests/
 
 # ── Concurrency test outputs ─────────────────────────────────────────────────
 conc_test_*.json
