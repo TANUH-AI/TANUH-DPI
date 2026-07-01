@@ -34,7 +34,7 @@ from typing import Any, Dict, List, Tuple
 
 import fitz
 
-from ..detectors.safe_harbor_detector import SafeHarborDetector
+from ..detectors.safe_harbor_detector import SafeHarborDetector, _CLINICAL_ALLOWLIST
 
 logger = logging.getLogger("privacy_filter.pdf_redactor")
 
@@ -65,12 +65,18 @@ _QR_MAX_SIDE = 160.0  # PDF points
 _BARCODE_MIN_AR = 2.5
 _BARCODE_MAX_H = 70.0  # PDF points — distinguishes barcodes from wide banners
 
+# Signature image heuristic: wider than tall, moderate height.
+_SIG_MIN_AR = 1.5
+_SIG_MAX_AR = 6.0
+_SIG_MIN_H = 20.0  # PDF points
+_SIG_MAX_H = 80.0  # PDF points
+
 # Labels whose detected text is a discrete identifier worth searching for
 # everywhere it repeats (names, codes, IDs). Dates/times/ages repeat too but
 # are already caught per-line by the pattern detectors on every page.
 _GLOBAL_LABELS = {
     "PERSON_NAME", "IDENTIFIER", "LABELED_PHI", "BARCODE", "AADHAAR",
-    "PAN", "SSN", "EMAIL",
+    "PAN", "SSN", "EMAIL", "ORG_NAME",
 }
 
 # Stop-words never worth global searching (would over-match clinical text).
@@ -202,6 +208,12 @@ class PDFRedactor:
                 if rect is not None:
                     redact_rects.append((rect, span.label, span.text))
 
+        # ── Block-level detection ────────────────────────────────────────────
+        # PDF text extraction sometimes splits a label ("Name") and its value
+        # (": Lyubochka Svetka") into different lines within the same block.
+        # Re-run detection on block-level concatenated text to catch these.
+        redact_rects.extend(self._block_level_detect(lines, words))
+
         # Apply text redactions (true removal + black fill).
         for rect, label, text in redact_rects:
             page.add_redact_annot(rect, fill=(0, 0, 0))
@@ -225,13 +237,67 @@ class PDFRedactor:
                 "bbox": _px_bbox(rect, page_index),
             })
 
-        if redact_rects or any(e["entity_group"] in ("QR_CODE", "BARCODE") for e in entities):
+        if redact_rects or any(e["entity_group"] in ("QR_CODE", "BARCODE", "SIGNATURE") for e in entities):
             # images=PDF_REDACT_IMAGE_NONE keeps unrelated images (logos, figures);
-            # the QR/barcode rects are removed because their annots cover them and
-            # we request pixel removal only where annots sit.
+            # the QR/barcode/signature rects are removed because their annots cover
+            # them and we request pixel removal only where annots sit.
             page.apply_redactions(images=fitz.PDF_REDACT_IMAGE_REMOVE)
 
         return entities
+
+    # ------------------------------------------------------------------
+
+    def _block_level_detect(
+        self,
+        lines: Dict[tuple, list],
+        words: list,
+    ) -> List[tuple]:
+        """Re-run detection on block-level text to catch cross-line label-value pairs.
+        """
+        extra: List[tuple] = []
+        blocks: Dict[int, list] = {}
+        for key, line_words in lines.items():
+            blocks.setdefault(key[0], []).append((key, line_words))
+
+        _Y_TOL = 3.0  # points — lines within this tolerance are the same row
+
+        for block_id, block_data in blocks.items():
+            if len(block_data) <= 1:
+                continue
+            # Sort lines into visual reading order: group by y (with tolerance),
+            # then left-to-right within each row.
+            for item in block_data:
+                item_words = item[1]
+                item_words.sort(key=lambda w: w[0])
+            block_data.sort(
+                key=lambda x: (
+                    round(min(w[1] for w in x[1]) / _Y_TOL) * _Y_TOL,
+                    min(w[0] for w in x[1]),
+                )
+            )
+
+            block_text = ""
+            block_offsets = []
+            for _key, lwords in block_data:
+                for w in lwords:
+                    start = len(block_text)
+                    block_text += w[4]
+                    block_offsets.append(
+                        (start, len(block_text), fitz.Rect(w[0], w[1], w[2], w[3]))
+                    )
+                    block_text += " "
+
+            for span in self.detector.detect_spans(block_text):
+                rect = None
+                span_words = []
+                for cs, ce, r in block_offsets:
+                    if not (ce <= span.start or cs >= span.end):
+                        rect = r if rect is None else (rect | r)
+                        span_words.append(block_text[cs:ce])
+                if rect is not None:
+                    text = span.text or " ".join(span_words)
+                    extra.append((rect, span.label, text))
+        return extra
 
     # ------------------------------------------------------------------
 
@@ -250,6 +316,8 @@ class PDFRedactor:
                         out.append((rect, "QR_CODE"))
                     elif ar >= _BARCODE_MIN_AR and h <= _BARCODE_MAX_H:
                         out.append((rect, "BARCODE"))
+                    elif _SIG_MIN_AR <= ar <= _SIG_MAX_AR and _SIG_MIN_H <= h <= _SIG_MAX_H:
+                        out.append((rect, "SIGNATURE"))
         except Exception as exc:
             logger.warning("QR/barcode scan failed: %s", exc)
         return out
@@ -268,6 +336,8 @@ class PDFRedactor:
             for raw in phrase.replace("/", " ").replace(",", " ").split():
                 t = raw.strip(".:-()[]*")
                 if len(t) < 4 or t.lower() in _TOKEN_STOPWORDS:
+                    continue
+                if t.lower() in _CLINICAL_ALLOWLIST:
                     continue
                 # Only search for identifier-like tokens: those containing a
                 # digit (codes/IDs) or that are capitalised/UPPER name parts.
