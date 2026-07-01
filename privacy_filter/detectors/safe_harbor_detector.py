@@ -49,10 +49,17 @@ _AGE_GENDER = re.compile(
     r"\b\d{1,3}\s*(?:Y|yr|yrs|year|years)\s*/\s*(?:Male|Female|M|F|Other)\b",
     re.IGNORECASE,
 )
+# Gender-first variant: "Male / 41 Y", "Female/45 Yrs"
+_GENDER_AGE = re.compile(
+    r"\b(?:Male|Female)\s*/\s*\d{1,3}\s*(?:Y|yr|yrs|year|years)\b",
+    re.IGNORECASE,
+)
 _AGE_ONLY = re.compile(
     r"\b\d{1,3}\s*(?:years?|yrs?)\s*(?:old)?\b",
     re.IGNORECASE,
 )
+# Standalone demographic age notation: "41 Y", "69Y" (uppercase Y only)
+_AGE_Y = re.compile(r"\b\d{1,3}\s*Y\b")
 
 # ── Dates (all elements except a bare year) ─────────────────────────────────
 # 18-03-2026, 18/03/2026, 18-03-26, 2026-03-18, 6/2/26
@@ -88,6 +95,24 @@ _PHONE = re.compile(
     r"(?<!\d)(?:\+?\d{1,3}[-\s]?)?(?:\(?\d{2,5}\)?[-\s]?)?\d{3,5}[-\s]?\d{4,8}(?!\d)",
 )
 
+# ── Organization / lab names ─────────────────────────────────────────────────
+# "Sterling Accuris Pathology Laboratory", "City Hospital", "Medall Diagnostics"
+_ORG_SUFFIX = re.compile(
+    r"\b[A-Z][A-Za-z]+(?:\s+[A-Z][A-Za-z]+)*\s+"
+    r"(?:Laborator(?:y|ies)|Pathology|Diagnostics?|Hospital|Clinic(?:s)?|"
+    r"Medical\s+Cent(?:re|er)|Healthcare|Health\s*Care|Institute|Foundation|"
+    r"Imaging|Radiology|Pharmacy)\b",
+    re.IGNORECASE,
+)
+
+# ── Doctor credentials near names ───────────────────────────────────────────
+# "Sanjeev Shah MD", "Pallavi B R MBBS", "Yash Shah M.D."
+_CREDENTIAL_NAME = re.compile(
+    r"\b[A-Z][a-z]+(?:\s+[A-Z][A-Za-z]*)+\s*,?\s*"
+    r"(?:MBBS|MD|MS|DNB|DM|MCh|M\.D\.|M\.S\.|FRCS|MRCP|DCH|DA|"
+    r"FRCPath|MRCPath|Ph\.?D)\b",
+)
+
 # ── Identifiers ──────────────────────────────────────────────────────────────
 # Indian PIN code: "570 004" / "570004"
 _PIN = re.compile(r"\b\d{3}\s?\d{3}\b")
@@ -115,9 +140,18 @@ _LABELS = [
     "patient category", "category",
     "referred by", "referring", "requested by", "consultant", "physician",
     "result entered by", "result verified by", "entered by", "verified by",
+    "authorized by", "authorised by", "approved by", "checked by", "signed by",
     "name", "patient name", "patient", "mobile", "phone", "tel", "tel no",
     "fax", "email", "e-mail", "address", "specimen collected at",
     "health id", "abha", "insurance", "policy no", "member id", "beneficiary",
+    "dob", "date of birth", "d.o.b", "birth date",
+    "sex", "gender", "age", "age/sex", "age / sex", "sex/age", "sex / age",
+    "client", "client name", "client id",
+    "lab", "lab name", "laboratory",
+    "centre", "center", "branch",
+    "collected at", "reported at", "received at",
+    "sample id", "sample no", "barcode no",
+    "contact", "contact no", "website",
 ]
 # A colon is REQUIRED after the label. This prevents a generic word like
 # "Patient" inside a clinical sentence ("*Patient is not able to hold urine…")
@@ -132,8 +166,54 @@ _CATEGORY_WORDS = {"general", "private", "corporate", "insurance", "camp", "staf
 # Labels whose entire line-remainder is identifier data (no clinical content).
 _FULL_LINE_LABELS = {
     "result entered by", "result verified by", "entered by", "verified by",
+    "authorized by", "authorised by", "approved by", "checked by", "signed by",
     "referred by", "referring", "requested by", "consultant", "physician",
+    "address", "specimen collected at", "collected at",
+    "client", "client name",
+    "contact", "contact no", "website",
+    "lab", "lab name", "laboratory",
+    "centre", "center", "branch",
 }
+
+
+# ── Clinical allowlist (never redact these terms) ───────────────────────────
+_CLINICAL_ALLOWLIST = {
+    "haemoglobin", "hemoglobin", "haemoglobins", "hemoglobins",
+    "platelet", "platelets", "lymphocyte", "lymphocytes",
+    "neutrophil", "neutrophils", "monocyte", "monocytes",
+    "eosinophil", "eosinophils", "basophil", "basophils",
+    "erythrocyte", "erythrocytes", "leukocyte", "leukocytes",
+    "creatinine", "bilirubin", "cholesterol", "triglyceride", "triglycerides",
+    "glucose", "albumin", "globulin", "protein", "calcium",
+    "sodium", "potassium", "chloride", "phosphorus", "magnesium",
+    "urea", "uric", "insulin", "testosterone", "estrogen",
+    "progesterone", "cortisol", "thyroxine", "triiodothyronine",
+    "ferritin", "transferrin", "fibrinogen", "prothrombin",
+    "hematocrit", "haematocrit", "reticulocyte", "reticulocytes",
+    "immunoglobulin", "antibody", "antibodies", "antigen",
+    "specimen", "reference", "normal", "abnormal", "positive",
+    "negative", "reactive", "nonreactive", "testing", "tested",
+    "method", "methodology", "technique", "analysis", "report",
+    "result", "results", "finding", "findings", "impression",
+    "conclusion", "recommendation", "comment", "comments",
+    "note", "notes", "observation", "observations",
+    "prostate", "kidney", "bladder", "liver", "pancreas",
+    "thyroid", "pituitary", "adrenal", "serum", "plasma", "whole",
+    "glycated", "glycosylated", "fasting", "random", "postprandial",
+}
+
+# ── Clinical context detector (lab result lines) ───────────────────────────
+_CLINICAL_CONTEXT = re.compile(
+    r"(?:g/dL|mg/dL|mmol|µmol|ng/mL|pg/mL|IU/L|U/L|mEq/L|cells/µL|"
+    r"×10|x10|lakhs?|million|thou|/cumm|/cu\.?\s*mm|fl|fL|"
+    r"reference|ref\.?\s*range|normal\s*range|biological\s*ref|"
+    r"\d+\.?\d*\s*-\s*\d+\.?\d*\s*(?:g|mg|ng|µg|mmol|U|IU|%))",
+    re.IGNORECASE,
+)
+
+
+def _is_clinical_line(text: str) -> bool:
+    return bool(_CLINICAL_CONTEXT.search(text))
 
 
 class SafeHarborDetector:
@@ -153,6 +233,8 @@ class SafeHarborDetector:
                 spans.append(Span(s + lead, e - trail, text[s + lead:e - trail], label))
 
         # ── Strong, unambiguous patterns first ──────────────────────────────
+        clinical = _is_clinical_line(text)
+
         for m in _EMAIL.finditer(text):        add(m, "EMAIL")
         for m in _URL.finditer(text):          add(m, "URL")
         for m in _IP.finditer(text):           add(m, "IP_ADDRESS")
@@ -164,11 +246,23 @@ class SafeHarborDetector:
         for m in _DATE_MONTHNAME.finditer(text): add(m, "DATE")
         for m in _TIME.finditer(text):         add(m, "TIME")
         for m in _AGE_GENDER.finditer(text):   add(m, "AGE_GENDER")
-        for m in _AGE_ONLY.finditer(text):     add(m, "AGE")
+        for m in _GENDER_AGE.finditer(text):   add(m, "AGE_GENDER")
+        for m in _AGE_Y.finditer(text):
+            if not clinical:
+                add(m, "AGE")
+        for m in _AGE_ONLY.finditer(text):
+            if not clinical:
+                add(m, "AGE")
         for m in _HONORIFIC_NAME.finditer(text): add(m, "PERSON_NAME")
-        for m in _LONG_NUM.finditer(text):     add(m, "IDENTIFIER")
+        for m in _ORG_SUFFIX.finditer(text):   add(m, "ORG_NAME")
+        for m in _CREDENTIAL_NAME.finditer(text): add(m, "PERSON_NAME")
+        for m in _LONG_NUM.finditer(text):
+            if not clinical:
+                add(m, "IDENTIFIER")
         for m in _ALNUM_CODE.finditer(text):   add(m, "IDENTIFIER")
-        for m in _PIN.finditer(text):          add(m, "ZIP")
+        for m in _PIN.finditer(text):
+            if not clinical:
+                add(m, "ZIP")
 
         # ── Phone numbers (after the above, to avoid double-spanning dates) ──
         for m in _PHONE.finditer(text):
@@ -176,7 +270,7 @@ class SafeHarborDetector:
             if not _overlaps(m.start(), m.end(), spans):
                 # Require at least 8 digits total to be a phone (not a 6-digit id)
                 digits = sum(c.isdigit() for c in m.group())
-                if digits >= 8:
+                if digits >= 8 and not clinical:
                     add(m, "PHONE")
 
         # ── Label-anchored values (staff codes, category, names on same line) ─

@@ -298,6 +298,8 @@ reference/
 postman/
 test_files/
 privacy_filter_data/
+privacy_filter_bharath_old/
+privacy_filter_old/
 forgensic_data/
 
 # ── Concurrency test outputs ─────────────────────────────────────────────────
