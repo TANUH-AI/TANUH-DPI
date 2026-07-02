@@ -25,7 +25,7 @@
 
         // Silent centralized token fetch using logged-in Firebase session
         if (window.DPI_Auth && window.DPI_Auth.isLoggedIn()) {
-            const firebaseToken = window.DPI_Auth.getToken();
+            const firebaseToken = await window.DPI_Auth.getToken();
             const serviceId = isClinical ? 'pdf2abdm' : 'pdf2nhcx';
             const loggerBase = window.DPI_API_CONFIG ? window.DPI_API_CONFIG.logger : 'http://localhost:8002';
             try {
