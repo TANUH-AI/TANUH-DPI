@@ -573,9 +573,9 @@ a:hover {
 /* Hero service quick-links */
 .hero-services {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 12px;
-    max-width: 56rem;
+    max-width: 72rem;
     margin: 0 auto;
 }
 
@@ -768,9 +768,9 @@ a:hover {
    ═══════════════════════════════════════════════════════════════════════════ */
 .ecosystem-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 1.25rem;
-    max-width: 72rem;
+    max-width: 90rem;
     margin: 0 auto;
 }
 
@@ -4308,7 +4308,7 @@ select:focus {
    ═══════════════════════════════════════════════════════════════════════════ */
 
 /* Remove default container padding/max-width for full-width layout */
-#ClinicalDocs, #InsuranceDocs, #PrivacyDocs, #ForgeryDocs {
+#ClinicalDocs, #InsuranceDocs, #PrivacyDocs, #ForgeryDocs, #AudioDocs {
     max-width: 100% !important;
     padding: 0 !important;
 }

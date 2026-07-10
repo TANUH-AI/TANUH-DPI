@@ -71,6 +71,15 @@
                     <div class="hero-service-desc">Data/image anonymization engine</div>
                 </div>
             </div>
+            <div class="hero-service-card"
+                onclick="openTab(null,'AudioASR'); document.getElementById('navAudio').classList.add('active');">
+                <div class="hero-service-icon" style="background:rgba(236,72,153,0.1);color:#ec4899;"><i
+                        class="fas fa-microphone"></i></div>
+                <div class="hero-service-info">
+                    <div class="hero-service-name">Medical Audio Summarization</div>
+                    <div class="hero-service-desc">Audio dictation &amp; summarization</div>
+                </div>
+            </div>
         </div>
         <!-- Scroll Down Arrow -->
         <div class="hero-scroll-arrow" onclick="scrollToStats()" aria-label="Scroll Down">
@@ -116,6 +125,12 @@
                     <span class="stat-value" id="statDocsRedacted">0</span><span class="stat-plus">+</span>
                 </div>
                 <div class="stat-label">Data/images anonymized</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value-container">
+                    <span class="stat-value" id="statAudio">0</span><span class="stat-plus">+</span>
+                </div>
+                <div class="stat-label">Medical Audio Summarization</div>
             </div>
         </div>
         <!-- <div class="stats-footer animate-slide-up" style="animation-delay: 0.1s;">
@@ -191,7 +206,7 @@
     <div class="container">
         <div class="section-header reveal-on-scroll">
             <p class="section-label">Infrastructure</p>
-            <h2 class="section-title">Four services, one platform</h2>
+            <h2 class="section-title">Five services, one platform</h2>
             <p class="section-desc">Convert clinical documents, process insurance claims, anonymize clinical
                 data/images, and detect forgery. Built and runs on unified infrastructure.</p>
         </div>
@@ -325,7 +340,35 @@
                     </button>
                 </div>
             </div>
-
+            <!-- Audio ASR -->
+            <div class="eco-card">
+                <div class="eco-card-accent" style="background:#ec4899;"></div>
+                <div class="eco-card-body">
+                    <div class="eco-card-header">
+                        <div class="eco-card-icon" style="background:rgba(236,72,153,0.1);color:#ec4899;">
+                            <i class="fas fa-microphone"></i>
+                        </div>
+                        <div>
+                            <div class="eco-card-phase" style="color:#ec4899;">Transcribe &amp; Summarize</div>
+                            <h3 class="eco-card-name">Medical Audio Summarization</h3>
+                        </div>
+                    </div>
+                    <p>Convert medical audio dictations into text and generate structured summaries using state-of-the-art AI models.</p>
+                    <ul class="eco-card-features">
+                        <li><span class="dot" style="background:#ec4899;"></span> Indic-Conformer ASR</li>
+                        <li><span class="dot" style="background:#ec4899;"></span> Extractive &amp; Abstractive Summaries</li>
+                        <li><span class="dot" style="background:#ec4899;"></span> Fast local inference</li>
+                    </ul>
+                    <button class="eco-card-link"
+                        onclick="openTab(null,'AudioASR'); document.getElementById('navAudio').classList.add('active');">
+                        Launch Service
+                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
 
         </div>
     </div>
