@@ -206,7 +206,7 @@
         setTarget('statInsurance',       insurance);
         setTarget('statDocsRedacted',    docsRedacted);
         setTarget('statForgery',         forgeryDocs);
-        setTarget('statAudio',           0);
+        setTarget('statAudio',           21);
         
         // Trigger animations for any elements that are already revealed
         document.querySelectorAll('.stat-value').forEach(el => {
