@@ -77,8 +77,8 @@
         if (servicesTrigger) servicesTrigger.classList.remove('active');
         if (docsTrigger) docsTrigger.classList.remove('active');
 
-        const servicesTabs = ['PDF2FHIR', 'PDF2NHCX', 'PrivacyFilter', 'ForgeryDetection'];
-        const docsTabs = ['ClinicalDocs', 'InsuranceDocs', 'PrivacyDocs', 'ForgeryDocs'];
+        const servicesTabs = ['PDF2FHIR', 'PDF2NHCX', 'PrivacyFilter', 'ForgeryDetection', 'AudioASR'];
+        const docsTabs = ['ClinicalDocs', 'InsuranceDocs', 'PrivacyDocs', 'ForgeryDocs', 'AudioDocs'];
         
         if (servicesTabs.includes(tabName)) {
             const parent = document.getElementById(tabName);
@@ -164,8 +164,14 @@
     // ── Tab Management ──────────────────────────────────────────────────────────
     const loadedTabs = new Set();
 
-    async function openTab(evt, tabName, skipScroll) {
+    async function openTab(evt, tabName, skipScroll, skipHistory = false) {
         if (evt) evt.preventDefault();
+
+        if (!skipHistory) {
+            if (!history.state || history.state.tab !== tabName) {
+                history.pushState({ tab: tabName }, "", "#" + tabName);
+            }
+        }
 
         document.querySelectorAll(".tabcontent").forEach(el => el.style.display = "none");
 
@@ -198,6 +204,7 @@
             if (tabName === 'ForgeryDetection' && window.FG_init) window.FG_init();
             if (tabName === 'PDF2NHCX' && window.INS_init) window.INS_init();
             if (tabName === 'PDF2FHIR' && window.CLN_init) window.CLN_init();
+            if (tabName === 'AudioASR' && window.AUDIO_init) window.AUDIO_init();
             if ((tabName === 'PDF2FHIR' || tabName === 'PDF2NHCX' || tabName === 'ForgeryDetection' || tabName === 'PrivacyFilter' || tabName === 'APIAccess') && window.initApiAccess) {
                 window.initApiAccess();
             }
@@ -213,6 +220,7 @@
                     else if (tabName === 'PDF2NHCX' && window.INS_launchService) INS_launchService();
                     else if (tabName === 'PrivacyFilter' && window.PF_launchService) PF_launchService();
                     else if (tabName === 'ForgeryDetection' && window.FG_launchService) FG_launchService();
+                    else if (tabName === 'AudioASR' && window.AUDIO_launchService) AUDIO_launchService();
                 }, 300);
             }
         }
@@ -237,6 +245,7 @@
             else if (fileName === 'pdf2nhcx') fileName = 'insurance';
             else if (fileName === 'privacyfilter') fileName = 'privacyfilter';
             else if (fileName === 'forgerydetection') fileName = 'forgery';
+            else if (fileName === 'audioasr') fileName = 'audioasr';
             else if (fileName === 'aboutus') fileName = 'about';
             else if (fileName === 'apiaccess') fileName = 'apiaccess';
             else if (fileName === 'download') fileName = 'download';
@@ -245,6 +254,7 @@
             else if (fileName === 'insurancedocs') { isDoc = true; docUrl = 'docs/insurance.html'; }
             else if (fileName === 'privacydocs') { isDoc = true; docUrl = 'docs/privacyfilter.html'; }
             else if (fileName === 'forgerydocs') { isDoc = true; docUrl = 'docs/forgery.html'; }
+            else if (fileName === 'audiodocs') { isDoc = true; docUrl = 'docs/audio.html'; }
 
             if (isDoc) {
                 const response = await fetch(docUrl);
@@ -356,7 +366,7 @@
                     console.error(`Failed to load doc tab ${tabId}: ${response.status}`);
                 }
             } else {
-                const response = await fetch(`tabs/${fileName}.html?v=15`);
+                const response = await fetch(`tabs/${fileName}.html?v=17`);
                 if (response.ok) {
                     el.innerHTML = await response.text();
                 } else {
@@ -494,6 +504,7 @@
         else if (tabName === 'ForgeryDetection') navId = 'navForgery';
         else if (tabName === 'PDF2NHCX') navId = 'navInsurance';
         else if (tabName === 'PrivacyFilter') navId = 'navPrivacyFilter';
+        else if (tabName === 'AudioASR') navId = 'navAudio';
         
         if (navId) {
             document.querySelectorAll('.navbar .nav-link, .navbar .dropdown-item').forEach(el => el.classList.remove('active'));
@@ -704,7 +715,12 @@
         }
     }
 
-    // ── Init ────────────────────────────────────────────────────────────────────
+    // ── Init & History ──────────────────────────────────────────────────────────
+    window.addEventListener('popstate', (e) => {
+        const tab = e.state ? e.state.tab : (window.location.hash ? window.location.hash.substring(1) : 'Home');
+        openTab(null, tab, false, true);
+    });
+
     document.addEventListener('DOMContentLoaded', () => {
         initNavigation();
         checkLocalBackend(); // silent fallback router check
@@ -713,7 +729,9 @@
         handleNavbarScroll();
         window.addEventListener('scroll', handleNavbarScroll);
         
-        openTab(null, 'Home');
+        const initialTab = window.location.hash ? window.location.hash.substring(1) : 'Home';
+        history.replaceState({ tab: initialTab }, "", "#" + initialTab);
+        openTab(null, initialTab, false, true);
         setInterval(checkAllServiceBadges, 30000);
         if (window.DPI_Auth) {
             DPI_Auth.updateNavAuthState();

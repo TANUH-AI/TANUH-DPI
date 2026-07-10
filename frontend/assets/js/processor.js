@@ -346,6 +346,34 @@
         if (interactive) interactive.style.display = 'none';
     };
 
+    window.AUDIO_init = function () {
+        const landing = document.getElementById('audioasr-landing-view');
+        const interactive = document.getElementById('audioasr-interactive-view');
+        if (landing) landing.style.display = 'block';
+        if (interactive) interactive.style.display = 'none';
+    };
+
+    window.AUDIO_launchService = function () {
+        const landing = document.getElementById('audioasr-landing-view');
+        const interactive = document.getElementById('audioasr-interactive-view');
+        if (landing) landing.style.display = 'none';
+        if (interactive) {
+            interactive.style.display = 'block';
+            const pendingSub = sessionStorage.getItem('pendingLaunchSubTab');
+            let targetBtn = null;
+            if (pendingSub) {
+                sessionStorage.removeItem('pendingLaunchSubTab');
+                targetBtn = interactive.querySelector(`.sub-tab-btn[onclick*="${pendingSub}"]`);
+            }
+            if (!targetBtn) {
+                targetBtn = interactive.querySelector('.sub-tab-btn');
+            }
+            if (targetBtn) {
+                targetBtn.click();
+            }
+        }
+    };
+
     window.CLN_launchService = function () {
         const landing = document.getElementById('clinical-landing-view');
         const interactive = document.getElementById('clinical-interactive-view');

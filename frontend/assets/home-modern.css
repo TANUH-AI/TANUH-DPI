@@ -257,9 +257,9 @@ body {
 /* ── Shrunk Hero Service Quick Links ─────────────────────────────────────── */
 .hero-services {
     display: grid !important;
-    grid-template-columns: repeat(4, 1fr) !important;
+    grid-template-columns: repeat(5, 1fr) !important;
     gap: 8px !important; /* reduced gap */
-    max-width: 48rem !important; /* reduced width of the row */
+    max-width: 62rem !important; /* increased width of the row */
     margin: 0 auto !important;
 }
 
@@ -338,7 +338,7 @@ body {
 
 .stats-row {
     display: grid !important;
-    grid-template-columns: repeat(5, 1fr) !important;
+    grid-template-columns: repeat(6, 1fr) !important;
     gap: 1.5rem !important;
 }
 
@@ -448,9 +448,9 @@ body {
 /* ── Ecosystem Side-by-Side Cards (4-Column Layout) ──────────────────────── */
 .ecosystem-grid {
     display: grid !important;
-    grid-template-columns: repeat(4, 1fr) !important;
+    grid-template-columns: repeat(5, 1fr) !important;
     gap: 1rem !important;
-    max-width: 76rem !important;
+    max-width: 90rem !important;
 }
 
 @media (max-width: 1024px) {
@@ -572,6 +572,7 @@ body {
 .eco-card:nth-child(2) { transition-delay: 0.3s !important; }
 .eco-card:nth-child(3) { transition-delay: 0.5s !important; }
 .eco-card:nth-child(4) { transition-delay: 0.7s !important; }
+.eco-card:nth-child(5) { transition-delay: 0.9s !important; }
 
 /* ── Staggered reveal for Backed By logos ────────────────────────────────── */
 .logo-grid img {
