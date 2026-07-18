@@ -39,7 +39,7 @@ class Span:
 # "Mr RAJA SHETTY", "Dr MADHU SRINIVASARANGAN", "Dr. ARPITHA M R",
 # "Dr.PALLAVI B R", "Dr. Jyothsana Harini Suma S P", "Smt / Shri ..."
 _HONORIFIC_NAME = re.compile(
-    r"\b(?:Mr|Mrs|Ms|Miss|Master|Dr|Smt|Shri|Baby\s+of|B/O|S/O|D/O|W/O)\.?\s*"
+    r"\b(?i:Mr|Mrs|Ms|Miss|Master|Dr|Smt|Shri|Baby\s+of|B/O|S/O|D/O|W/O)\.?\s*"
     r"[A-Z][A-Za-z]*(?:[\s.]+[A-Z][A-Za-z]*){0,5}",
 )
 
@@ -99,19 +99,36 @@ _PHONE = re.compile(
 # ── Organization / lab names ─────────────────────────────────────────────────
 # "Sterling Accuris Pathology Laboratory", "City Hospital", "Medall Diagnostics"
 _ORG_SUFFIX = re.compile(
-    r"\b[A-Z][A-Za-z]+(?:\s+[A-Z][A-Za-z]+)*\s+"
-    r"(?:Laborator(?:y|ies)|Pathology|Diagnostics?|Hospital|Clinic(?:s)?|"
+    r"\b[A-Z][A-Za-z']+(?:[\s&]+[A-Z][A-Za-z']*)*\s+"
+    r"(?:Laborator(?:y|ies)|Pathology|Diagnostics?|Hospital(?:s)?|Clinic(?:s)?|"
     r"Medical\s+Cent(?:re|er)|Healthcare|Health\s*Care|Institute|Foundation|"
-    r"Imaging|Radiology|Pharmacy)\b",
+    r"Imaging|Radiology|Pharmacy|College|University|Mission|Academy|"
+    r"Medical\s+College|Nursing\s+Home)"
+    r"(?:\s*&\s*[A-Za-z']+)*\b",
     re.IGNORECASE,
 )
 
 # ── Doctor credentials near names ───────────────────────────────────────────
 # "Sanjeev Shah MD", "Pallavi B R MBBS", "Yash Shah M.D."
 _CREDENTIAL_NAME = re.compile(
-    r"\b[A-Z][a-z]+(?:\s+[A-Z][A-Za-z]*)+\s*,?\s*"
-    r"(?:MBBS|MD|MS|DNB|DM|MCh|M\.D\.|M\.S\.|FRCS|MRCP|DCH|DA|"
-    r"FRCPath|MRCPath|Ph\.?D)\b",
+    r"\b[A-Z][A-Za-z]*(?:[\s.,]+[A-Z][A-Za-z]*)+\s*[.,]?\s*"
+    r"(?i:MBBS|MD|MS|DNB|DM|MCh|M\.?D\.?|M\.?S\.?|FRCS|MRCP|DCH|DA|DGO|"
+    r"FRCOG|FAIS|FRCPath|MRCPath|Ph\.?D|D\.?C\.?P\.?|D\.?O\.?|D\.?N\.?B\.?)\b",
+)
+
+# ── Department / section headers (identifiable org sub-units) ───────────
+# "DEPARTMENT OF PATHOLOGY", "DEPT. OF HISTOPATHOLOGY"
+_DEPT_HEADER = re.compile(
+    r"\b(?:DEPARTMENT|DEPT\.?)\s+OF\s+[A-Z][A-Za-z]+(?:\s+[A-Z][A-Za-z]+)*\b",
+    re.IGNORECASE,
+)
+
+# ── Standalone credentials (catch trailing "MD.,", "MBBS" after names) ──
+_STANDALONE_CRED = re.compile(
+    r"\b(?:MBBS|DNB|MCh|FRCS|MRCP|DCH|DGO|"
+    r"FRCOG|FAIS|FRCPath|MRCPath|Ph\.?D|D\.?C\.?P\.?|D\.?O\.?|D\.?N\.?B\.?|"
+    r"M\.D\.?|M\.S\.?)[.,]*\b",
+    re.IGNORECASE,
 )
 
 # ── Identifiers ──────────────────────────────────────────────────────────────
@@ -140,19 +157,26 @@ _LABELS = [
     "accession", "accession number", "account", "account number",
     "patient category", "category",
     "referred by", "referring", "requested by", "consultant", "physician",
+    "ref by", "ref. by",
     "result entered by", "result verified by", "entered by", "verified by",
     "authorized by", "authorised by", "approved by", "checked by", "signed by",
     "name", "patient name", "patient", "mobile", "phone", "tel", "tel no",
     "fax", "email", "e-mail", "address", "specimen collected at",
     "health id", "abha", "insurance", "policy no", "member id", "beneficiary",
-    "dob", "date of birth", "d.o.b", "birth date",
+    "dob", "date of birth", "d.o.b", "birth date", "date",
     "sex", "gender", "age", "age/sex", "age / sex", "sex/age", "sex / age",
     "client", "client name", "client id",
-    "lab", "lab name", "laboratory",
+    "lab", "lab name", "lab no", "lab no.", "laboratory",
     "centre", "center", "branch",
     "collected at", "reported at", "received at",
+    "collected on", "received on", "reported on",
     "sample id", "sample no", "barcode no",
     "contact", "contact no", "website",
+    "biopsy no", "biopsy no.", "biopsy. no", "biopsy number",
+    "hospital no", "hospital no.", "hospital number",
+    "reference no", "reference no.", "reference number",
+    "bill no", "bill no.",
+    "pathologist", "pathologists",
 ]
 # A colon is REQUIRED after the label. This prevents a generic word like
 # "Patient" inside a clinical sentence ("*Patient is not able to hold urine…")
@@ -169,11 +193,13 @@ _FULL_LINE_LABELS = {
     "result entered by", "result verified by", "entered by", "verified by",
     "authorized by", "authorised by", "approved by", "checked by", "signed by",
     "referred by", "referring", "requested by", "consultant", "physician",
+    "ref by", "ref. by",
     "address", "specimen collected at", "collected at",
     "client", "client name",
     "contact", "contact no", "website",
     "lab", "lab name", "laboratory",
     "centre", "center", "branch",
+    "pathologist", "pathologists",
 }
 
 
@@ -294,7 +320,11 @@ class SafeHarborDetector:
                 add(m, "AGE")
         for m in _HONORIFIC_NAME.finditer(text): add(m, "PERSON_NAME")
         for m in _ORG_SUFFIX.finditer(text):   add(m, "ORG_NAME")
+        for m in _DEPT_HEADER.finditer(text):  add(m, "ORG_NAME")
         for m in _CREDENTIAL_NAME.finditer(text): add(m, "PERSON_NAME")
+        for m in _STANDALONE_CRED.finditer(text):
+            if not _overlaps(m.start(), m.end(), spans):
+                add(m, "PERSON_NAME")
         for m in _LONG_NUM.finditer(text):
             if not clinical:
                 add(m, "IDENTIFIER")
@@ -366,9 +396,9 @@ def _merge_overlaps(spans: List[Span]) -> List[Span]:
         last = merged[-1]
         if sp.start <= last.end:  # overlap or touch
             new_end = max(last.end, sp.end)
-            # Prefer a non-generic label
             label = last.label if last.label != "LABELED_PHI" else sp.label
-            merged[-1] = Span(last.start, new_end, "", label)
+            text = last.text if len(last.text) >= len(sp.text) else sp.text
+            merged[-1] = Span(last.start, new_end, text, label)
         else:
             merged.append(sp)
     return merged

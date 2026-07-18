@@ -716,6 +716,12 @@ async def apply_redactions(
     with open(redacted_path, "rb") as fh:
         storage.save("redacted", redacted_key, fh.read())
 
+    # Invalidate cached preview PNGs so the new redacted file is rendered fresh.
+    import shutil
+    cache_dir = _PAGE_RENDER_DIR / redacted_key
+    if cache_dir.exists():
+        shutil.rmtree(cache_dir, ignore_errors=True)
+
     preview_pages = _render_document_pages(redacted_path, redacted_key)
     return {
         "redacted_key": redacted_key,
