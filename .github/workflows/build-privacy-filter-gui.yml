@@ -49,12 +49,15 @@ jobs:
             Pillow==11.0.0 \
             pytesseract==0.3.13 \
             pydicom==3.0.1 \
+            "pylibjpeg>=2.0" \
+            "pylibjpeg-openjpeg>=2.0" \
+            "pylibjpeg-libjpeg>=2.0" \
             nibabel==5.3.2 \
             pymupdf==1.24.13 \
             "flask>=3.0" \
             "pywebview>=5.0"
           echo "Dependencies installed:"
-          pip list | grep -iE "opencv|numpy|pillow|pytesseract|pydicom|nibabel|pymupdf|flask|webview"
+          pip list | grep -iE "opencv|numpy|pillow|pytesseract|pydicom|pylibjpeg|nibabel|pymupdf|flask|webview"
           deactivate
 
       - name: Download appimagetool
@@ -285,6 +288,9 @@ jobs:
             Pillow==11.0.0 \
             pytesseract==0.3.13 \
             pydicom==3.0.1 \
+            "pylibjpeg>=2.0" \
+            "pylibjpeg-openjpeg>=2.0" \
+            "pylibjpeg-libjpeg>=2.0" \
             nibabel==5.3.2 \
             pymupdf==1.24.13 \
             "flask>=3.0" \
@@ -342,6 +348,8 @@ jobs:
                   'fitz', 'pymupdf',
                   'pydicom.encoders', 'pydicom.encoders.gdcm',
                   'pydicom.encoders.pylibjpeg', 'pydicom.encoders.native',
+                  'pylibjpeg', 'pylibjpeg.utils',
+                  'openjpeg', 'libjpeg',
                   'webview', 'jinja2', 'markupsafe', 'werkzeug',
               ]
           )
@@ -474,6 +482,9 @@ jobs:
             Pillow==11.0.0 `
             pytesseract==0.3.13 `
             pydicom==3.0.1 `
+            "pylibjpeg>=2.0" `
+            "pylibjpeg-openjpeg>=2.0" `
+            "pylibjpeg-libjpeg>=2.0" `
             nibabel==5.3.2 `
             pymupdf==1.24.13 `
             "flask>=3.0" `
@@ -519,6 +530,8 @@ jobs:
                   'fitz', 'pymupdf',
                   'pydicom.encoders', 'pydicom.encoders.gdcm',
                   'pydicom.encoders.pylibjpeg', 'pydicom.encoders.native',
+                  'pylibjpeg', 'pylibjpeg.utils',
+                  'openjpeg', 'libjpeg',
                   'webview', 'jinja2', 'markupsafe', 'werkzeug',
               ]
           )
@@ -653,6 +666,9 @@ jobs:
             Pillow==11.0.0 \
             pytesseract==0.3.13 \
             pydicom==3.0.1 \
+            "pylibjpeg>=2.0" \
+            "pylibjpeg-openjpeg>=2.0" \
+            "pylibjpeg-libjpeg>=2.0" \
             nibabel==5.3.2 \
             pymupdf==1.24.13 \
             "flask>=3.0" \
@@ -705,6 +721,8 @@ jobs:
                   'fitz', 'pymupdf',
                   'pydicom.encoders', 'pydicom.encoders.gdcm',
                   'pydicom.encoders.pylibjpeg', 'pydicom.encoders.native',
+                  'pylibjpeg', 'pylibjpeg.utils',
+                  'openjpeg', 'libjpeg',
                   'webview', 'jinja2', 'markupsafe', 'werkzeug',
               ]
           )
