@@ -444,7 +444,7 @@ body {
                                     </button>
                                 </div>
                             </div>
-                            <div id="pfPreviewOriginal" style="min-height: 200px; max-height: 450px; overflow: auto; padding: 6px; display: flex; flex-direction: column; align-items: center; gap: 6px; background: #f8fafc;">
+                            <div id="pfPreviewOriginal" style="height: 400px; overflow: auto; padding: 6px; display: flex; flex-direction: column; align-items: center; gap: 6px; background: #f8fafc;">
                                 <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 180px; color: #94a3b8; gap: 6px;">
                                     <i class="fas fa-image" style="font-size: 1.8rem;"></i><span style="font-size: 0.75rem;">Original document</span>
                                 </div>
@@ -464,7 +464,7 @@ body {
                                     </button>
                                 </div>
                             </div>
-                            <div id="pfPreviewRedacted" style="min-height: 200px; max-height: 450px; overflow: auto; padding: 6px; display: flex; flex-direction: column; align-items: center; gap: 6px; background: #f8fafc;">
+                            <div id="pfPreviewRedacted" style="height: 400px; overflow: auto; padding: 6px; display: flex; flex-direction: column; align-items: center; gap: 6px; background: #f8fafc;">
                                 <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 180px; color: #94a3b8; gap: 6px;">
                                     <i class="fas fa-shield-alt" style="font-size: 1.8rem;"></i><span style="font-size: 0.75rem;">Redacted document</span>
                                 </div>
@@ -737,6 +737,8 @@ body {
     var filename = window._PF_filename || "document";
     if (!url) return;
 
+    var encodedUrl = encodeURI(url);
+
     var btnId = kind === "original" ? "pfDlOriginal" : "pfDlRedacted";
     var subId = kind === "original" ? "pfDlOriginalSub" : "pfDlRedactedSub";
     var btn = pfQ(btnId);
@@ -753,7 +755,7 @@ body {
         if (sub) { sub.textContent = "Saved"; sub.style.color = "#10b981"; }
         if (window.showToast) window.showToast("Saved to Downloads: " + dlName, "success");
       } else {
-        var r = await fetch(url, { signal: AbortSignal.timeout(30000) });
+        var r = await fetch(encodedUrl, { signal: AbortSignal.timeout(30000) });
         if (!r.ok) throw new Error("HTTP " + r.status);
         var blob = await r.blob();
         var objUrl = URL.createObjectURL(blob);
@@ -984,7 +986,7 @@ def _get_editor_js() -> str:
     viewport.innerHTML = _placeholder("fa-spinner fa-spin", "Rendering preview...");
     try {
       var apiKind = key.indexOf("__redacted") >= 0 ? "redacted" : (kind === "original" ? "uploads" : "redacted");
-      var r = await fetch(BASE() + "/api/render-pages/" + apiKind + "/" + key, { headers: AUTH(), signal: AbortSignal.timeout(120000) });
+      var r = await fetch(BASE() + "/api/render-pages/" + apiKind + "/" + encodeURIComponent(key), { headers: AUTH(), signal: AbortSignal.timeout(120000) });
       if (!r.ok) throw new Error("HTTP " + r.status);
       var data = await r.json();
       if (data.text_only) {

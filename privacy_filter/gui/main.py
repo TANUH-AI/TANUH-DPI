@@ -40,6 +40,7 @@ class _Api:
     def save_file(self, url: str, filename: str) -> str:
         """Download a file from the local server and save to Downloads folder."""
         import urllib.request
+        from urllib.parse import quote
         downloads = Path.home() / "Downloads"
         downloads.mkdir(exist_ok=True)
         dest = downloads / filename
@@ -48,8 +49,9 @@ class _Api:
         while dest.exists():
             dest = downloads / f"{stem} ({counter}){ext}"
             counter += 1
+        encoded_url = quote(url, safe="/:?=&")
         urllib.request.urlretrieve(
-            f"http://127.0.0.1:{self._port}{url}", str(dest)
+            f"http://127.0.0.1:{self._port}{encoded_url}", str(dest)
         )
         return str(dest)
 
