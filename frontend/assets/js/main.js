@@ -167,6 +167,23 @@
     async function openTab(evt, tabName, skipScroll, skipHistory = false) {
         if (evt) evt.preventDefault();
 
+        // ── Central auth gate ────────────────────────────────────────────────
+        // This is the ONE place every navigation path funnels through (nav
+        // dropdown links, popstate/back-button, initial page load via URL
+        // hash, doc links, direct-launch buttons) — so gating here is what
+        // actually closes the login bypass, instead of relying on individual
+        // callers (like directLaunchService) to each remember to check.
+        // Wait for Firebase's initial auth-state restore before deciding —
+        // on a hard refresh/direct link, auth.currentUser can briefly read as
+        // null even for an already-logged-in user until this resolves once.
+        if (window.DPI_Auth && DPI_Auth.isGatedTab(tabName)) {
+            await new Promise(resolve => DPI_Auth.onAuthReady(resolve));
+            if (!DPI_Auth.isLoggedIn()) {
+                DPI_Auth.setPendingTab(tabName);
+                tabName = 'Login';
+            }
+        }
+
         if (!skipHistory) {
             if (!history.state || history.state.tab !== tabName) {
                 history.pushState({ tab: tabName }, "", "#" + tabName);

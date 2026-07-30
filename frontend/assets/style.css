@@ -4700,16 +4700,16 @@ select:focus {
     padding: 6px 10px;
     font-size: 0.75rem;
     font-weight: 600;
-    color: #ef4444; /* red-500 */
-    background: rgba(239, 68, 68, 0.08);
-    border: 1px solid rgba(239, 68, 68, 0.15);
+    color: var(--brand-primary);
+    background: rgba(20, 134, 140, 0.08);
+    border: 1px solid rgba(20, 134, 140, 0.2);
     border-radius: 6px;
     cursor: pointer;
     transition: all 0.2s ease;
 }
 .nav-logout-btn:hover {
-    background: rgba(239, 68, 68, 0.15);
-    border-color: rgba(239, 68, 68, 0.3);
+    background: rgba(20, 134, 140, 0.15);
+    border-color: rgba(20, 134, 140, 0.35);
 }
 
 /* ── Login page layout ─────────────────────────────────────────────────── */
