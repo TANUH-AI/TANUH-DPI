@@ -452,8 +452,11 @@
         const reportInput = document.getElementById('ctReportInput');
         const btn = document.getElementById('ctProcessBtn');
         if (!btn) return;
-        const hasScan = !!(scanInput && scanInput.files && scanInput.files.length > 0);
+        let hasScan = !!(scanInput && scanInput.files && scanInput.files.length > 0);
         const hasReport = !!(reportInput && reportInput.files && reportInput.files.length > 0);
+        if (hasScan && scanInput.files[0].name.toLowerCase().endsWith('.zip') && !CT_previewState.convertedScanFile) {
+            hasScan = false;
+        }
         if (hasScan && hasReport) {
             btn.removeAttribute('disabled');
         } else {
@@ -471,6 +474,252 @@
         512: 'uint16',
         768: 'uint32'
     };
+    function CT_readDicomString(bytes, offset, length) {
+        let str = '';
+        for (let i = 0; i < length; i++) {
+            const ch = bytes[offset + i];
+            if (ch === 0) break;
+            str += String.fromCharCode(ch);
+        }
+        return str.trim();
+    }
+
+    function CT_parseDicomSlice(buffer) {
+        const view = new DataView(buffer);
+        const bytes = new Uint8Array(buffer);
+
+        const hasPreamble = buffer.byteLength > 132 &&
+            bytes[128] === 0x44 && bytes[129] === 0x49 &&
+            bytes[130] === 0x43 && bytes[131] === 0x4D;
+
+        let pos = hasPreamble ? 132 : 0;
+
+        let isExplicitVR = false;
+        if (pos + 6 <= buffer.byteLength) {
+            const ch1 = bytes[pos + 4], ch2 = bytes[pos + 5];
+            isExplicitVR = ch1 >= 65 && ch1 <= 90 && ch2 >= 65 && ch2 <= 90;
+        }
+
+        const tags = {};
+        const LONG_VRS = ['OB','OW','OF','OD','SQ','UC','UN','UR','UT'];
+
+        while (pos + 8 <= buffer.byteLength) {
+            const group = view.getUint16(pos, true);
+            const element = view.getUint16(pos + 2, true);
+            const tag = ((group << 16) | element) >>> 0;
+            let vr = '', len = 0;
+
+            if (isExplicitVR && group !== 0xFFFE) {
+                vr = String.fromCharCode(bytes[pos + 4], bytes[pos + 5]);
+                if (LONG_VRS.indexOf(vr) !== -1) {
+                    len = view.getUint32(pos + 8, true);
+                    pos += 12;
+                } else {
+                    len = view.getUint16(pos + 6, true);
+                    pos += 8;
+                }
+            } else {
+                len = view.getUint32(pos + 4, true);
+                pos += 8;
+            }
+
+            if (len === 0xFFFFFFFF) {
+                if (tag === 0x7FE00010) {
+                    tags.pixelDataOffset = pos;
+                    tags.pixelDataLength = buffer.byteLength - pos;
+                }
+                break;
+            }
+
+            if (tag === 0x7FE00010) {
+                tags.pixelDataOffset = pos;
+                tags.pixelDataLength = len;
+            } else if (len > 0 && len < 2000) {
+                switch (tag) {
+                    case 0x00280010: tags.rows = view.getUint16(pos, true); break;
+                    case 0x00280011: tags.cols = view.getUint16(pos, true); break;
+                    case 0x00280100: tags.bitsAllocated = view.getUint16(pos, true); break;
+                    case 0x00280101: tags.bitsStored = view.getUint16(pos, true); break;
+                    case 0x00280103: tags.pixelRepresentation = view.getUint16(pos, true); break;
+                    case 0x00281053: tags.rescaleSlope = parseFloat(CT_readDicomString(bytes, pos, len)) || 1; break;
+                    case 0x00281052: tags.rescaleIntercept = parseFloat(CT_readDicomString(bytes, pos, len)) || 0; break;
+                    case 0x00200032: {
+                        const parts = CT_readDicomString(bytes, pos, len).split('\\');
+                        tags.imagePosition = parts.map(Number);
+                        break;
+                    }
+                    case 0x00280030: {
+                        const parts = CT_readDicomString(bytes, pos, len).split('\\');
+                        tags.pixelSpacing = parts.map(Number);
+                        break;
+                    }
+                    case 0x00180050: tags.sliceThickness = parseFloat(CT_readDicomString(bytes, pos, len)) || 1; break;
+                    case 0x00200013: tags.instanceNumber = parseInt(CT_readDicomString(bytes, pos, len)) || 0; break;
+                }
+            }
+            pos += len;
+        }
+        return tags;
+    }
+
+    function CT_buildNiftiFromSlices(slices) {
+        const first = slices[0];
+        const width = first.cols;
+        const height = first.rows;
+        const depth = slices.length;
+        const pixSpacing = first.pixelSpacing || [1, 1];
+        const sliceThick = first.sliceThickness || 1;
+        const slope = first.rescaleSlope || 1;
+        const intercept = first.rescaleIntercept || 0;
+
+        const headerSize = 348;
+        const extSize = 4;
+        const voxelCount = width * height * depth;
+        const totalSize = headerSize + extSize + (voxelCount * 2);
+        const buf = new ArrayBuffer(totalSize);
+        const v = new DataView(buf);
+
+        v.setInt32(0, 348, true);
+        v.setInt16(40, 3, true);
+        v.setInt16(42, width, true);
+        v.setInt16(44, height, true);
+        v.setInt16(46, depth, true);
+        v.setInt16(48, 1, true);
+        v.setInt16(50, 1, true);
+        v.setInt16(52, 1, true);
+        v.setInt16(54, 1, true);
+        v.setInt16(70, 4, true);
+        v.setInt16(72, 16, true);
+        v.setFloat32(76, -1, true);
+        v.setFloat32(80, pixSpacing[1] || 1, true);
+        v.setFloat32(84, pixSpacing[0] || 1, true);
+        v.setFloat32(88, sliceThick, true);
+        v.setFloat32(108, 352, true);
+        v.setFloat32(112, slope, true);
+        v.setFloat32(116, intercept, true);
+
+        const magic = 'n+1\0';
+        for (let i = 0; i < 4; i++) v.setUint8(344 + i, magic.charCodeAt(i));
+        v.setInt32(348, 0, true);
+
+        const voxels = new Int16Array(buf, 352, voxelCount);
+        for (let s = 0; s < depth; s++) {
+            const pd = slices[s].pixelData;
+            const off = s * width * height;
+            for (let i = 0; i < width * height && i < pd.length; i++) {
+                voxels[off + i] = pd[i];
+            }
+        }
+        return buf;
+    }
+
+    async function CT_convertDicomZipToNifti(file, progressCb) {
+        if (typeof JSZip === 'undefined') {
+            throw new Error('ZIP support library not loaded. Please refresh the page and try again.');
+        }
+
+        if (progressCb) progressCb('Reading ZIP file...');
+        const zipData = await file.arrayBuffer();
+        const zip = await JSZip.loadAsync(zipData);
+
+        const entries = [];
+        zip.forEach(function(path, entry) {
+            if (!entry.dir) entries.push({ path: path, entry: entry });
+        });
+
+        if (entries.length === 0) {
+            throw new Error('ZIP file is empty.');
+        }
+
+        for (let i = 0; i < entries.length; i++) {
+            const name = entries[i].path.split('/').pop().toLowerCase();
+            if (name === '.ds_store' || name === 'thumbs.db' || name.startsWith('__macosx') || name.startsWith('.')) continue;
+            if (!name.endsWith('.dcm')) {
+                throw new Error('ZIP contains non-DICOM file: "' + entries[i].path + '". ZIP must contain only .dcm files.');
+            }
+        }
+
+        const dcmEntries = entries.filter(function(e) {
+            const name = e.path.split('/').pop().toLowerCase();
+            return name.endsWith('.dcm');
+        });
+
+        if (dcmEntries.length === 0) {
+            throw new Error('ZIP contains no DICOM (.dcm) files.');
+        }
+
+        if (progressCb) progressCb('Parsing ' + dcmEntries.length + ' DICOM slices...');
+        const slices = [];
+        for (let i = 0; i < dcmEntries.length; i++) {
+            if (progressCb && i % 10 === 0) progressCb('Parsing slice ' + (i + 1) + ' / ' + dcmEntries.length + '...');
+            const buf = await dcmEntries[i].entry.async('arraybuffer');
+            const tags = CT_parseDicomSlice(buf);
+
+            if (!tags.rows || !tags.cols) {
+                throw new Error('DICOM file missing image dimensions: ' + dcmEntries[i].path);
+            }
+            if (tags.pixelDataOffset == null) {
+                throw new Error('DICOM file missing pixel data: ' + dcmEntries[i].path);
+            }
+
+            var bitsAlloc = tags.bitsAllocated || 16;
+            var bytesPerPixel = bitsAlloc / 8;
+            var numPixels = tags.rows * tags.cols;
+            var pixelData;
+
+            if (bitsAlloc === 16) {
+                if (tags.pixelDataOffset % 2 === 0) {
+                    pixelData = new Int16Array(new Int16Array(buf, tags.pixelDataOffset, numPixels));
+                } else {
+                    pixelData = new Int16Array(numPixels);
+                    var dv = new DataView(buf);
+                    for (var p = 0; p < numPixels; p++) {
+                        pixelData[p] = dv.getInt16(tags.pixelDataOffset + p * 2, true);
+                    }
+                }
+            } else if (bitsAlloc === 8) {
+                var raw = new Uint8Array(buf, tags.pixelDataOffset, numPixels);
+                pixelData = new Int16Array(numPixels);
+                for (var p = 0; p < numPixels; p++) pixelData[p] = raw[p];
+            } else {
+                pixelData = new Int16Array(numPixels);
+            }
+
+            var zPos = 0;
+            if (tags.imagePosition && tags.imagePosition.length >= 3) {
+                zPos = tags.imagePosition[2];
+            } else {
+                zPos = tags.instanceNumber || i;
+            }
+
+            slices.push({
+                rows: tags.rows,
+                cols: tags.cols,
+                bitsAllocated: bitsAlloc,
+                pixelRepresentation: tags.pixelRepresentation || 0,
+                rescaleSlope: tags.rescaleSlope || 1,
+                rescaleIntercept: tags.rescaleIntercept || 0,
+                pixelSpacing: tags.pixelSpacing || [1, 1],
+                sliceThickness: tags.sliceThickness || 1,
+                zPos: zPos,
+                pixelData: pixelData
+            });
+        }
+
+        slices.sort(function(a, b) { return a.zPos - b.zPos; });
+
+        if (progressCb) progressCb('Building NIfTI volume (' + slices[0].cols + '×' + slices[0].rows + '×' + slices.length + ')...');
+        var niftiBuf = CT_buildNiftiFromSlices(slices);
+
+        if (progressCb) progressCb('Compressing NIfTI...');
+        var blob = new Blob([niftiBuf]);
+        var stream = blob.stream().pipeThrough(new CompressionStream('gzip'));
+        var compressed = await new Response(stream).arrayBuffer();
+
+        var baseName = file.name.replace(/\.zip$/i, '');
+        return new File([compressed], baseName + '.nii.gz', { type: 'application/gzip' });
+    }
+
     function CT_getReportCheckerEndpoints() {
         return ['https://request-brussels-amaze.ngrok-free.dev/verify'];
     }
@@ -486,10 +735,14 @@
         activeKind: null,
         reportUrl: null,
         scan: null,
-        playTimer: null
+        playTimer: null,
+        convertedScanFile: null
     };
 
     function CT_getSelectedFile(kind) {
+        if (kind === 'scan' && CT_previewState.convertedScanFile) {
+            return CT_previewState.convertedScanFile;
+        }
         const input = document.getElementById(kind === 'scan' ? 'ctScanInput' : 'ctReportInput');
         if (!input || !input.files || input.files.length === 0) return null;
         return input.files[0];
@@ -707,23 +960,8 @@
         return values;
     }
 
-    function CT_getPreviewWindow(values) {
-        const sample = [];
-        const stride = Math.max(1, Math.floor(values.length / 20000));
-        for (let i = 0; i < values.length; i += stride) {
-            const value = values[i];
-            if (Number.isFinite(value)) sample.push(value);
-        }
-        if (sample.length < 2) return { low: 0, high: 1 };
-        sample.sort((a, b) => a - b);
-        let low = sample[Math.floor(sample.length * 0.01)];
-        let high = sample[Math.floor(sample.length * 0.99)];
-        if (!Number.isFinite(low) || !Number.isFinite(high) || high <= low) {
-            low = sample[0];
-            high = sample[sample.length - 1];
-        }
-        if (high <= low) high = low + 1;
-        return { low, high };
+    function CT_getPreviewWindow(_values) {
+        return { low: 0, high: 80 };
     }
 
     function CT_escapeHtml(value) {
@@ -767,7 +1005,7 @@
         if (slider && slider.value !== String(safeSlice)) slider.value = String(safeSlice);
         const meta = document.getElementById('ctScanPreviewMeta');
         if (meta) {
-            meta.innerHTML = `<strong>${CT_escapeHtml(scan.fileName)}</strong>${scan.width} x ${scan.height} x ${scan.depth}<br>${scan.datatypeLabel}, ${scan.bitpix}-bit<br>Window ${windowRange.low.toFixed(1)} to ${windowRange.high.toFixed(1)}`;
+            meta.innerHTML = `<strong>${CT_escapeHtml(scan.fileName)}</strong>${scan.width} x ${scan.height} x ${scan.depth}<br>${scan.datatypeLabel}, ${scan.bitpix}-bit<br>Brain Window (W:80 L:40)`;
         }
     }
 
@@ -874,10 +1112,12 @@
     };
 
     function CT_clearResultTags() {
+        const panel = document.getElementById('ctResultPanel');
         const pass = document.getElementById('ctResultPass');
         const review = document.getElementById('ctResultReview');
-        if (pass) pass.classList.remove('ct-result-pass-active');
-        if (review) review.classList.remove('ct-result-review-active');
+        if (panel) panel.style.display = 'none';
+        if (pass) { pass.classList.remove('ct-result-pass-active'); pass.style.display = 'none'; }
+        if (review) { review.classList.remove('ct-result-review-active'); review.style.display = 'none'; }
     }
 
     function CT_showResultTagColors() {
@@ -904,13 +1144,17 @@
 
     function CT_showPredictionTag(prediction) {
         const decision = CT_getPredictionDecision(prediction);
+        const panel = document.getElementById('ctResultPanel');
         const pass = document.getElementById('ctResultPass');
         const review = document.getElementById('ctResultReview');
         CT_clearResultTags();
 
+        if (panel) panel.style.display = '';
         if (decision === 'PASS' && pass) {
+            pass.style.display = '';
             pass.classList.add('ct-result-pass-active');
         } else if (decision === 'REVIEW' && review) {
+            review.style.display = '';
             review.classList.add('ct-result-review-active');
         }
     }
@@ -979,10 +1223,44 @@
         CT_updateProcessButton();
     };
 
-    window.CT_handleFileChange = function (kind) {
+    window.CT_handleFileChange = async function (kind) {
         CT_renderSelectedFile(kind);
+
+        if (kind === 'scan') {
+            CT_previewState.convertedScanFile = null;
+            const input = document.getElementById('ctScanInput');
+            if (input && input.files && input.files.length > 0) {
+                const file = input.files[0];
+                if (file.name.toLowerCase().endsWith('.zip')) {
+                    const nameEl = document.getElementById('ctScanFileName');
+                    const sizeEl = document.getElementById('ctScanFileSize');
+                    const btn = document.getElementById('ctProcessBtn');
+                    if (btn) btn.setAttribute('disabled', 'true');
+
+                    try {
+                        if (sizeEl) sizeEl.textContent = 'Converting DICOM to NIfTI...';
+                        const niftiFile = await CT_convertDicomZipToNifti(file, function(msg) {
+                            if (sizeEl) sizeEl.textContent = msg;
+                        });
+                        CT_previewState.convertedScanFile = niftiFile;
+                        if (nameEl) nameEl.textContent = niftiFile.name;
+                        if (sizeEl) sizeEl.textContent = (niftiFile.size / (1024 * 1024)).toFixed(2) + ' MB (converted)';
+                        if (window.showToast) window.showToast('DICOM Converted', 'DICOM slices converted to NIfTI successfully.', 'info', 4000);
+                    } catch (err) {
+                        CT_previewState.convertedScanFile = null;
+                        if (nameEl) nameEl.textContent = 'Conversion failed';
+                        if (sizeEl) sizeEl.textContent = err.message;
+                        if (window.showToast) window.showToast('DICOM Error', err.message, 'error');
+                        CT_updateProcessButton();
+                        return;
+                    }
+                }
+            }
+        }
+
         CT_updateProcessButton();
     };
+
 
     window.CT_removeFile = function (kind, e) {
         if (e) e.stopPropagation();
@@ -993,6 +1271,7 @@
         const nameEl = document.getElementById(isScan ? 'ctScanFileName' : 'ctReportFileName');
         const sizeEl = document.getElementById(isScan ? 'ctScanFileSize' : 'ctReportFileSize');
 
+        if (isScan) CT_previewState.convertedScanFile = null;
         if (input) input.value = '';
         if (dropzone) dropzone.style.display = 'flex';
         if (card) card.style.display = 'none';
