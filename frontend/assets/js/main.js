@@ -57,6 +57,7 @@
     }
 
     function updateActiveNav(tabName) {
+        document.body.classList.toggle('ct-report-checker-active', tabName === 'CTReportChecker');
         document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
         const navMap = {
             'Home': 'navHome',
