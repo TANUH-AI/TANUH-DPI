@@ -221,6 +221,8 @@ def _doc_type_enum(service: str) -> str:
         "pdf2nhcx": "insurance_document",
         "privacy_filter": "privacy_document",
         "forgensic": "forgery_document",
+        "audio_asr": "audio_document",
+        "ct_report_checker": "ct_report",
     }
     return mapping.get(service, service)
 
@@ -228,7 +230,7 @@ def _doc_type_enum(service: str) -> str:
 # ── Pydantic schemas ──────────────────────────────────────────────────────────
 
 class SessionLogCreate(BaseModel):
-    service:      Literal["pdf2abdm", "pdf2nhcx", "privacy_filter", "forgensic"]
+    service:      Literal["pdf2abdm", "pdf2nhcx", "privacy_filter", "forgensic", "audio_asr", "ct_report_checker"]
     ip_address:   Optional[str]  = "unknown"
     state:        Optional[str]  = None
     city:         Optional[str]  = None
@@ -572,6 +574,30 @@ def forgensic_stats(db: Session = Depends(get_db)):
         "docs_analyzed": docs_analyzed,
         "active_jobs":   0,
     }
+
+
+@app.get("/logs/audio-stats", tags=["Analytics"],
+         summary="Audio ASR usage stats")
+def audio_stats(db: Session = Depends(get_db)):
+    """Return audio processing count from the database."""
+    audio_processings = (
+        db.query(func.count(SessionLog.session_id))
+        .filter(SessionLog.document_type == "audio_document")
+        .scalar() or 0
+    )
+    return {"audio_processings": audio_processings}
+
+
+@app.get("/logs/ct-stats", tags=["Analytics"],
+         summary="CT Report Checker usage stats")
+def ct_stats(db: Session = Depends(get_db)):
+    """Return CT report check count from the database."""
+    ct_processings = (
+        db.query(func.count(SessionLog.session_id))
+        .filter(SessionLog.document_type == "ct_report")
+        .scalar() or 0
+    )
+    return {"ct_processings": ct_processings}
 
 
 # ── NHCX Page Visit tracking ──────────────────────────────────────────────────

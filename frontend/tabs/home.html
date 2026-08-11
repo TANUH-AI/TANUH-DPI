@@ -80,6 +80,15 @@
                     <div class="hero-service-desc">Audio dictation &amp; summarization</div>
                 </div>
             </div>
+            <div class="hero-service-card"
+                onclick="openTab(null,'CTReportChecker'); document.getElementById('navCTReportChecker').classList.add('active');">
+                <div class="hero-service-icon" style="background:rgba(20,134,140,0.1);color:#14868C;"><i
+                        class="fas fa-x-ray"></i></div>
+                <div class="hero-service-info">
+                    <div class="hero-service-name">CT Report Checker</div>
+                    <div class="hero-service-desc">Radiology report review</div>
+                </div>
+            </div>
         </div>
         <!-- Scroll Down Arrow -->
         <div class="hero-scroll-arrow" onclick="scrollToStats()" aria-label="Scroll Down">
@@ -131,6 +140,12 @@
                     <span class="stat-value" id="statAudio">0</span><span class="stat-plus">+</span>
                 </div>
                 <div class="stat-label">Medical Audio Summarization</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value-container">
+                    <span class="stat-value" id="statCTReports">0</span><span class="stat-plus">+</span>
+                </div>
+                <div class="stat-label">CT reports checked</div>
             </div>
         </div>
         <!-- <div class="stats-footer animate-slide-up" style="animation-delay: 0.1s;">
@@ -206,9 +221,9 @@
     <div class="container">
         <div class="section-header reveal-on-scroll">
             <p class="section-label">Infrastructure</p>
-            <h2 class="section-title">Five services, one platform</h2>
+            <h2 class="section-title">Six services, one platform</h2>
             <p class="section-desc">Convert clinical documents, process insurance claims, anonymize clinical
-                data/images, and detect forgery. Built and runs on unified infrastructure.</p>
+                data/images, check CT reports, and detect forgery. Built and runs on unified infrastructure.</p>
         </div>
 
         <div class="ecosystem-grid">
@@ -353,7 +368,7 @@
                             <h3 class="eco-card-name">Medical Audio Summarization</h3>
                         </div>
                     </div>
-                    <p>Convert medical audio dictations into text and generate structured summaries using state-of-the-art AI models.</p>
+                    <p>Convert medical audio dictations in Hindi/Kannada into English text and generate structured summaries using state-of-the-art AI models.</p>
                     <ul class="eco-card-features">
                         <li><span class="dot" style="background:#ec4899;"></span> Indic-Conformer ASR</li>
                         <li><span class="dot" style="background:#ec4899;"></span> Extractive &amp; Abstractive Summaries</li>
@@ -361,6 +376,36 @@
                     </ul>
                     <button class="eco-card-link"
                         onclick="openTab(null,'AudioASR'); document.getElementById('navAudio').classList.add('active');">
+                        Launch Service
+                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- CT Report Checker -->
+            <div class="eco-card">
+                <div class="eco-card-accent" style="background:#14868C;"></div>
+                <div class="eco-card-body">
+                    <div class="eco-card-header">
+                        <div class="eco-card-icon" style="background:rgba(20,134,140,0.1);color:#14868C;">
+                            <i class="fas fa-x-ray"></i>
+                        </div>
+                        <div>
+                            <div class="eco-card-phase" style="color:#14868C;">Review</div>
+                            <h3 class="eco-card-name">CT Report Checker</h3>
+                        </div>
+                    </div>
+                    <p>Compare a CT scan with its corresponding report to verify whether reported findings are supported by the imaging, powered by medical foundation models.</p>
+                    <ul class="eco-card-features">
+                        <li><span class="dot" style="background:#14868C;"></span> Scan-report finding verification</li>
+                        <li><span class="dot" style="background:#14868C;"></span> PASS or Needs Review tagging</li>
+                        <li><span class="dot" style="background:#14868C;"></span> Medical foundation model assisted review</li>
+                    </ul>
+                    <button class="eco-card-link"
+                        onclick="openTab(null,'CTReportChecker'); document.getElementById('navCTReportChecker').classList.add('active');">
                         Launch Service
                         <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

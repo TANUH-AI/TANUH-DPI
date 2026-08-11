@@ -447,4 +447,604 @@
         if (valReport) valReport.textContent = '';
     };
 
+    function CT_updateProcessButton() {
+        const scanInput = document.getElementById('ctScanInput');
+        const reportInput = document.getElementById('ctReportInput');
+        const btn = document.getElementById('ctProcessBtn');
+        if (!btn) return;
+        const hasScan = !!(scanInput && scanInput.files && scanInput.files.length > 0);
+        const hasReport = !!(reportInput && reportInput.files && reportInput.files.length > 0);
+        if (hasScan && hasReport) {
+            btn.removeAttribute('disabled');
+        } else {
+            btn.setAttribute('disabled', 'true');
+        }
+    }
+
+    const CT_DATATYPE_LABELS = {
+        2: 'uint8',
+        4: 'int16',
+        8: 'int32',
+        16: 'float32',
+        64: 'float64',
+        256: 'int8',
+        512: 'uint16',
+        768: 'uint32'
+    };
+    function CT_getReportCheckerEndpoints() {
+        return ['https://request-brussels-amaze.ngrok-free.dev/verify'];
+    }
+
+    function CT_buildReportCheckerFormData(scanFile, reportFile) {
+        const formData = new FormData();
+        formData.append('scan_file', scanFile, scanFile.name);
+        formData.append('report_file', reportFile, reportFile.name);
+        return formData;
+    }
+
+    const CT_previewState = {
+        activeKind: null,
+        reportUrl: null,
+        scan: null,
+        playTimer: null
+    };
+
+    function CT_getSelectedFile(kind) {
+        const input = document.getElementById(kind === 'scan' ? 'ctScanInput' : 'ctReportInput');
+        if (!input || !input.files || input.files.length === 0) return null;
+        return input.files[0];
+    }
+
+    function CT_setPreviewHeader(title, meta, iconClass) {
+        const titleEl = document.getElementById('ctPreviewTitle');
+        const metaEl = document.getElementById('ctPreviewMeta');
+        if (titleEl) titleEl.innerHTML = `<i class="${iconClass}"></i> ${title}`;
+        if (metaEl) metaEl.textContent = meta || '';
+    }
+
+    function CT_showPreviewPane(kind) {
+        const panel = document.getElementById('ctUploadPreviewPanel');
+        const scanPane = document.getElementById('ctScanPreviewPane');
+        const reportPane = document.getElementById('ctReportPreviewPane');
+        if (panel) panel.classList.add('active');
+        if (scanPane) scanPane.classList.toggle('active', kind === 'scan');
+        if (reportPane) reportPane.classList.toggle('active', kind === 'report');
+        CT_previewState.activeKind = kind;
+    }
+
+    function CT_prepareReportPreview(file) {
+        if (CT_previewState.reportUrl) {
+            URL.revokeObjectURL(CT_previewState.reportUrl);
+        }
+        CT_previewState.reportUrl = URL.createObjectURL(file);
+        const frame = document.getElementById('ctReportPreviewFrame');
+        if (frame && CT_previewState.activeKind === 'report') {
+            frame.src = CT_previewState.reportUrl;
+        }
+    }
+
+    function CT_setPlayButton(isPlaying) {
+        const btn = document.getElementById('ctScanPlayBtn');
+        if (!btn) return;
+        btn.innerHTML = isPlaying
+            ? '<i class="fas fa-pause"></i> Pause slices'
+            : '<i class="fas fa-play"></i> Play slices';
+    }
+
+    function CT_stopScanPlayback() {
+        if (CT_previewState.playTimer) {
+            window.clearInterval(CT_previewState.playTimer);
+            CT_previewState.playTimer = null;
+        }
+        CT_setPlayButton(false);
+    }
+
+    function CT_clearPreview(kind) {
+        if (!kind || kind === 'report') {
+            if (CT_previewState.reportUrl) {
+                URL.revokeObjectURL(CT_previewState.reportUrl);
+                CT_previewState.reportUrl = null;
+            }
+            const frame = document.getElementById('ctReportPreviewFrame');
+            if (frame) frame.removeAttribute('src');
+        }
+
+        if (!kind || kind === 'scan') {
+            CT_stopScanPlayback();
+            CT_previewState.scan = null;
+            const loading = document.getElementById('ctScanPreviewLoading');
+            const viewer = document.getElementById('ctScanPreviewViewer');
+            const canvas = document.getElementById('ctScanPreviewCanvas');
+            const ctx = canvas ? canvas.getContext('2d') : null;
+            if (ctx && canvas) ctx.clearRect(0, 0, canvas.width, canvas.height);
+            if (loading) loading.textContent = 'Preparing CT scan preview...';
+            if (viewer) viewer.style.display = 'none';
+        }
+
+        if (!kind || CT_previewState.activeKind === kind) {
+            window.CT_hideUploadPreview();
+        }
+    }
+
+    function CT_renderSelectedFile(kind) {
+        const isScan = kind === 'scan';
+        const input = document.getElementById(isScan ? 'ctScanInput' : 'ctReportInput');
+        const dropzone = document.getElementById(isScan ? 'ctScanDropzone' : 'ctReportDropzone');
+        const card = document.getElementById(isScan ? 'ctScanCard' : 'ctReportCard');
+        const nameEl = document.getElementById(isScan ? 'ctScanFileName' : 'ctReportFileName');
+        const sizeEl = document.getElementById(isScan ? 'ctScanFileSize' : 'ctReportFileSize');
+        if (!input || !input.files || input.files.length === 0) return;
+
+        const file = input.files[0];
+        CT_clearPreview(kind);
+        if (nameEl) nameEl.textContent = file.name;
+        if (sizeEl) {
+            sizeEl.textContent = isScan
+                ? (file.size / (1024 * 1024)).toFixed(2) + " MB"
+                : (file.size / 1024).toFixed(1) + " KB";
+        }
+        if (dropzone) dropzone.style.display = 'none';
+        if (card) card.style.display = 'flex';
+        if (!isScan) CT_prepareReportPreview(file);
+    }
+
+    async function CT_decompressIfNeeded(file, buffer) {
+        const bytes = new Uint8Array(buffer, 0, Math.min(2, buffer.byteLength));
+        const isGzip = bytes.length === 2 && bytes[0] === 0x1f && bytes[1] === 0x8b;
+        if (!isGzip) return buffer;
+
+        if (!('DecompressionStream' in window)) {
+            throw new Error('This browser cannot preview compressed NIfTI files. Upload processing is still available.');
+        }
+
+        const stream = new Blob([buffer]).stream().pipeThrough(new DecompressionStream('gzip'));
+        return await new Response(stream).arrayBuffer();
+    }
+
+    function CT_parseNifti(buffer, fileName) {
+        if (buffer.byteLength < 352) {
+            throw new Error('NIfTI header is incomplete.');
+        }
+
+        const view = new DataView(buffer);
+        const littleSize = view.getInt32(0, true);
+        const bigSize = view.getInt32(0, false);
+        let littleEndian = true;
+        if (littleSize !== 348) {
+            if (bigSize === 348) {
+                littleEndian = false;
+            } else {
+                throw new Error('Only NIfTI-1 single-file volumes are supported for quick preview.');
+            }
+        }
+
+        const width = view.getInt16(42, littleEndian);
+        const height = view.getInt16(44, littleEndian);
+        const depth = Math.max(1, view.getInt16(46, littleEndian));
+        const datatype = view.getInt16(70, littleEndian);
+        const bitpix = view.getInt16(72, littleEndian);
+        const bytes = bitpix / 8;
+        const voxOffsetRaw = view.getFloat32(108, littleEndian);
+        const voxOffset = Number.isFinite(voxOffsetRaw) && voxOffsetRaw > 0 ? Math.floor(voxOffsetRaw) : 352;
+        const slopeRaw = view.getFloat32(112, littleEndian);
+        const interceptRaw = view.getFloat32(116, littleEndian);
+        const slope = Number.isFinite(slopeRaw) && slopeRaw !== 0 ? slopeRaw : 1;
+        const intercept = Number.isFinite(interceptRaw) ? interceptRaw : 0;
+
+        if (!width || !height || width < 1 || height < 1) {
+            throw new Error('NIfTI dimensions are invalid.');
+        }
+
+        if (!CT_DATATYPE_LABELS[datatype] || !Number.isInteger(bytes) || bytes < 1) {
+            throw new Error('This NIfTI datatype is not supported by the lightweight preview.');
+        }
+
+        const neededBytes = voxOffset + (width * height * depth * bytes);
+        if (neededBytes > buffer.byteLength) {
+            throw new Error('NIfTI image data is incomplete.');
+        }
+
+        return {
+            buffer,
+            view,
+            fileName,
+            littleEndian,
+            datatype,
+            datatypeLabel: CT_DATATYPE_LABELS[datatype],
+            bitpix,
+            bytes,
+            voxOffset,
+            slope,
+            intercept,
+            width,
+            height,
+            depth,
+            sliceIndex: Math.floor(depth / 2)
+        };
+    }
+
+    function CT_readVoxel(scan, voxelIndex) {
+        const offset = scan.voxOffset + (voxelIndex * scan.bytes);
+        let value;
+        switch (scan.datatype) {
+            case 2:
+                value = scan.view.getUint8(offset);
+                break;
+            case 4:
+                value = scan.view.getInt16(offset, scan.littleEndian);
+                break;
+            case 8:
+                value = scan.view.getInt32(offset, scan.littleEndian);
+                break;
+            case 16:
+                value = scan.view.getFloat32(offset, scan.littleEndian);
+                break;
+            case 64:
+                value = scan.view.getFloat64(offset, scan.littleEndian);
+                break;
+            case 256:
+                value = scan.view.getInt8(offset);
+                break;
+            case 512:
+                value = scan.view.getUint16(offset, scan.littleEndian);
+                break;
+            case 768:
+                value = scan.view.getUint32(offset, scan.littleEndian);
+                break;
+            default:
+                value = 0;
+        }
+        return (value * scan.slope) + scan.intercept;
+    }
+
+    function CT_getSliceValues(scan, sliceIndex) {
+        const safeSlice = Math.max(0, Math.min(scan.depth - 1, sliceIndex));
+        const values = new Float32Array(scan.width * scan.height);
+        const sliceOffset = safeSlice * scan.width * scan.height;
+        for (let i = 0; i < values.length; i++) {
+            values[i] = CT_readVoxel(scan, sliceOffset + i);
+        }
+        return values;
+    }
+
+    function CT_getPreviewWindow(values) {
+        const sample = [];
+        const stride = Math.max(1, Math.floor(values.length / 20000));
+        for (let i = 0; i < values.length; i += stride) {
+            const value = values[i];
+            if (Number.isFinite(value)) sample.push(value);
+        }
+        if (sample.length < 2) return { low: 0, high: 1 };
+        sample.sort((a, b) => a - b);
+        let low = sample[Math.floor(sample.length * 0.01)];
+        let high = sample[Math.floor(sample.length * 0.99)];
+        if (!Number.isFinite(low) || !Number.isFinite(high) || high <= low) {
+            low = sample[0];
+            high = sample[sample.length - 1];
+        }
+        if (high <= low) high = low + 1;
+        return { low, high };
+    }
+
+    function CT_escapeHtml(value) {
+        return String(value).replace(/[&<>"']/g, ch => ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;'
+        }[ch]));
+    }
+
+    function CT_paintSlice(scan, sliceIndex) {
+        const canvas = document.getElementById('ctScanPreviewCanvas');
+        if (!canvas) return;
+
+        const safeSlice = Math.max(0, Math.min(scan.depth - 1, sliceIndex));
+        scan.sliceIndex = safeSlice;
+        const values = CT_getSliceValues(scan, safeSlice);
+        const windowRange = CT_getPreviewWindow(values);
+        canvas.width = scan.width;
+        canvas.height = scan.height;
+
+        const ctx = canvas.getContext('2d');
+        const image = ctx.createImageData(scan.width, scan.height);
+        const denom = windowRange.high - windowRange.low;
+        for (let i = 0; i < values.length; i++) {
+            const normalized = (values[i] - windowRange.low) / denom;
+            const gray = Math.max(0, Math.min(255, Math.round(normalized * 255)));
+            const pixel = i * 4;
+            image.data[pixel] = gray;
+            image.data[pixel + 1] = gray;
+            image.data[pixel + 2] = gray;
+            image.data[pixel + 3] = 255;
+        }
+        ctx.putImageData(image, 0, 0);
+
+        const label = document.getElementById('ctScanSliceLabel');
+        if (label) label.textContent = `${safeSlice + 1} / ${scan.depth}`;
+        const slider = document.getElementById('ctScanSliceSlider');
+        if (slider && slider.value !== String(safeSlice)) slider.value = String(safeSlice);
+        const meta = document.getElementById('ctScanPreviewMeta');
+        if (meta) {
+            meta.innerHTML = `<strong>${CT_escapeHtml(scan.fileName)}</strong>${scan.width} x ${scan.height} x ${scan.depth}<br>${scan.datatypeLabel}, ${scan.bitpix}-bit<br>Window ${windowRange.low.toFixed(1)} to ${windowRange.high.toFixed(1)}`;
+        }
+    }
+
+    async function CT_loadScanPreview(file) {
+        const loading = document.getElementById('ctScanPreviewLoading');
+        const viewer = document.getElementById('ctScanPreviewViewer');
+        if (loading) {
+            loading.style.display = 'flex';
+            loading.textContent = 'Preparing CT scan preview...';
+        }
+        if (viewer) viewer.style.display = 'none';
+
+        const compressedBuffer = await file.arrayBuffer();
+        const buffer = await CT_decompressIfNeeded(file, compressedBuffer);
+        const scan = CT_parseNifti(buffer, file.name);
+        CT_previewState.scan = scan;
+
+        const slider = document.getElementById('ctScanSliceSlider');
+        if (slider) {
+            slider.min = '0';
+            slider.max = String(Math.max(0, scan.depth - 1));
+            slider.value = String(scan.sliceIndex);
+        }
+        CT_paintSlice(scan, scan.sliceIndex);
+
+        if (loading) loading.style.display = 'none';
+        if (viewer) viewer.style.display = 'grid';
+    }
+
+    window.CT_renderScanSlice = function (sliceIndex) {
+        if (!CT_previewState.scan) return;
+        CT_paintSlice(CT_previewState.scan, sliceIndex);
+    };
+
+    window.CT_toggleScanPlayback = function () {
+        if (!CT_previewState.scan) return;
+
+        if (CT_previewState.playTimer) {
+            CT_stopScanPlayback();
+            return;
+        }
+
+        CT_setPlayButton(true);
+        CT_previewState.playTimer = window.setInterval(() => {
+            const scan = CT_previewState.scan;
+            if (!scan || CT_previewState.activeKind !== 'scan') {
+                CT_stopScanPlayback();
+                return;
+            }
+            const nextSlice = scan.sliceIndex >= scan.depth - 1 ? 0 : scan.sliceIndex + 1;
+            CT_paintSlice(scan, nextSlice);
+        }, 180);
+    };
+
+    window.CT_showUploadPreview = async function (kind, e) {
+        if (e) e.stopPropagation();
+        const file = CT_getSelectedFile(kind);
+        if (!file) {
+            if (window.showToast) window.showToast('No File', 'Please select a file first.', 'warn');
+            return;
+        }
+
+        CT_showPreviewPane(kind);
+        if (kind === 'report') {
+            CT_stopScanPlayback();
+            if (!CT_previewState.reportUrl) CT_prepareReportPreview(file);
+            const frame = document.getElementById('ctReportPreviewFrame');
+            if (frame) frame.src = CT_previewState.reportUrl;
+            CT_setPreviewHeader('Report PDF Preview', file.name, 'fas fa-file-pdf');
+            return;
+        }
+
+        CT_setPreviewHeader('CT Scan Preview', file.name, 'fas fa-x-ray');
+        try {
+            if (CT_previewState.scan && CT_previewState.scan.fileName === file.name) {
+                const loading = document.getElementById('ctScanPreviewLoading');
+                const viewer = document.getElementById('ctScanPreviewViewer');
+                if (loading) loading.style.display = 'none';
+                if (viewer) viewer.style.display = 'grid';
+                CT_paintSlice(CT_previewState.scan, CT_previewState.scan.sliceIndex);
+            } else {
+                await CT_loadScanPreview(file);
+            }
+        } catch (err) {
+            const loading = document.getElementById('ctScanPreviewLoading');
+            const viewer = document.getElementById('ctScanPreviewViewer');
+            if (viewer) viewer.style.display = 'none';
+            if (loading) {
+                loading.style.display = 'flex';
+                loading.textContent = err.message || 'Unable to preview this NIfTI file.';
+            }
+        }
+    };
+
+    window.CT_hideUploadPreview = function () {
+        const panel = document.getElementById('ctUploadPreviewPanel');
+        const scanPane = document.getElementById('ctScanPreviewPane');
+        const reportPane = document.getElementById('ctReportPreviewPane');
+        if (panel) panel.classList.remove('active');
+        if (scanPane) scanPane.classList.remove('active');
+        if (reportPane) reportPane.classList.remove('active');
+        CT_previewState.activeKind = null;
+        CT_stopScanPlayback();
+    };
+
+    function CT_clearResultTags() {
+        const pass = document.getElementById('ctResultPass');
+        const review = document.getElementById('ctResultReview');
+        if (pass) pass.classList.remove('ct-result-pass-active');
+        if (review) review.classList.remove('ct-result-review-active');
+    }
+
+    function CT_showResultTagColors() {
+        const pass = document.getElementById('ctResultPass');
+        const review = document.getElementById('ctResultReview');
+        if (pass) pass.classList.add('ct-result-pass-active');
+        if (review) review.classList.add('ct-result-review-active');
+    }
+
+    function CT_getPredictionDecision(prediction) {
+        const normalized = String(prediction || '').trim().toUpperCase();
+        const compact = normalized.replace(/[^A-Z]/g, '');
+        if (compact === 'PASS' || compact === 'YES') return 'PASS';
+        if (compact === 'REVIEW' || compact === 'NEEDSREVIEW') return 'REVIEW';
+        return '';
+    }
+
+    function CT_getPredictionLabel(prediction) {
+        const decision = CT_getPredictionDecision(prediction);
+        if (decision === 'PASS') return 'PASS';
+        if (decision === 'REVIEW') return 'Needs Review';
+        return '';
+    }
+
+    function CT_showPredictionTag(prediction) {
+        const decision = CT_getPredictionDecision(prediction);
+        const pass = document.getElementById('ctResultPass');
+        const review = document.getElementById('ctResultReview');
+        CT_clearResultTags();
+
+        if (decision === 'PASS' && pass) {
+            pass.classList.add('ct-result-pass-active');
+        } else if (decision === 'REVIEW' && review) {
+            review.classList.add('ct-result-review-active');
+        }
+    }
+
+    function CT_formatApiResult(data) {
+        const label = CT_getPredictionLabel(data && data.prediction);
+        const details = [];
+
+        if (data && Number.isFinite(Number(data.latency_seconds))) {
+            details.push(`Latency: ${Number(data.latency_seconds).toFixed(2)}s`);
+        }
+
+        if (!label) return 'Prediction unavailable from API';
+        return `${label}${details.length ? ': ' + details.join(' | ') : ''}`;
+    }
+
+    async function CT_submitToReportChecker(scanFile, reportFile) {
+        let lastError = null;
+        const endpoints = CT_getReportCheckerEndpoints();
+
+        for (const endpoint of endpoints) {
+            try {
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    body: CT_buildReportCheckerFormData(scanFile, reportFile)
+                });
+
+                if (response.ok) return await response.json();
+
+                const message = response.status === 501
+                    ? `CT proxy route is not active at ${endpoint}.`
+                    : await _extractErrorMessage(response, 'CT report checker request failed');
+                lastError = new Error(message);
+
+                if (response.status !== 501 && response.status !== 404) {
+                    throw lastError;
+                }
+            } catch (err) {
+                lastError = err;
+            }
+        }
+
+        throw new Error(
+            `Unable to reach CT report checker backend. Tried: ${endpoints.join(', ')}. Last error: ${lastError ? lastError.message : 'unknown error'}`
+        );
+    }
+
+    window.CT_init = function () {
+        const landing = document.getElementById('ctreportchecker-landing-view');
+        const interactive = document.getElementById('ctreportchecker-interactive-view');
+        if (landing) landing.style.display = 'block';
+        if (interactive) interactive.style.display = 'none';
+        CT_clearResultTags();
+        window.CT_hideUploadPreview();
+        CT_updateProcessButton();
+    };
+
+    window.CT_launchService = function () {
+        const landing = document.getElementById('ctreportchecker-landing-view');
+        const interactive = document.getElementById('ctreportchecker-interactive-view');
+        if (landing) landing.style.display = 'none';
+        if (interactive) {
+            interactive.style.display = 'block';
+            window.scrollTo(0, 0);
+        }
+        CT_updateProcessButton();
+    };
+
+    window.CT_handleFileChange = function (kind) {
+        CT_renderSelectedFile(kind);
+        CT_updateProcessButton();
+    };
+
+    window.CT_removeFile = function (kind, e) {
+        if (e) e.stopPropagation();
+        const isScan = kind === 'scan';
+        const input = document.getElementById(isScan ? 'ctScanInput' : 'ctReportInput');
+        const dropzone = document.getElementById(isScan ? 'ctScanDropzone' : 'ctReportDropzone');
+        const card = document.getElementById(isScan ? 'ctScanCard' : 'ctReportCard');
+        const nameEl = document.getElementById(isScan ? 'ctScanFileName' : 'ctReportFileName');
+        const sizeEl = document.getElementById(isScan ? 'ctScanFileSize' : 'ctReportFileSize');
+
+        if (input) input.value = '';
+        if (dropzone) dropzone.style.display = 'flex';
+        if (card) card.style.display = 'none';
+        if (nameEl) nameEl.textContent = isScan ? 'No scan selected' : 'No report selected';
+        if (sizeEl) sizeEl.textContent = isScan ? '0 MB' : '0 KB';
+        CT_clearPreview(kind);
+        CT_clearResultTags();
+        CT_updateProcessButton();
+    };
+
+    window.CT_processCase = async function () {
+        const scanFile = CT_getSelectedFile('scan');
+        const reportFile = CT_getSelectedFile('report');
+        const btn = document.getElementById('ctProcessBtn');
+        const result = document.getElementById('ctResultText');
+
+        if (!scanFile || !reportFile) {
+            if (window.showToast) window.showToast('Missing Files', 'Please select both CT scan and report PDF.', 'warn');
+            return;
+        }
+
+        CT_clearResultTags();
+        const originalHtml = btn ? btn.innerHTML : '';
+        if (btn) {
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking...';
+        }
+        if (result) result.textContent = 'Checking scan-report consistency...';
+
+        try {
+            const data = await CT_submitToReportChecker(scanFile, reportFile);
+            CT_showPredictionTag(data.prediction);
+            if (result) result.textContent = CT_formatApiResult(data);
+            if (window.showToast) {
+                const prediction = CT_getPredictionLabel(data.prediction);
+                window.showToast('CT Report Checker', prediction ? `Prediction: ${prediction}` : 'Prediction unavailable from API', 'info', 5000);
+            }
+            const _logUrl = (window.DPI_API_CONFIG && window.DPI_API_CONFIG.logger)
+                ? `${window.DPI_API_CONFIG.logger}/log`
+                : (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+                    ? 'http://localhost:8002/log'
+                    : `${window.location.origin}/session-logger/log`;
+            fetch(_logUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ service: 'ct_report_checker' }) }).catch(() => {});
+        } catch (err) {
+            if (result) result.textContent = `Error: ${err.message}`;
+            if (window.showToast) window.showToast('Error', err.message, 'error');
+        } finally {
+            if (btn) {
+                btn.disabled = false;
+                btn.innerHTML = originalHtml;
+            }
+        }
+    };
+
 })();

@@ -225,7 +225,12 @@ document.addEventListener('DOMContentLoaded', () => {
             if (isComplete) {
                 showToast('Processing complete!', 'success');
                 btnProcess.textContent = 'Process Complete';
-                
+
+                const _logUrl = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+                    ? 'http://localhost:8002/log'
+                    : `${window.location.origin}/session-logger/log`;
+                fetch(_logUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ service: 'audio_asr' }) }).catch(() => {});
+
                 const btnDone = document.getElementById('btn-done');
                 if (btnDone) {
                     btnDone.style.display = 'inline-block';
