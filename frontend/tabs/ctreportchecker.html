@@ -521,16 +521,16 @@
                 Radiology Review
             </span>
             <h2 style="font-size: 2.2rem; font-weight: 800; color: #0f172a; margin: 0 0 16px; letter-spacing: -0.02em; line-height: 1.2;">
-                CT Report Checker
+                Head CT Report Checker
             </h2>
             <p style="font-size: 1.02rem; line-height: 1.6; color: #475569; margin: 0 0 28px;">
-                Compare a Non-Contrast CT scan with its corresponding report and verify whether each reported finding is visible in the imaging. The checker will tag findings as PASS or Needs Review with support from medical foundation models.
+                Compare a Non-Contrast Head CT scan with its corresponding report and verify whether each reported finding is visible in the imaging. The checker will tag findings as PASS or Needs Review with support from medical foundation models.
             </p>
             <div style="display: flex; flex-wrap: wrap; gap: 14px;">
-                <button onclick="directLaunchService('CTReportChecker')" class="ct-btn-modern" style="padding: 12px 24px !important; font-size: 0.95rem !important; border-radius: 8px !important;">
+                <button onclick="directLaunchService('HeadCTReportChecker')" class="ct-btn-modern" style="padding: 12px 24px !important; font-size: 0.95rem !important; border-radius: 8px !important;">
                     <i class="fas fa-rocket"></i> Launch Interactive Service
                 </button>
-                <button onclick="window.open('docs/ct-report-checker.html', '_blank');" class="sub-tab-btn" style="border: 1.5px solid #e2e8f0; background: white; padding: 11px 20px; border-radius: 8px; font-weight: 600; color: #475569; display: inline-flex; align-items: center; gap: 8px; cursor: pointer;">
+                <button onclick="window.open('docs/head-ct-checker.html', '_blank');" class="sub-tab-btn" style="border: 1.5px solid #e2e8f0; background: white; padding: 11px 20px; border-radius: 8px; font-weight: 600; color: #475569; display: inline-flex; align-items: center; gap: 8px; cursor: pointer;">
                     <i class="fas fa-book"></i> Read User Guide
                 </button>
                 <button onclick="window.open('https://github.com/TANUH-AI/TANUH-DPI', '_blank');" class="sub-tab-btn" style="border: 1.5px solid #e2e8f0; background: white; padding: 11px 20px; border-radius: 8px; font-weight: 600; color: #475569; display: inline-flex; align-items: center; gap: 8px; cursor: pointer;">
@@ -551,7 +551,7 @@
             </div>
             <div style="display: grid; gap: 8px; font-size: 0.78rem;">
                 <div style="display: flex; justify-content: space-between; border: 1px solid #e2e8f0; border-radius: 8px; padding: 9px 10px;">
-                    <span style="color: #475569;">Non-Contrast CT scan input</span>
+                    <span style="color: #475569;">Non-Contrast Head CT scan input</span>
                     <span style="font-weight: 700; color: #14868C;">NIfTI / DICOM</span>
                 </div>
                 <div style="display: flex; justify-content: space-between; border: 1px solid #e2e8f0; border-radius: 8px; padding: 9px 10px;">
@@ -570,7 +570,7 @@
         <div class="ct-panel">
             <div class="ct-panel-icon"><i class="fas fa-file-medical-alt"></i></div>
             <h3>Scan and Report Intake</h3>
-            <p>Accepts a paired Non-Contrast CT scan and report for finding-level verification.</p>
+            <p>Accepts a paired Non-Contrast Head CT scan and report for finding-level verification.</p>
         </div>
         <div class="ct-panel">
             <div class="ct-panel-icon"><i class="fas fa-brain"></i></div>
@@ -591,7 +591,7 @@
             <div style="position: relative; z-index: 2;">
                 <div style="font-size: 2.2rem; font-weight: 800; color: #14868C; opacity: 0.15; margin-bottom: -10px;">01</div>
                 <h4 style="font-size: 0.95rem; font-weight: 700; color: #0f172a; margin: 0 0 6px;">Pair Inputs</h4>
-                <p style="font-size: 0.82rem; line-height: 1.5; color: #64748b; margin: 0;">Upload one Non-Contrast CT scan and its corresponding radiology report PDF.</p>
+                <p style="font-size: 0.82rem; line-height: 1.5; color: #64748b; margin: 0;">Upload one Non-Contrast Head CT scan and its corresponding radiology report PDF.</p>
             </div>
             <div style="position: relative; z-index: 2;">
                 <div style="font-size: 2.2rem; font-weight: 800; color: #14868C; opacity: 0.15; margin-bottom: -10px;">02</div>
@@ -618,7 +618,7 @@
                 </div>
                 <h4 style="font-size: 0.95rem; font-weight: 700; color: #0f172a; margin: 0 0 8px;">Input Pairing Required</h4>
                 <p style="font-size: 0.85rem; line-height: 1.5; color: #64748b; margin: 0;">
-                    The Non-Contrast CT scan and report must belong to the same study. Mismatched studies can lead to unreliable verification tags.
+                    The Non-Contrast Head CT scan and report must belong to the same study. Mismatched studies can lead to unreliable verification tags.
                 </p>
             </div>
 
@@ -655,7 +655,7 @@
             </p>
         </div>
         <div class="service-feedback-action">
-            <a href="mailto:dpi@tanuh.ai?subject=Feedback / Bug Report - CT Report Checker" class="service-feedback-btn">
+            <a href="mailto:dpi@tanuh.ai?subject=Feedback / Bug Report - Head CT Report Checker" class="service-feedback-btn">
                 <i class="fas fa-envelope-open-text"></i> Give Feedback & Report Bugs
             </a>
         </div>
@@ -666,8 +666,8 @@
     <div class="ct-workspace-card">
         <div class="tab-header" style="margin-bottom: 16px;">
             <div class="tab-header-text">
-                <h2>CT Report Checker</h2>
-                <p>Upload one Non-Contrast CT scan and the corresponding report PDF for scan-report verification.</p>
+                <h2>Head CT Report Checker</h2>
+                <p>Upload one Non-Contrast Head CT scan and the corresponding report PDF for scan-report verification.</p>
             </div>
             <div class="tab-header-logos">
                 <img src="assets/cbr.jpeg" alt="Centre for Brain Research" class="logo">
@@ -676,13 +676,13 @@
 
         <div class="ct-info-notes" style="margin-bottom: 16px; padding: 10px 14px; border-left: 4px solid #14868C; background-color: #f0fdfa; border-radius: 6px;">
             <p style="margin: 0 0 6px 0; color: #0f766e; font-size: 0.78rem; line-height: 1.4;">
-                <strong><i class="fas fa-clock"></i> Note:</strong> Upload exactly one Non-Contrast CT scan and its matching radiology report. The checker compares report findings against imaging evidence and returns PASS or Needs Review tags.
+                <strong><i class="fas fa-clock"></i> Note:</strong> Upload exactly one Non-Contrast Head CT scan and its matching radiology report. The checker compares report findings against imaging evidence and returns PASS or Needs Review tags.
             </p>
             <p style="margin: 0 0 6px 0; color: #0f766e; font-size: 0.78rem; line-height: 1.4;">
                 <strong><i class="fas fa-user-shield"></i> Privacy Protocol:</strong> This is a non-persistent service. Your data is processed in real-time and purged automatically after use. No data is stored.
             </p>
             <p style="margin: 0 0 6px 0; color: #0f766e; font-size: 0.78rem; line-height: 1.4;">
-                <strong><i class="fas fa-file-medical"></i> Limit:</strong> One scan-report pair per check. Supported Non-Contrast CT input: NIfTI GZ (.nii.gz) or DICOM ZIP (.zip); report input: PDF.
+                <strong><i class="fas fa-file-medical"></i> Limit:</strong> One scan-report pair per check. Supported Head CT input: NIfTI GZ (.nii.gz) or DICOM ZIP (.zip); report input: PDF.
             </p>
             <p style="margin: 0; color: #b45309; font-size: 0.78rem; line-height: 1.4;">
                 <strong><i class="fas fa-exclamation-circle"></i> Disclosures:</strong> AI generated, Research use only, Not approved tool, Should not be used for clinical judgement.
@@ -691,12 +691,12 @@
 
         <div class="ct-upload-grid">
             <div class="ct-upload-panel">
-                <h3><i class="fas fa-x-ray" style="color:#14868C; margin-right:6px;"></i> Non-Contrast CT Scan</h3>
-                <p>Upload the Non-Contrast CT scan as a NIfTI GZ (.nii.gz) or DICOM ZIP (.zip) volume for review.</p>
+                <h3><i class="fas fa-x-ray" style="color:#14868C; margin-right:6px;"></i> Non-Contrast Head CT Scan</h3>
+                <p>Upload the Non-Contrast Head CT scan as a NIfTI GZ (.nii.gz) or DICOM ZIP (.zip) volume for review.</p>
                 <input id="ctScanInput" type="file" accept=".nii.gz,.zip" style="display:none;" onchange="CT_handleFileChange('scan')">
                 <label id="ctScanDropzone" class="ct-dropzone" for="ctScanInput">
                     <span class="ct-dropzone-icon"><i class="fas fa-file-medical"></i></span>
-                    <span class="ct-dropzone-title">Choose CT scan</span>
+                    <span class="ct-dropzone-title">Choose Head CT Scan</span>
                     <span class="ct-dropzone-subtitle">NIfTI GZ (.nii.gz) or DICOM ZIP (.zip)</span>
                 </label>
                 <div id="ctScanCard" class="ct-selected-card">
@@ -706,10 +706,10 @@
                         <div id="ctScanFileSize" class="ct-selected-size">0 MB</div>
                     </div>
                     <div class="ct-selected-actions">
-                        <button type="button" class="ct-view-file-btn" onclick="CT_showUploadPreview('scan', event)" aria-label="Preview CT scan">
+                        <button type="button" class="ct-view-file-btn" onclick="CT_showUploadPreview('scan', event)" aria-label="Preview Head CT scan">
                             <i class="fas fa-eye"></i> View
                         </button>
-                        <button type="button" class="ct-remove-file-btn" onclick="CT_removeFile('scan', event)" aria-label="Remove CT scan">
+                        <button type="button" class="ct-remove-file-btn" onclick="CT_removeFile('scan', event)" aria-label="Remove Head CT scan">
                             <i class="fas fa-times"></i>
                         </button>
                     </div>
@@ -718,7 +718,7 @@
 
             <div class="ct-upload-panel">
                 <h3><i class="fas fa-file-pdf" style="color:#14868C; margin-right:6px;"></i> Corresponding Radiology Report</h3>
-                <p>Upload the PDF report that corresponds to the Non-Contrast CT scan selected on the left.</p>
+                <p>Upload the PDF report that corresponds to the Non-Contrast Head CT scan selected on the left.</p>
                 <input id="ctReportInput" type="file" accept=".pdf,application/pdf" style="display:none;" onchange="CT_handleFileChange('report')">
                 <label id="ctReportDropzone" class="ct-dropzone" for="ctReportInput">
                     <span class="ct-dropzone-icon"><i class="fas fa-file-pdf"></i></span>
@@ -758,7 +758,7 @@
                     <iframe id="ctReportPreviewFrame" class="ct-pdf-frame" title="Radiology report PDF preview"></iframe>
                 </div>
                 <div id="ctScanPreviewPane" class="ct-preview-pane">
-                    <div id="ctScanPreviewLoading" class="ct-preview-message">Preparing CT scan preview...</div>
+                    <div id="ctScanPreviewLoading" class="ct-preview-message">Preparing Head CT scan preview...</div>
                     <div id="ctScanPreviewViewer" class="ct-scan-viewer" style="display:none;">
                         <div class="ct-scan-canvas-wrap">
                             <canvas id="ctScanPreviewCanvas" width="512" height="512"></canvas>
@@ -800,7 +800,7 @@
         <div class="ct-result-grid" style="grid-template-columns: 1fr;">
             <div class="ct-result-chip" id="ctResultPass" style="display:none; text-align:center; padding: 18px;">
                 <strong style="font-size: 1.2rem;">PASS</strong>
-                <span style="font-size: 0.85rem;">Finding supported by CT scan evidence</span>
+                <span style="font-size: 0.85rem;">Finding supported by Head CT scan evidence</span>
             </div>
             <div class="ct-result-chip" id="ctResultReview" style="display:none; text-align:center; padding: 18px;">
                 <strong style="font-size: 1.2rem;">Needs Review</strong>

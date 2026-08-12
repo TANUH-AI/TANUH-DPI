@@ -57,7 +57,7 @@
     }
 
     function updateActiveNav(tabName) {
-        document.body.classList.toggle('ct-report-checker-active', tabName === 'CTReportChecker');
+        document.body.classList.toggle('ct-report-checker-active', tabName === 'HeadCTReportChecker');
         document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
         const navMap = {
             'Home': 'navHome',
@@ -66,7 +66,7 @@
             'PrivacyFilter': 'navPrivacyFilter',
             'ForgeryDetection': 'navForgery',
             'AudioASR': 'navAudio',
-            'CTReportChecker': 'navCTReportChecker',
+            'HeadCTReportChecker': 'navHeadCTReportChecker',
             'AboutUs': 'navAboutUs'
         };
         const id = navMap[tabName];
@@ -80,7 +80,7 @@
         if (servicesTrigger) servicesTrigger.classList.remove('active');
         if (docsTrigger) docsTrigger.classList.remove('active');
 
-        const servicesTabs = ['PDF2FHIR', 'PDF2NHCX', 'PrivacyFilter', 'ForgeryDetection', 'AudioASR', 'CTReportChecker'];
+        const servicesTabs = ['PDF2FHIR', 'PDF2NHCX', 'PrivacyFilter', 'ForgeryDetection', 'AudioASR', 'HeadCTReportChecker'];
         const docsTabs = ['ClinicalDocs', 'InsuranceDocs', 'PrivacyDocs', 'ForgeryDocs', 'AudioDocs'];
         
         if (servicesTabs.includes(tabName)) {
@@ -225,7 +225,7 @@
             if (tabName === 'PDF2NHCX' && window.INS_init) window.INS_init();
             if (tabName === 'PDF2FHIR' && window.CLN_init) window.CLN_init();
             if (tabName === 'AudioASR' && window.AUDIO_init) window.AUDIO_init();
-            if (tabName === 'CTReportChecker' && window.CT_init) window.CT_init();
+            if (tabName === 'HeadCTReportChecker' && window.CT_init) window.CT_init();
             if ((tabName === 'PDF2FHIR' || tabName === 'PDF2NHCX' || tabName === 'ForgeryDetection' || tabName === 'PrivacyFilter' || tabName === 'APIAccess') && window.initApiAccess) {
                 window.initApiAccess();
             }
@@ -242,7 +242,7 @@
                     else if (tabName === 'PrivacyFilter' && window.PF_launchService) PF_launchService();
                     else if (tabName === 'ForgeryDetection' && window.FG_launchService) FG_launchService();
                     else if (tabName === 'AudioASR' && window.AUDIO_launchService) AUDIO_launchService();
-                    else if (tabName === 'CTReportChecker' && window.CT_launchService) CT_launchService();
+                    else if (tabName === 'HeadCTReportChecker' && window.CT_launchService) CT_launchService();
                 }, 300);
             }
         }
@@ -268,7 +268,7 @@
             else if (fileName === 'privacyfilter') fileName = 'privacyfilter';
             else if (fileName === 'forgerydetection') fileName = 'forgery';
             else if (fileName === 'audioasr') fileName = 'audioasr';
-            else if (fileName === 'ctreportchecker') fileName = 'ctreportchecker';
+            else if (fileName === 'headctreportchecker') fileName = 'ctreportchecker';
             else if (fileName === 'aboutus') fileName = 'about';
             else if (fileName === 'apiaccess') fileName = 'apiaccess';
             else if (fileName === 'download') fileName = 'download';
@@ -528,7 +528,7 @@
         else if (tabName === 'PDF2NHCX') navId = 'navInsurance';
         else if (tabName === 'PrivacyFilter') navId = 'navPrivacyFilter';
         else if (tabName === 'AudioASR') navId = 'navAudio';
-        else if (tabName === 'CTReportChecker') navId = 'navCTReportChecker';
+        else if (tabName === 'HeadCTReportChecker') navId = 'navHeadCTReportChecker';
 
         if (navId) {
             document.querySelectorAll('.navbar .nav-link, .navbar .dropdown-item').forEach(el => el.classList.remove('active'));

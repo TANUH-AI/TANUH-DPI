@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CT Report Checker Documentation | TANUH DPI</title>
+    <title>Head CT Report Checker Documentation | TANUH DPI</title>
     <link rel="icon" type="image/png" href="../assets/tanuh.png">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -26,17 +26,17 @@
 
         <main class="docs-main">
             <div class="docs-content-inner">
-                <h1 style="margin-top:0.25rem;">CT Report Checker Documentation</h1>
-                <p style="font-size:1.1rem; color:var(--text-500); margin-bottom:2rem;">TANUH-CBR IndiNeuroFM CT Report Checker</p>
+                <h1 style="margin-top:0.25rem;">Head CT Report Checker Documentation</h1>
+                <p style="font-size:1.1rem; color:var(--text-500); margin-bottom:2rem;">TANUH-CBR IndiNeuroFM Head CT Report Checker</p>
 
                 <h1>1. Overview</h1>
-                <p>The CT Report Checker is an automated CT report verification framework that assesses consistency between CT scans and their corresponding radiology reports. The service is designed to verify whether findings mentioned in a report are supported by the imaging evidence and to generate binary review tags: PASS or Needs Review.</p>
+                <p>The Head CT Report Checker is an automated CT report verification framework that assesses consistency between Head CT scans and their corresponding radiology reports. The service is designed to verify whether findings mentioned in a report are supported by the imaging evidence and to generate binary review tags: PASS or Needs Review.</p>
                 <p>Radiology interpretation errors and discrepancies are a known clinical quality challenge. Caranci et al. describe daily-practice radiologic interpretation errors around 4%, with report discrepancy ranges that can vary by setting and review context (<a href="https://pubmed.ncbi.nlm.nih.gov/26183038/" target="_blank" rel="noopener noreferrer">PubMed PMID: 26183038</a>). At global imaging volumes, even a small error rate can translate into a large number of interpretive errors each year, especially in abnormal or emergency-after-hours studies.</p>
                 <p>The objective of this work package is to build an inference-only pipeline that combines multiple pretrained medical foundation models. Rather than training new models, the framework uses an ensemble strategy to integrate complementary model capabilities for CT image understanding and report verification.</p>
 
                 <h1>2. Key Features</h1>
                 <ul>
-                    <li>Verifies consistency between a CT scan and its matching radiology report</li>
+                    <li>Verifies consistency between a Head CT scan and its matching radiology report</li>
                     <li>Uses de-identified clinical CT datasets and associated reports from clinical partners</li>
                     <li>Works with CT images in NIfTI format and report PDFs</li>
                     <li>Evaluates a selected pool of five recent and efficient medical foundation models</li>
@@ -47,11 +47,11 @@
                 </ul>
 
                 <h1>3. Architecture</h1>
-                <p>The framework follows a modular inference pipeline for scan-report verification. A paired CT scan and report are prepared, processed through a unified preprocessing layer, evaluated by a selected ensemble of medical foundation models, and converted into a consensus verification output.</p>
+                <p>The framework follows a modular inference pipeline for scan-report verification. A paired Head CT scan and report are prepared, processed through a unified preprocessing layer, evaluated by a selected ensemble of medical foundation models, and converted into a consensus verification output.</p>
                 <ol>
                     <li>Input: CT image in NIfTI format and corresponding report PDF</li>
                     <li>Preprocessing: standardize CT volume inputs so selected models can process clinical partner data</li>
-                    <li>Model inference: run multiple pretrained medical foundation models on the CT scan and report context</li>
+                    <li>Model inference: run multiple pretrained medical foundation models on the Head CT scan and report context</li>
                     <li>Finding comparison: compare model-generated imaging observations with the corresponding report findings</li>
                     <li>Consensus generation: combine model outputs to improve robustness and reliability</li>
                     <li>Verification output: produce a PASS or REVIEW flag with finding-level tags, confidence scores, and explanatory reasoning</li>
@@ -60,7 +60,7 @@
                 <h1>4. Usage Guide</h1>
                 <p>The intended workflow is:</p>
                 <ol>
-                    <li>Upload one CT scan in NIfTI format</li>
+                    <li>Upload one Head CT scan in NIfTI format</li>
                     <li>Upload the corresponding radiology report PDF</li>
                     <li>Submit the paired case for automated verification</li>
                     <li>Review finding-level outputs tagged as PASS or Needs Review</li>
