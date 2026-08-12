@@ -810,7 +810,7 @@
             const canvas = document.getElementById('ctScanPreviewCanvas');
             const ctx = canvas ? canvas.getContext('2d') : null;
             if (ctx && canvas) ctx.clearRect(0, 0, canvas.width, canvas.height);
-            if (loading) loading.textContent = 'Preparing CT scan preview...';
+            if (loading) loading.textContent = 'Preparing Head CT scan preview...';
             if (viewer) viewer.style.display = 'none';
         }
 
@@ -1014,7 +1014,7 @@
         const viewer = document.getElementById('ctScanPreviewViewer');
         if (loading) {
             loading.style.display = 'flex';
-            loading.textContent = 'Preparing CT scan preview...';
+            loading.textContent = 'Preparing Head CT scan preview...';
         }
         if (viewer) viewer.style.display = 'none';
 
@@ -1078,7 +1078,7 @@
             return;
         }
 
-        CT_setPreviewHeader('CT Scan Preview', file.name, 'fas fa-x-ray');
+        CT_setPreviewHeader('Head CT Scan Preview', file.name, 'fas fa-x-ray');
         try {
             if (CT_previewState.scan && CT_previewState.scan.fileName === file.name) {
                 const loading = document.getElementById('ctScanPreviewLoading');
@@ -1289,7 +1289,7 @@
         const result = document.getElementById('ctResultText');
 
         if (!scanFile || !reportFile) {
-            if (window.showToast) window.showToast('Missing Files', 'Please select both CT scan and report PDF.', 'warn');
+            if (window.showToast) window.showToast('Missing Files', 'Please select both Head CT scan and report PDF.', 'warn');
             return;
         }
 
@@ -1307,7 +1307,7 @@
             if (result) result.textContent = CT_formatApiResult(data);
             if (window.showToast) {
                 const prediction = CT_getPredictionLabel(data.prediction);
-                window.showToast('CT Report Checker', prediction ? `Prediction: ${prediction}` : 'Prediction unavailable from API', 'info', 5000);
+                window.showToast('Head CT Report Checker', prediction ? `Prediction: ${prediction}` : 'Prediction unavailable from API', 'info', 5000);
             }
             const _logUrl = (window.DPI_API_CONFIG && window.DPI_API_CONFIG.logger)
                 ? `${window.DPI_API_CONFIG.logger}/log`

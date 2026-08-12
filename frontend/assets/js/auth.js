@@ -1,7 +1,7 @@
 (function () {
     "use strict";
 
-    const GATED_TABS = new Set(["PDF2FHIR", "PDF2NHCX", "PrivacyFilter", "ForgeryDetection", "AudioASR", "CTReportChecker"]);
+    const GATED_TABS = new Set(["PDF2FHIR", "PDF2NHCX", "PrivacyFilter", "ForgeryDetection", "AudioASR", "HeadCTReportChecker"]);
     let _pendingTab = null;
     let _authReady = false;
     let _authReadyCallbacks = [];
