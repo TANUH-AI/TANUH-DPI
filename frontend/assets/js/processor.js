@@ -721,7 +721,7 @@
     }
 
     function CT_getReportCheckerEndpoints() {
-        return ['https://request-brussels-amaze.ngrok-free.dev/verify'];
+        return ['http://34.180.46.162/verify'];
     }
 
     function CT_buildReportCheckerFormData(scanFile, reportFile) {
