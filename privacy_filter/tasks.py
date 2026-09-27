@@ -45,7 +45,13 @@ def _fire_log(payload: dict):
     try:
         import httpx
         with httpx.Client(timeout=5.0) as client:
-            client.post(f"{SESSION_LOGGER_URL}/log", json=payload)
+            resp = client.post(f"{SESSION_LOGGER_URL}/log", json=payload)
+        if resp.status_code >= 400:
+            # The document is not counted on the dashboard — make that visible.
+            logger.error(
+                "[session-logger] log rejected (HTTP %s), document not recorded: %s",
+                resp.status_code, resp.text[:300],
+            )
     except Exception as exc:
         logger.warning("[session-logger] fire-and-forget failed: %s", exc)
 

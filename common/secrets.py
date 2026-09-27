@@ -117,3 +117,34 @@ def load_secrets(project: str | None = None) -> None:
             )
 
     _inject_redis_auth()
+
+
+def refresh_secret(target: str, project: str | None = None) -> str | None:
+    """
+    Re-fetch the latest value of one secret-backed env var, e.g. after a
+    credential rotation. ``target`` is the resolved name (``MYSQL_PASSWORD``),
+    looked up through its ``<target>_SECRET`` pointer. Returns the new value
+    (also written to ``os.environ[target]``), or None if there is no pointer
+    or the fetch fails. Never raises.
+    """
+    secret_name = os.environ.get(f"{target}_SECRET")
+    project = (
+        project
+        or os.getenv("PROJECT_ID")
+        or os.getenv("GOOGLE_CLOUD_PROJECT")
+    )
+    if not secret_name or not project:
+        return None
+
+    try:
+        value = _access_secret(project, secret_name, _get_adc_token())
+    except Exception as exc:
+        logger.warning(
+            "refresh_secret: failed to re-fetch %s from secret %r: %s",
+            target, secret_name, exc,
+        )
+        return None
+
+    os.environ[target] = value
+    logger.info("refresh_secret: re-fetched %s from secret %r", target, secret_name)
+    return value
