@@ -73,9 +73,10 @@ def _fire_log(payload: dict) -> None:
             resp = client.post(f"{SESSION_LOGGER_URL}/log", json=payload)
         if resp.status_code >= 400:
             # The document is not counted on the dashboard — make that visible.
+            # Status only: the error body can carry DB details and filenames.
             logger.error(
-                "[session-logger] log rejected (HTTP %s), document not recorded: %s",
-                resp.status_code, resp.text[:300],
+                "[session-logger] log rejected (HTTP %s), document not recorded",
+                resp.status_code,
             )
     except Exception as exc:
         logger.warning("[session-logger] fire-and-forget failed: %s", exc)
