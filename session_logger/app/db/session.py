@@ -5,6 +5,7 @@ from sqlalchemy import create_engine, text as sa_text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from ..core.config import settings
+from .mysql_auth import attach_password_refresh
 
 logger = logging.getLogger(__name__)
 
@@ -16,7 +17,7 @@ if settings.MYSQL_USER and settings.MYSQL_PASSWORD:
     _mysql_url = settings.DATABASE_URL
     for _attempt in range(5):
         try:
-            _test_engine = create_engine(_mysql_url, pool_pre_ping=True)
+            _test_engine = attach_password_refresh(create_engine(_mysql_url, pool_pre_ping=True))
             with _test_engine.connect() as conn:
                 conn.execute(sa_text("SELECT 1"))
             db_url = _mysql_url
@@ -46,6 +47,9 @@ engine = create_engine(
     pool_pre_ping=True,
     pool_recycle=1800,
 )
+if not USE_SQLITE:
+    # Survive mysql-password rotations without a container restart.
+    attach_password_refresh(engine)
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
