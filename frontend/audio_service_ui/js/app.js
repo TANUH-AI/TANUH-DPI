@@ -148,6 +148,12 @@ document.addEventListener('DOMContentLoaded', () => {
                         progressBarFill.style.width = `${statData.progress}%`;
                     }
 
+                    // Count the run as soon as the job completes, before fetching
+                    // results, so a failed results call cannot drop it.
+                    if (statData.status === 'COMPLETED') {
+                        recordCompletedRun(jobId);
+                    }
+
                     // Fetch partial results if past diarizing phase
                     if (['TRANSCRIBING', 'TOPIC_EXTRACTION', 'SUMMARIZING', 'COMPLETED'].includes(statData.status)) {
                         fetchAndDisplayResults(jobId, statData.status === 'COMPLETED');
@@ -174,6 +180,22 @@ document.addEventListener('DOMContentLoaded', () => {
             resetProcessButton();
         }
     });
+
+    // Record one completed voice job in the DPI session log (dashboard count).
+    const loggedJobs = new Set();
+    function recordCompletedRun(jobId) {
+        if (loggedJobs.has(jobId)) return;
+        loggedJobs.add(jobId);
+        const logUrl = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+            ? 'http://localhost:8002/log'
+            : `${window.location.origin}/session-logger/log`;
+        fetch(logUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ service: 'audio_asr' }),
+            keepalive: true,  // still delivered if the user navigates away
+        }).catch(() => {});
+    }
 
     async function fetchAndDisplayResults(jobId, isComplete = false) {
         try {
@@ -225,11 +247,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (isComplete) {
                 showToast('Processing complete!', 'success');
                 btnProcess.textContent = 'Process Complete';
-
-                const _logUrl = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-                    ? 'http://localhost:8002/log'
-                    : `${window.location.origin}/session-logger/log`;
-                fetch(_logUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ service: 'audio_asr' }) }).catch(() => {});
 
                 const btnDone = document.getElementById('btn-done');
                 if (btnDone) {
