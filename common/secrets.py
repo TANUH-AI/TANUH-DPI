@@ -139,12 +139,13 @@ def refresh_secret(target: str, project: str | None = None) -> str | None:
     try:
         value = _access_secret(project, secret_name, _get_adc_token())
     except Exception as exc:
+        # Keep secret names/values out of logs (CodeQL: clear-text logging).
         logger.warning(
-            "refresh_secret: failed to re-fetch %s from secret %r: %s",
-            target, secret_name, exc,
+            "refresh_secret: re-fetch from Secret Manager failed (%s)",
+            type(exc).__name__,
         )
         return None
 
     os.environ[target] = value
-    logger.info("refresh_secret: re-fetched %s from secret %r", target, secret_name)
+    logger.info("refresh_secret: re-fetched a rotated secret from Secret Manager")
     return value
