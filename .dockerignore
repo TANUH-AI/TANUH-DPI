@@ -19,3 +19,4 @@ venv
 *.nii.gz
 pii_test_output
 vector_store
+common/tests

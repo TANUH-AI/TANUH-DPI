@@ -16,6 +16,7 @@ from celery.signals import task_retry, task_failure, worker_ready
 logger = logging.getLogger(__name__)
 
 from common.secrets import load_secrets
+from common.worker_watchdog import start_worker_watchdog
 load_secrets()
 
 REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379/0")
@@ -101,3 +102,4 @@ def _start_worker_metrics_server() -> None:
 @worker_ready.connect
 def on_worker_ready(sender=None, **kwargs):
     _start_worker_metrics_server()
+    start_worker_watchdog(celery_app, sender)
