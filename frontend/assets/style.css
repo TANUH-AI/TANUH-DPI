@@ -2951,7 +2951,8 @@ select:focus {
     }
 }
 
-.fg-team-grid > a {
+.fg-team-grid > a,
+.fg-team-grid > div {
     display: flex;
     text-decoration: none;
 }
@@ -3011,6 +3012,24 @@ select:focus {
     color: var(--brand-primary);
     font-weight: 500;
     margin-top: 2px;
+}
+
+.team-avatar-placeholder {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #e8f4f5, #d1ecee);
+    border: 3px solid #e8f4f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+    flex-shrink: 0;
+}
+
+.team-avatar-placeholder i {
+    font-size: 34px;
+    color: #7fbec2;
 }
 
 .fg-results-grid {
